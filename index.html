@@ -39,7 +39,7 @@
 <script src="Scripts/shots.js"></script>
 <script src="Scripts/towers.js"></script>
 <script>
-(function() {
+var Game = (function(initTowers) {
 	"use strict";
 
 	var canvas = document.querySelector('#game');
@@ -167,9 +167,6 @@
 		towerPanel.appendChild(div);
 	};
 	var addTowers = function() {
-
-		// logic.buildTower(new Point(10, 10), Rock);
-		// console.log(Rock);
 		for (var key in types.towers)
 			addTower(types.towers[key]);
 	};
@@ -187,6 +184,14 @@
 		document.querySelector('#wait').classList.add('hidden');
 		startMusic();
 		logic.start();
+
+		/* Modifications here */
+		for(var i = 0; i < initTowers.length; i++) {
+			var Towerinfo = initTowers[i];
+			logic.buildTower(new Point(Towerinfo[0][0], Towerinfo[0][1]), Towerinfo[1]);
+		}
+
+		/* End Modifications*/
 	};
 	var progress = function(e) {
 		document.querySelector('#wait-message').textContent = 'Loading (' + e.name + ', ' + ~~(e.progress * 100) + '% of ' + e.total + ')';
@@ -201,7 +206,12 @@
 	// console.log(JSON.stringify(types));
 
 	// logic.buildTower(new Point(10, 10), FlameTower );
-})();
+});
+var initTowers= [
+	[[2, 8], GateToHell],
+	[[10, 10], Flak]
+];
+Game(initTowers);
 </script>
 </body>
 </html>

@@ -26,6 +26,11 @@ var GameLogic = Base.extend({
 		var me = this;
 		me._super();
 
+		// Modification saves mazeWidth & mazeHeight for reuse
+		me.mazeWidth = mazeWidth;
+		me.mazeHeight = mazeHeight;
+		// End Modification
+
 		me.towers = [];
 		me.units  = [];
 		me.shots  = [];
@@ -117,6 +122,20 @@ var GameLogic = Base.extend({
 				unit.path = new Path(path);
 				this.addUnit(unit);
 			}
+
+
+			// Modification for units to be aware of new rocks
+			// var allUnits = this.units;
+
+			// for (var i = allUnits.length; i--; ) {
+			// 	var unit = allUnits[i];
+			// 	var newMaze = new Maze(new Size(this.mazeWidth || 20, this.mazeHeight || 11), unit.mazeCoordinates);
+			// 	var path = newMaze.getPath(unit.strategy);
+			// 	unit.path = new Path(path);
+			// }
+
+			// End Modifications
+
 		}
 	},
 	finish: function() {
@@ -215,7 +234,7 @@ var GameLogic = Base.extend({
 		var isrock = newTower instanceof Rock;
 		var numShooting = this.getNumShooting();
 
-		if (this.state === GameState.building && type.cost <= this.player.money && (isrock || (numShooting < this.maxTowerNumber))) {
+		if (type.cost <= this.player.money && (isrock || (numShooting < this.maxTowerNumber))) { // Modication Remove check gamestate building here
 			newTower.mazeCoordinates = pt;
 			newTower.cost = type.cost;
 			newTower.targets = this.units;

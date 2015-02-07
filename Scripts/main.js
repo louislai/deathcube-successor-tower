@@ -249,14 +249,16 @@ var Tower = GameObject.extend({
 		var targets = this.targets.filter(this.targetFilter);
 		var closestTarget = this.getClosestTarget(targets, this.range);
 
-		if (closestTarget) {
-			var shot = new (this.shotType)();
-            shot.mazeCoordinates = this.mazeCoordinates;
-            shot.velocity = closestTarget.mazeCoordinates.subtract(this.mazeCoordinates);
-            shot.direction = shot.velocity.toDirection();
-            shot.targets = targets;
-            this.direction = shot.direction;
-            return shot;
+		if (!(this instanceof Rock)) { // Modification here to stop Rock from shooting
+			if (closestTarget) {
+				var shot = new (this.shotType)();
+	            shot.mazeCoordinates = this.mazeCoordinates;
+	            shot.velocity = closestTarget.mazeCoordinates.subtract(this.mazeCoordinates);
+	            shot.direction = shot.velocity.toDirection();
+	            shot.targets = targets;
+	            this.direction = shot.direction;
+	            return shot;
+			}
 		}
 	},
 });
