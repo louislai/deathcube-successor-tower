@@ -1,0 +1,207 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Tower Defense Demo</title>
+<link href="Content/style.css" rel="stylesheet" />
+</head>
+<body>
+<div id="wait"><div id="wait-message">Loading ...</div></div>
+<div id="frame" class="hidden">
+	<div id="info">
+		<div id="money-info" title="Money left"></div>
+		<div id="tower-info" title="Towers built"></div>
+		<div id="health-info" title="Health left"></div>
+		<div id="time-info">Game started ...</div>
+		<div id="sound-info" class="on" title="Sound status"></div>
+	</div>
+	<canvas id="game" width=900 height=450>
+		<p><b>Your browser does not support the canvas element.</b></p>
+		<p>This indicates that you are really stuck in the past (sorry!). Please get a new browser.</p>
+	</canvas>
+	<div id="towers"></div>
+	<div id="buttons">
+		<button id="startWave">Start Wave</button>
+		<button id="buyMedipack">Buy Medipack</button>
+		<button id="buyTowerbuild">Buy Towerbuild</button>
+	</div>
+</div>
+<script src="Scripts/manifest.js"></script>
+<script src="Scripts/oop.js"></script>
+<script src="Scripts/utilities.js"></script>
+<script src="Scripts/path.js"></script>
+<script src="Scripts/resources.js"></script>
+<script src="Scripts/video.js"></script>
+<script src="Scripts/sound.js"></script>
+<script src="Scripts/main.js"></script>
+<script src="Scripts/logic.js"></script>
+<script src="Scripts/units.js"></script>
+<script src="Scripts/shots.js"></script>
+<script src="Scripts/towers.js"></script>
+<script>
+(function() {
+	"use strict";
+
+	var canvas = document.querySelector('#game');
+	var towerPanel = document.querySelector('#towers');
+	var towerButtons = [];
+	var moneyInfo = document.querySelector('#money-info');
+	var healthInfo = document.querySelector('#health-info');
+	var towerInfo = document.querySelector('#tower-info');
+	var timeInfo = document.querySelector('#time-info');
+	var soundInfo = document.querySelector('#sound-info');
+	var startWaveButton = document.querySelector('#startWave');
+	var buyMedipackButton = document.querySelector('#buyMedipack');
+	var buyTowerbuildButton = document.querySelector('#buyTowerbuild');
+
+	var towerType = undefined;
+	var getMousePosition = function(evt) {
+		var rect = canvas.getBoundingClientRect();
+		return {
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top
+		};
+	};
+	var buildPhase = function() {
+		var time = 10;
+		var f = function() {
+			setTimeout(function() {
+				time--;
+				timeInfo.textContent = time + ' seconds left';
+
+				if (time > 0) f();
+				else logic.beginWave();
+			}, 1000);
+		};
+
+		f();
+	};
+	var addHandlers = function() {
+		logic.addEventListener(events.waveFinished, function() {
+			timeInfo.textContent = 'All units are out!';
+		});
+		logic.addEventListener(events.waveDefeated, function() {
+			timeInfo.textContent = 'Idle';
+			startWaveButton.disabled = false;
+		});
+		logic.addEventListener(events.playerDefeated, function() {
+			timeInfo.textContent = 'Game over ...';
+		});
+		logic.addEventListener(events.waveCreated, function(wave) {
+			timeInfo.textContent = wave.units.length + ' units remaining';
+			startWaveButton.disabled = true;
+		});
+		logic.addEventListener(events.unitSpawned, function(remaining) {
+			timeInfo.textContent = remaining + ' units remaining';
+		});
+		logic.addEventListener(events.moneyChanged, function(player) {
+			moneyInfo.textContent = player.money;
+		});
+		logic.addEventListener(events.healthChanged, function(player) {
+			healthInfo.textContent = player.hitpoints;
+		});
+		logic.addEventListener(events.towerNumberChanged, function(info) {
+			towerInfo.textContent = info.current + ' / ' + info.maximum;
+		});
+		startWaveButton.addEventListener(events.click, function() {
+			logic.beginWave();
+		});
+		buyMedipackButton.addEventListener(events.click, function() {
+			logic.buyMediPack();
+		});
+		buyTowerbuildButton.addEventListener(events.click, function() {
+			logic.buyTowerBuildRight();
+		});
+		soundInfo.addEventListener(events.click, function() {
+			var on = 'on';
+			var off = 'off'
+			var status = this.classList.contains('on');
+			this.classList.remove(status ? on : off);
+			this.classList.add(status ? off : on);
+			Sound.setVolume(status ? 0 : 1);
+		});
+		canvas.addEventListener(events.click, function(evt) {
+			var mousePos = getMousePosition(evt);
+			var pos = logic.transformCoordinates(mousePos.x, mousePos.y);
+			evt.preventDefault();
+			if (towerType) {
+				logic.buildTower(pos, towerType);
+			}
+			else logic.destroyTower(pos);
+		});
+		canvas.addEventListener(events.contextmenu, function(evt) {
+			var mousePos = getMousePosition(evt);
+			var pos = logic.transformCoordinates(mousePos.x, mousePos.y);
+			evt.preventDefault();
+			logic.destroyTower(pos);
+		});
+		canvas.addEventListener(events.mouseover, function(evt) {
+			view.showGrid = true;
+		});
+		canvas.addEventListener(events.mouseout, function(evt) {
+			view.showGrid = false;
+		});
+	};
+	var addTower = function(tower) {
+		var img = images[tower.sprite];
+		var div = document.createElement('div');
+		div.innerHTML = [
+			'<div class=preview><div style="background: url(', img.src, ') no-repeat; width: ', ~~(img.naturalWidth / tower.frames), 'px; height: ', img.naturalHeight, 'px" class="preview-image"></div></div>',
+			'<div class=title>', tower.nickName, '</div><div class=info>',
+			'<div class=description>', tower.description, '</div>',
+			'<div class=rating>', ~~tower.rating, '</div>',
+			'<div class=speed>', tower.speed, '</div>',
+			'<div class=damage>', tower.shotType.damage, '</div>',
+			'<div class=range>', tower.range, '</div>',
+			'<div class=cost>', tower.cost, '</div></div>',
+		].join('');
+		towerButtons.push(div);
+		div.addEventListener(events.click, function() {
+			towerType = tower;
+
+			for (var i = towerButtons.length; i--; )
+				towerButtons[i].classList.remove('selected-tower');
+
+			this.classList.add('selected-tower');
+		});
+		towerPanel.appendChild(div);
+	};
+	var addTowers = function() {
+
+		// logic.buildTower(new Point(10, 10), Rock);
+		// console.log(Rock);
+		for (var key in types.towers)
+			addTower(types.towers[key]);
+	};
+	var startMusic = function() {
+		var sound = new Sound(sounds['burn_them_down'], true);
+		sound.setVolume(0.3);
+		sound.play();
+	};
+	var completed = function(e) {
+		addTowers();
+		addHandlers();
+		view.background = images.background;
+		view.showGrid = false;
+		document.querySelector('#frame').classList.remove('hidden');
+		document.querySelector('#wait').classList.add('hidden');
+		startMusic();
+		logic.start();
+	};
+	var progress = function(e) {
+		document.querySelector('#wait-message').textContent = 'Loading (' + e.name + ', ' + ~~(e.progress * 100) + '% of ' + e.total + ')';
+	};
+
+	var view = new CanvasView(canvas);
+	var logic = new GameLogic(view, 30, 15);
+	var loader = new Loader(completed, progress);
+	loader.set('Images', ImageLoader, images, resources.images);
+	loader.set('Sounds', SoundLoader, sounds, resources.sounds);
+	loader.start();
+	// console.log(JSON.stringify(types));
+
+	// logic.buildTower(new Point(10, 10), FlameTower );
+})();
+</script>
+</body>
+</html>
