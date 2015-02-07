@@ -95,22 +95,21 @@ var GameLogic = Base.extend({
 		}
 	},
 	update: function(objects) {
-		for (var i = objects.length; i--; )
+		for (var i = objects.length; i--; ) {
 			objects[i].update();
+		}
 	},
 	tick: function() {
 		if (this.state !== GameState.building && this.state !== GameState.waving)
 			return;
 
 		this.update(this.towers);
-
 		if (this.state === GameState.waving) {
 			// Modification for units to be aware of new rocks
 			var allUnits = this.units;
 
 			for (var i = allUnits.length; i--; ) {
 				var unit = allUnits[i];
-				console.log('Changing path');
 				var path = this.maze.getPath(unit.strategy, Math.ceil(unit.mazeCoordinates));
 				unit.path = new Path(path);
 			}
@@ -129,6 +128,19 @@ var GameLogic = Base.extend({
 				unit.path = new Path(path);
 				this.addUnit(unit);
 			}
+
+			// Modifications to update gamestate
+			var towers = this.towers;
+			GameRecord.rocks = [];
+			GameRecord.towers = [];
+			for (var i=0; i < towers.length; i++) {
+				if (towers[i] instanceof Rock) {
+					GameRecord.rocks.push(towers[i]);
+				} else {
+					GameRecord.towers.push(towers[i]);
+				}
+			}
+			GameRecord.units = this.units;
 		}
 	},
 	finish: function() {
