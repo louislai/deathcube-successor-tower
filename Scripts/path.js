@@ -282,6 +282,10 @@ var Maze = Class.extend({
 		this.pf = new PathFinder(this.grid);
 		this.pf.diagonals = false;
 		this.paths = {};
+
+		// Modifications to add start point for unit in map
+		this.Ustart = this.start;
+		// End mofications
 	},
 	isPointInGrid: function(point) {
 		if (point.x > this.gridDim.width - 1 || point.x < 0)
@@ -318,7 +322,8 @@ var Maze = Class.extend({
 		
 		return false;
 	},
-	getPath: function(mazeStrategy) {
+	getPath: function(mazeStrategy, Ustart) { // Modification for Ustart
+		this.Ustart = Ustart || this.start;
 		if (mazeStrategy === MazeStrategy.air)
 			return this.getPathAir();
 
@@ -330,8 +335,9 @@ var Maze = Class.extend({
 	getPathAir: function() {
 		var path = [];
 
-		for (var i = this.start.x; i < this.end.x + 1; ++i)
-			path.push(new Point(i, this.start.y));
+		// Modification change this.start to this.Ustart
+		for (var i = this.Ustart.x; i < this.end.x + 1; ++i)
+			path.push(new Point(i, this.Ustart.y));
 
 		return path;
 	},
@@ -341,7 +347,8 @@ var Maze = Class.extend({
 		} else {
 			var path = [];
 			this.pf.formula = mazeStrategy;
-			var nodes = this.pf.findPath(this.start, this.end);
+			// Modification change this.start to this.Ustart
+			var nodes = this.pf.findPath(this.Ustart, this.end);
 
 			for (var i = 0; i < nodes.length; i++)
 				path.push(new Point(nodes[i].x, nodes[i].y));
