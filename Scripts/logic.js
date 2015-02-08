@@ -42,7 +42,12 @@ var GameLogic = Base.extend({
 		me.state         = GameState.unstarted;
 		me.maze          = new Maze(new Size(mazeWidth || 20, mazeHeight || 11));
 		me.view.mazeSize = me.getMazeSize();
-		me.waves         = new WaveList();
+
+		// Modification change WaveList to UnitGenerator
+		// me.waves         = new WaveList();
+		me.waves = new UnitGenerator();
+		me.waves.assignGenerator(PlayerGenerator);
+		// End Modification
 		me.currentWave   = new Wave();
 
 		me.player.addEventListener(events.playerDefeated, function(e) {
@@ -391,5 +396,37 @@ var Wave = Base.extend({
 		}
 
 		return unitsToSpawn;
+	},
+});
+
+// Modification
+
+/*
+ * The Unit Generator
+ */
+var UnitGenerator = Base.extend({
+	init: function() {
+		this.waves = [];
+		this.index = 0;
+		this.unitNames = Object.keys(types.units);
+		this.generate = {};
+	},
+	assignGenerator: function(f) {
+		this.generate = f;
+	},
+	generateUnit: function() {
+		var wave = new Wave();
+		var maxtime = 1300;
+		wave.prizeMoney = 1;
+		var unit = this.generate();
+		wave.add(unit, rand(0, maxtime));
+		return wave;
+	},
+	next: function() {
+		if (this.index < this.waves.length)
+			return this.waves[this.index++];
+
+		++this.index;
+		return this.generateUnit();
 	},
 });
