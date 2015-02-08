@@ -25,7 +25,14 @@ var GameLogic = Base.extend({
 	init: function(view, mazeWidth, mazeHeight, playerData) {
 		var me = this;
 		me._super();
+
+		// Timer to run towergenerator
+		me.towerTimer = 20;
+		me.timer = 0;
 		// Modification to add  player data
+		me.width = mazeWidth;
+		me.height = mazeHeight;
+		console.log(me.height);
 		me.playerData = playerData || new Bot();
 
 		me.towers = [];
@@ -139,14 +146,16 @@ var GameLogic = Base.extend({
 				}
 			}
 			/* Modifications to build new towers on demand */
-			var nextTowers = (this.playerData.getTowerGenerator())();
-			for(var i = 0; i < nextTowers.length; i++) {
-				var Towerinfo = nextTowers[i];
-				if (Towerinfo) {
-					this.buildTower(new Point(Towerinfo[0][0], Towerinfo[0][1]), Towerinfo[1]);
+			if (this.towerTimer % this.timer == 0) {
+				var nextTowers = (this.playerData.getTowerGenerator())();
+				for(var i = 0; i < nextTowers.length; i++) {
+					var Towerinfo = nextTowers[i];
+					if (Towerinfo) {
+						this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+					}
 				}
 			}
-
+			this.timer++;
 			/* End Modifications*/
 
 			// Modifications to update gamestate
@@ -258,24 +267,25 @@ var GameLogic = Base.extend({
 		var newTower = new type();
 		var isrock = newTower instanceof Rock;
 		var numShooting = this.getNumShooting();
+		if (pt.x <= this.width && pt.x >= 0 && pt.y <= this.height && pt.y >= 0) { // Modification to guarantee point is valid
+			if (type.cost <= this.player.money && (isrock || (numShooting < this.maxTowerNumber))) { // Modication Remove check gamestate building here
+				newTower.mazeCoordinates = pt;
+				newTower.cost = type.cost;
+				newTower.targets = this.units;
 
-		if (type.cost <= this.player.money && (isrock || (numShooting < this.maxTowerNumber))) { // Modication Remove check gamestate building here
-			newTower.mazeCoordinates = pt;
-			newTower.cost = type.cost;
-			newTower.targets = this.units;
+				if (this.maze.tryBuild(pt, newTower.mazeWeight)) {
+					this.player.addMoney(-type.cost);
+					this.addTower(newTower);
 
-			if (this.maze.tryBuild(pt, newTower.mazeWeight)) {
-				this.player.addMoney(-type.cost);
-				this.addTower(newTower);
+					if (!isrock) {
+						this.triggerEvent(events.towerNumberChanged, {
+							current: numShooting + 1,
+							maximum: this.maxTowerNumber,
+						});	
+					}
 
-				if (!isrock) {
-					this.triggerEvent(events.towerNumberChanged, {
-						current: numShooting + 1,
-						maximum: this.maxTowerNumber,
-					});	
+					return true;
 				}
-
-				return true;
 			}
 		}
 
