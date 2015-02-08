@@ -277,8 +277,8 @@ var Maze = Class.extend({
 		}
 
 		this.grid = grid;
-		this.end = start || new Point(0, ~~(size.height * 0.5));
-		this.start = end || new Point(size.width, ~~(size.height * 0.5));
+		this.start = start || new Point(0, ~~(size.height * 0.5));
+		this.end = end || new Point(size.width, ~~(size.height * 0.5));
 		this.pf = new PathFinder(this.grid);
 		this.pf.diagonals = false;
 		this.paths = {};

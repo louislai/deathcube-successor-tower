@@ -27,12 +27,11 @@ var GameLogic = Base.extend({
 		me._super();
 
 		// Timer to run towergenerator
-		me.towerTimer = 20;
-		me.timer = 0;
+		// me.towerTimer = 20;
+		// me.timer = 0;
 		// Modification to add  player data
 		me.width = mazeWidth;
 		me.height = mazeHeight;
-		console.log(me.height);
 		me.playerData = playerData || new Bot();
 
 		me.towers = [];
@@ -120,15 +119,15 @@ var GameLogic = Base.extend({
 		this.update(this.towers);
 		if (this.state === GameState.waving) {
 			// Modification for units to be aware of new rocks
-			var allUnits = this.units;
+			// var allUnits = this.units;
 
-			for (var i = allUnits.length; i--; ) {
-				var unit = allUnits[i];
-				var mazeCoordinates = unit.mazeCoordinates;
-				// console.log(mazeCoordinates);;
-				var path = this.maze.getPath(unit.strategy, Math.ceil(mazeCoordinates));
-				unit.path = new Path(path);			
-			}
+			// for (var i = allUnits.length; i--; ) {
+			// 	var unit = allUnits[i];
+			// 	var mazeCoordinates = unit.mazeCoordinates;
+			// 	// console.log(mazeCoordinates);;
+			// 	var path = this.maze.getPath(unit.strategy, Math.ceil(mazeCoordinates));
+			// 	unit.path = new Path(path);			
+			// }
 
 			// End Modifications
 
@@ -148,16 +147,16 @@ var GameLogic = Base.extend({
 				}
 			}
 			/* Modifications to build new towers on demand */
-			if (this.timer % this.towerTimer == 0) {
-				var nextTowers = (this.playerData.getTowerGenerator())();
-				for(var i = 0; i < nextTowers.length; i++) {
-					var Towerinfo = nextTowers[i];
-					if (Towerinfo) {
-						this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
-					}
-				}
-			}
-			this.timer++;
+			// if (this.timer % this.towerTimer == 0) {
+			// 	var nextTowers = (this.playerData.getTowerGenerator())();
+			// 	for(var i = 0; i < nextTowers.length; i++) {
+			// 		var Towerinfo = nextTowers[i];
+			// 		if (Towerinfo) {
+			// 			this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+			// 		}
+			// 	}
+			// }
+			// this.timer++;
 			/* End Modifications*/
 
 			// Modifications to update gamestate
@@ -246,12 +245,15 @@ var GameLogic = Base.extend({
 
 		this.triggerEvent(events.waveDefeated, this.currentWave);
 
-		this.beginWave();
+		this.beginWave(); // Modifcation to run wave continuously
 	},
 	beginWave: function() {
 		if (this.state === GameState.building) {
 			var me = this;
-			me.state = GameState.waving;
+			// Modifications to build user Tower
+			me.buildProgrammedTowers();
+			// End Modification
+			me.state = GameState.waving;	
 			var wave = me.waves.next(this.player1); // Modification to test with player 1
 			wave.addEventListener(events.waveFinished, function() {
 				me.triggerEvent(events.waveFinished);
@@ -292,6 +294,17 @@ var GameLogic = Base.extend({
 		}
 
 		return false;
+	},
+	// Modification to build Towers based on User TowerGenerator
+	buildProgrammedTowers: function() {
+		var nextTowers = (this.playerData.getTowerGenerator())();
+		for(var i = 0; i < nextTowers.length; i++) {
+			var Towerinfo = nextTowers[i];
+			if (Towerinfo) {
+				this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+			}
+		}
+			
 	},
 	destroyTower: function(pt) {
 		if (this.state == GameState.building) {
