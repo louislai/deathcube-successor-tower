@@ -212,7 +212,12 @@ var GameLogic = Base.extend({
 	addUnit: function(unit) {
 		var me = this;
 		unit.addEventListener(events.accomplished, function(unt) {
-			unt.target.hit(unt); // Modification to only hit target of unit
+			var player = unt.target;
+			player.hit(unt); // Modification to only hit target of unit
+			// if (player.getHitpoints() == 0) { 
+			// 	this.triggerEvent(events.playerDefeated, player);
+			// 	this.finish();
+			// } // Modification trigger PlayerDefeated event if hitpoint is 0
 		});
 		unit.playInitSound();
 		me.units.push(unit);
@@ -227,6 +232,7 @@ var GameLogic = Base.extend({
 		}
 	},
 	removeDeadObjects: function() {
+		var a = this.state;
 		this.removeDead(this.towers);
 		this.removeDead(this.shots);
 		this.removeDead(this.units);
@@ -235,6 +241,7 @@ var GameLogic = Base.extend({
 			this.endWave();
 	},
 	endWave: function() {
+		var gameOn = this.state !== 3; // Modification to detect if game not finished
 		this.player1.addMoney(this.currentWave.prizeMoney);
 		this.state = GameState.building;
 
@@ -245,7 +252,10 @@ var GameLogic = Base.extend({
 
 		this.triggerEvent(events.waveDefeated, this.currentWave);
 
-		this.beginWave(); // Modifcation to run wave continuously
+		if (gameOn) 
+			this.beginWave(); // Modifcation to run wave continuously
+		else
+			this.triggerEvent(events.playerDefeated, this.player1); // Trigger playerDefeated event if gameEnd
 	},
 	beginWave: function() {
 		if (this.state === GameState.building) {
