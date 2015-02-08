@@ -22,9 +22,11 @@ var types = {
  * The GAME
  */
 var GameLogic = Base.extend({
-	init: function(view, mazeWidth, mazeHeight) {
+	init: function(view, mazeWidth, mazeHeight, playerData) {
 		var me = this;
 		me._super();
+		// Modification to add  player data
+		me.playerData = playerData || new Bot();
 
 		me.towers = [];
 		me.units  = [];
@@ -46,7 +48,7 @@ var GameLogic = Base.extend({
 		// Modification change WaveList to UnitGenerator
 		// me.waves         = new WaveList();
 		me.waves = new UnitGenerator();
-		me.waves.assignGenerator(PlayerGenerator);
+		me.waves.assignGenerator(playerData.getUnitGenerator());
 		// End Modification
 		me.currentWave   = new Wave();
 
@@ -126,13 +128,17 @@ var GameLogic = Base.extend({
 			this.removeDeadObjects();
 			var newUnits = this.currentWave.update();
 
+			 
 			for (var i = newUnits.length; i--; ) {
 				var unit = newUnits[i];
-				var path = this.maze.getPath(unit.strategy);
-				unit.mazeCoordinates = this.maze.start;
-				unit.path = new Path(path);
-				this.addUnit(unit);
+				if (unit) {    // Modifcations check that unit is defined
+					var path = this.maze.getPath(unit.strategy);
+					unit.mazeCoordinates = this.maze.start;
+					unit.path = new Path(path);
+					this.addUnit(unit);
+				}
 			}
+			
 
 			// Modifications to update gamestate
 			var towers = this.towers;

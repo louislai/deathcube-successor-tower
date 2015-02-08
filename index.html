@@ -41,7 +41,7 @@
 <script src="Scripts/record.js"></script>
 <script src="Scripts/player.js"></script>
 <script>
-var Game = (function(initTowers) {
+var Game = (function(player) {
 	"use strict";
 
 	var canvas = document.querySelector('#game');
@@ -188,6 +188,8 @@ var Game = (function(initTowers) {
 		logic.start();
 
 		/* Modifications here */
+		var initTowers = player.getInitTowers();
+
 		for(var i = 0; i < initTowers.length; i++) {
 			var Towerinfo = initTowers[i];
 			logic.buildTower(new Point(Towerinfo[0][0], Towerinfo[0][1]), Towerinfo[1]);
@@ -200,20 +202,14 @@ var Game = (function(initTowers) {
 	};
 
 	var view = new CanvasView(canvas);
-	var logic = new GameLogic(view, 30, 15);
+	var logic = new GameLogic(view, 30, 15, player); // Modification to add players
 	var loader = new Loader(completed, progress);
 	loader.set('Images', ImageLoader, images, resources.images);
 	loader.set('Sounds', SoundLoader, sounds, resources.sounds);
 	loader.start();
-	// console.log(JSON.stringify(types));
-
-	// logic.buildTower(new Point(10, 10), FlameTower );
 });
-var initTowers= [
-	[[2, 8], GateToHell],
-	[[10, 10], Flak]
-];
-Game(initTowers);
+
+Game(player1);
 </script>
 </body>
 </html>
