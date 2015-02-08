@@ -3,7 +3,7 @@
  * Global constants
  */
 var constants = {
-	ticks: 25,
+	ticks: 5,
 	money : 100000,
 	hitpoints : 10,
 	mediPackCost : 5,

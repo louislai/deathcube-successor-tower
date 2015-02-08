@@ -27,7 +27,7 @@ var GameLogic = Base.extend({
 		me._super();
 
 		// Timer to run towergenerator
-		me.towerTimer = 1;
+		me.towerTimer = 20;
 		me.timer = 0;
 		// Modification to add  player data
 		me.width = mazeWidth;
@@ -124,8 +124,10 @@ var GameLogic = Base.extend({
 
 			for (var i = allUnits.length; i--; ) {
 				var unit = allUnits[i];
-				var path = this.maze.getPath(unit.strategy, Math.ceil(unit.mazeCoordinates));
-				unit.path = new Path(path);
+				var mazeCoordinates = unit.mazeCoordinates;
+				// console.log(mazeCoordinates);;
+				var path = this.maze.getPath(unit.strategy, Math.ceil(mazeCoordinates));
+				unit.path = new Path(path);			
 			}
 
 			// End Modifications
