@@ -277,6 +277,10 @@ var Unit = GameObject.extend({
  		this.hitpoints = hitpoints || 0;
  		this.health = this.hitpoints;
  		this.direction = Direction.right;
+ 		// Modification Add target and owner
+ 		this.own = undefined;
+ 		this.target = undefined;
+ 		// End Modification
  		this.registerEvent(events.accomplished);
  		this.registerEvent(events.died);
  	},
