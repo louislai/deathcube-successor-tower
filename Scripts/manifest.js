@@ -5,7 +5,7 @@
 var constants = {
 	ticks: 20, // Default is 20
 	money : 100000,
-	hitpoints : 1,
+	hitpoints : 10,
 	mediPackCost : 5,
 	mediPackFactor : 1.5,
 	mediPackHealth : 1,

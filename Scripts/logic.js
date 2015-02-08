@@ -140,6 +140,7 @@ var GameLogic = Base.extend({
 			for (var i = newUnits.length; i--; ) {
 				var unit = newUnits[i];
 				if (unit) {    // Modifcations check that unit is defined
+					this.buildProgrammedTowers(); // Build programmed towers for new unit
 					var path = this.maze.getPath(unit.strategy);
 					unit.mazeCoordinates = this.maze.start;
 					unit.path = new Path(path);
@@ -466,11 +467,15 @@ var UnitGenerator = Base.extend({
 	},
 	generateUnit: function(target) {
 		var wave = new Wave();
-		var maxtime = 1300;
+		
 		wave.prizeMoney = 1;
-		var unit = this.generate();
-		unit.target = target;
-		wave.add(unit, rand(0, maxtime));
+		var noUnits = 100;
+		var maxtime = 1300 * noUnits;
+		for (var i = 0; i < noUnits; ++i) {
+			var unit = this.generate();
+			unit.target = target;
+			wave.add(unit, i === 0 ? 0 : rand(0, maxtime));
+		}
 		return wave;
 	},
 	next: function(target) {
