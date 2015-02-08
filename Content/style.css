@@ -93,11 +93,17 @@ button:hover:not(:disabled) {
 #buttons {
 	text-align: center;
 }
+/* Modifcation to place player 1*/
+#info-p1 {
+	padding-right: 28px;
+	left: 0;
+	color: red;
+}
 
-#money-info {
+#money-info-p1 {
 	background: url(icons/money.png) no-repeat left center;
 	padding-left: 28px;
-	left: 0;
+	left: 50px;
 }
 
 #time-info {
@@ -106,20 +112,46 @@ button:hover:not(:disabled) {
 	left: 0;
 }
 
-#tower-info {
+#tower-info-p1 {
 	background: url(icons/tower.png) no-repeat left center;
 	padding-left: 28px;
-	left: 100px;
+	left: 150px;
 }
 
-#health-info {
+#health-info-p1 {
 	background: url(icons/health.png) no-repeat left center;
 	padding-left: 28px;
-	left: 200px;
+	left: 250px;
 }
+/* Modification to show info for player 2*/
+#info-p2 {
+	padding-left: 28px;
+	left: 950px;
+	color: green;
+}
+
+#money-info-p2 {
+	background: url(icons/money.png) no-repeat left center;
+	padding-left: 28px;
+	right: 300px;
+}
+
+#tower-info-p2 {
+	background: url(icons/tower.png) no-repeat left center;
+	padding-left: 28px;
+	right: 200px;
+}
+
+#health-info-p2 {
+	background: url(icons/health.png) no-repeat left center;
+	padding-left: 28px;
+	right: 100px;
+}
+/* Modification to show info for player 2*/
 
 #sound-info {
 	background: no-repeat right center;
+	margin-top: 500px; /* Modification put sound button to bottom */
 	padding-right: 28px;
 	right: 0;
 	width: 24px;
