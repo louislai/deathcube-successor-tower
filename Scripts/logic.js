@@ -138,7 +138,16 @@ var GameLogic = Base.extend({
 					this.addUnit(unit);
 				}
 			}
-			
+			/* Modifications to build new towers on demand */
+			var nextTowers = (this.playerData.getTowerGenerator())();
+			for(var i = 0; i < nextTowers.length; i++) {
+				var Towerinfo = nextTowers[i];
+				if (Towerinfo) {
+					this.buildTower(new Point(Towerinfo[0][0], Towerinfo[0][1]), Towerinfo[1]);
+				}
+			}
+
+			/* End Modifications*/
 
 			// Modifications to update gamestate
 			var towers = this.towers;

@@ -16,7 +16,11 @@ var PlayerGenerator = function() {
   return new Mario;
 }
 
+var TowerGenerator = function() {
+  return [[[Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)], Rock]];
+}
+
 var player1 = new Bot([
   [[2, 8], GateToHell],
   [[10, 10], Flak]
-], PlayerGenerator)
+], PlayerGenerator, TowerGenerator);
