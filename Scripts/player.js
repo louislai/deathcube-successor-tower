@@ -17,7 +17,7 @@ var PlayerGenerator = function() {
 }
 
 var TowerGenerator = function() {
-  return [[[Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)], Rock]];
+  return [[[Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)], Rock]];
 }
 
 var player1 = new Bot([
