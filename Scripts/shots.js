@@ -1,10 +1,11 @@
 "use strict";
 /*
  * The standard shot
+ * @override Add owner and target input paremeters for Shot
  */
 var StandardShot = Shot.extend({
-	init: function() {
-		this._super(StandardShot.speed, 15, StandardShot.damage, StandardShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, StandardShot.speed, 15, StandardShot.damage, StandardShot.impactRadius);
 		this.createVisual(StandardShot.sprite, [1], 0.25);
 		this.playSound('wowpulse');
 	},
@@ -24,8 +25,8 @@ var StandardShot = Shot.extend({
  * The anti-air shot
  */
 var AirShot = Shot.extend({
-	init: function() {
-		this._super(AirShot.speed, 10, AirShot.damage, AirShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, AirShot.speed, 10, AirShot.damage, AirShot.impactRadius);
 		this.createVisual(AirShot.sprite, [1, 1, 1, 1], 0.2);
 		this.playSound('flak');
 	},
@@ -45,8 +46,8 @@ var AirShot = Shot.extend({
  * The flames
  */
 var FlameShot = Shot.extend({
-	init: function() {
-		this._super(FlameShot.speed, 100, FlameShot.damage, FlameShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, FlameShot.speed, 100, FlameShot.damage, FlameShot.impactRadius);
 		this.createVisual(FlameShot.sprite, [8]);
 		this.playSound('flames');
 	},
@@ -66,8 +67,8 @@ var FlameShot = Shot.extend({
  * The shot from hell
  */
 var HellShot = Shot.extend({
-	init: function() {
-		this._super(HellShot.speed, 75, HellShot.damage, HellShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, HellShot.speed, 75, HellShot.damage, HellShot.impactRadius);
 		this.createVisual(HellShot.sprite, [12]);
 		this.playSound('hellshot');
 	},
@@ -87,8 +88,8 @@ var HellShot = Shot.extend({
  * The icy shot
  */
 var IceShot = Shot.extend({
-	init: function() {
-		this._super(IceShot.speed, 200, IceShot.damage, IceShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, IceShot.speed, 200, IceShot.damage, IceShot.impactRadius);
 		this.createVisual(IceShot.sprite, [4]);
 		this.playSound('icy');
 	},
@@ -108,8 +109,8 @@ var IceShot = Shot.extend({
  * A shot from the MG nest
  */
 var MGShot = Shot.extend({
-	init: function() {
-		this._super(MGShot.speed, 25, MGShot.damage, MGShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, MGShot.speed, 25, MGShot.damage, MGShot.impactRadius);
 		this.createVisual(MGShot.sprite, [1, 1, 1, 1], 0.3);
 		this.playSound('mgnest');
 	},
@@ -129,8 +130,8 @@ var MGShot = Shot.extend({
  * A laser beam
  */
 var LaserShot = Shot.extend({
-	init: function() {
-		this._super(LaserShot.speed, 25, LaserShot.damage, LaserShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, LaserShot.speed, 25, LaserShot.damage, LaserShot.impactRadius);
 		this.createVisual(LaserShot.sprite, [6, 6, 6, 6]);
 		this.playSound('laser');
 	},
@@ -150,8 +151,8 @@ var LaserShot = Shot.extend({
  * The shell shot
  */
 var ShellShot = Shot.extend({
-	init: function() {
-		this._super(ShellShot.speed, 25, ShellShot.damage, ShellShot.impactRadius);
+	init: function(owner, target) {
+		this._super(owner, target, ShellShot.speed, 25, ShellShot.damage, ShellShot.impactRadius);
 		this.createVisual(ShellShot.sprite, [1, 1, 1, 1], 0.3);
 		this.playSound('artillery');
 	},

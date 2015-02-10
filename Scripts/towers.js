@@ -4,8 +4,8 @@
  * A stupid rock
  */
 var Rock = Tower.extend({
-	init: function() {
-		this._super(Rock.speed, 200, Rock.range);
+	init: function(owner, target) {
+		this._super(owner, target, Rock.speed, 200, Rock.range);
 		this.createVisual(Rock.sprite, [1]);
 	},
 }, function(rock) {
@@ -25,8 +25,8 @@ var Rock = Tower.extend({
  * The efficient MG nest
  */
 var MGNest = Tower.extend({
-	init: function() {
-		this._super(MGNest.speed, 25, MGNest.range, MGNest.shotType);
+	init: function(owner, target) {
+		this._super(owner, target, MGNest.speed, 25, MGNest.range, MGNest.shotType);
 		this.createVisual(MGNest.sprite, [1]);
 	},
 }, function(nest) {
@@ -46,8 +46,8 @@ var MGNest = Tower.extend({
  * The canon tower
  */
 var CanonTower = Tower.extend({
-	init: function() {
-		this._super(CanonTower.speed, 50, CanonTower.range, CanonTower.shotType);
+	init: function(owner, target) {
+		this._super(owner, target, CanonTower.speed, 50, CanonTower.range, CanonTower.shotType);
 		this.createVisual(CanonTower.sprite, [1, 1, 1, 1]);
 	},
 }, function(canon) {
@@ -67,8 +67,8 @@ var CanonTower = Tower.extend({
  * The flame tower
  */
 var FlameTower = Tower.extend({
-	init: function() {
-		this._super(FlameTower.speed, 200, FlameTower.range, FlameTower.shotType);
+	init: function(owner, target) {
+		this._super(owner, target, FlameTower.speed, 200, FlameTower.range, FlameTower.shotType);
 		this.createVisual(FlameTower.sprite, [4]);
 	},
 }, function(flame) {
@@ -88,12 +88,12 @@ var FlameTower = Tower.extend({
  * The anti-air Flak tower
  */
 var Flak = Tower.extend({
-	init: function() {
-		this._super(Flak.speed, 200, Flak.range, Flak.shotType);
+	init: function(owner, target) {
+		this._super(owner, target, Flak.speed, 200, Flak.range, Flak.shotType);
 		this.createVisual(Flak.sprite, [1, 1, 1, 1]);
 	},
 	targetFilter: function(target) {
-			return target.strategy === MazeStrategy.air;
+			return target.strategy === MazeStrategy.air && target.owner !== this.owner;
 	},
 }, function(flak) {
 	flak.description = 'SAM! The only anti-air tower you will ever want (and you will ever get in this game).';
@@ -112,8 +112,8 @@ var Flak = Tower.extend({
  * The ice tower
  */
 var IceTower = Tower.extend({
-	init: function() {
-		this._super(IceTower.speed, 200, IceTower.range, IceTower.shotType);
+	init: function(owner, target) {
+		this._super(owner, target, IceTower.speed, 200, IceTower.range, IceTower.shotType);
 		this.createVisual(IceTower.sprite, [1, 1, 1, 1]);
 	},
 }, function(ice) {
@@ -133,8 +133,8 @@ var IceTower = Tower.extend({
  * The laser tower
  */
 var LaserTower = Tower.extend({
-	init: function() {
-		this._super(LaserTower.speed, 25, LaserTower.range, LaserTower.shotType);
+	init: function(owner, target) {
+		this._super(owner, target, LaserTower.speed, 25, LaserTower.range, LaserTower.shotType);
 		this.createVisual(LaserTower.sprite, [1, 1, 1, 1]);
 	},
 }, function(laser) {
@@ -154,8 +154,8 @@ var LaserTower = Tower.extend({
  * The famous gate to hell
  */
 var GateToHell = Tower.extend({
-	init: function() {
-		this._super(GateToHell.speed, 200, GateToHell.range, GateToHell.shotType);
+	init: function(owner, target) {
+		this._super(owner, target, GateToHell.speed, 200, GateToHell.range, GateToHell.shotType);
 		this.createVisual(GateToHell.sprite, [6]);
 	},
 }, function(gate) {

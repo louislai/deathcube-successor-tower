@@ -219,7 +219,8 @@ var Game = (function(playerai0, playerai1) {
 
 		for(var i = 0; i < initTowers.length; i++) {
 			var Towerinfo = initTowers[i];
-			logic.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+			logic.buildTower(logic.players[0], logic.players[1], 
+				               new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
 		}
 
 		// Build initial towers for player 1
@@ -227,7 +228,8 @@ var Game = (function(playerai0, playerai1) {
 
 		for(var i = 0; i < initTowers.length; i++) {
 			var Towerinfo = initTowers[i];
-			logic.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+			logic.buildTower(logic.players[1], logic.players[0], 
+				               new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
 		}
 		/* End Modifications*/
 	};

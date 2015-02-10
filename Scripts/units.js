@@ -1,10 +1,11 @@
 "use strict";
 /*
  * The Standard unit
+ * @override Add own and target for units
  */
 var Mario = Unit.extend({
-	init: function() {
-		this._super(Mario.speed, 100, MazeStrategy.manhattan, Mario.hitpoints);
+	init: function(owner, target) {
+		this._super(owner, target, Mario.speed, 100, MazeStrategy.manhattan, Mario.hitpoints);
 		this.createVisual(Mario.sprite, [8,8,8,8]);
 	},
 }, function(enemy) {
@@ -21,8 +22,8 @@ var Mario = Unit.extend({
  * The Rope unit
  */
 var Rope = Unit.extend({
-	init: function() {
-		this._super(Rope.speed, 80, MazeStrategy.euclideanNoSQR, Rope.hitpoints);
+	init: function(owner, target) {
+		this._super(owner, target, Rope.speed, 80, MazeStrategy.euclideanNoSQR, Rope.hitpoints);
 		this.createVisual(Rope.sprite, [4, 4, 4, 4], 0.8);
 	},
 }, function(rope) {
@@ -39,8 +40,8 @@ var Rope = Unit.extend({
  * The Fire Wizard Robe unit
  */
 var FireWizzrobe = Unit.extend({
-	init: function() {
-		this._super(FireWizzrobe.speed, 70, MazeStrategy.manhattan, FireWizzrobe.hitpoints);
+	init: function(owner, target) {
+		this._super(owner, target, FireWizzrobe.speed, 70, MazeStrategy.manhattan, FireWizzrobe.hitpoints);
 		this.createVisual(FireWizzrobe.sprite, [3, 3, 3, 3], 1.4);
 	},
 }, function(wizz) {
@@ -57,8 +58,8 @@ var FireWizzrobe = Unit.extend({
  * The Air Wolf unit
  */
 var AirWolf = Unit.extend({
-	init: function() {
-		this._super(AirWolf.speed, 50, MazeStrategy.air, AirWolf.hitpoints);
+	init: function(owner, target) {
+		this._super(owner, target, AirWolf.speed, 50, MazeStrategy.air, AirWolf.hitpoints);
 		this.createVisual(AirWolf.sprite, [4]);
 	},
 }, function(wolf) {
@@ -75,8 +76,8 @@ var AirWolf = Unit.extend({
  * The dark nut unit
  */
 var DarkNut = Unit.extend({
-	init: function() {
-		this._super(DarkNut.speed, 80, MazeStrategy.euclideanNoSQR, DarkNut.hitpoints);
+	init: function(owner, target) {
+		this._super(owner, target, DarkNut.speed, 80, MazeStrategy.euclideanNoSQR, DarkNut.hitpoints);
 		this.createVisual(DarkNut.sprite, [4, 4, 4, 4]);
 	},
 }, function(nut) {
@@ -93,8 +94,8 @@ var DarkNut = Unit.extend({
  * A derived unit
  */
 var Speedy = Unit.extend({
-	init: function() {
-		this._super(Speedy.speed, 25, MazeStrategy.diagonalShortCut, Speedy.hitpoints);
+	init: function(owner, target) {
+		this._super(owner, target, Speedy.speed, 25, MazeStrategy.diagonalShortCut, Speedy.hitpoints);
 		this.createVisual(Speedy.sprite, [20]);
 	},
 }, function(unit) {
@@ -111,8 +112,8 @@ var Speedy = Unit.extend({
  * The big Armored unit
  */
 var Armos = Unit.extend({
-	init: function() {
-		this._super(Armos.speed, 125, MazeStrategy.euclidean, Armos.hitpoints);
+	init: function(owner, target) {
+		this._super(owner, target, Armos.speed, 125, MazeStrategy.euclidean, Armos.hitpoints);
 		this.createVisual(Armos.sprite, [4, 4, 4, 4], 1.2);
 	},
 }, function(armos) {

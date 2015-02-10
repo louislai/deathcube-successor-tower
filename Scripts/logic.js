@@ -1,6 +1,7 @@
 "use strict";
 /*
  * The gamestate enumeration
+ * @overrride
  */
 var GameState = {
 	unstarted : 0,
@@ -45,7 +46,7 @@ var GameLogic = Base.extend({
 		me.view            = view;
 		me.players         = [new Player(), new Player()];
 		// Modification here to switch role between player
-		me.playerTurn      = 1;
+		me.playerTurn      = 1;   // Right player defends first
 		me.currentDefender = me.players[1];
 		me.currentAttacker = me.players[0];
 
@@ -306,7 +307,7 @@ var GameLogic = Base.extend({
 
 			me.state = GameState.waving;	
 			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
-			var wave = new AIWaveGenerator(this.playerData[(this.playerTurn + 1) % 2].getUnitGenerator(), this.currentDefender); // Modification generate unit that attacks current defender
+			var wave = new AIWaveGenerator(this.playerData[(this.playerTurn + 1) % 2].getUnitGenerator(), this.currentAttacker, this.currentDefender); // Modification generate unit that attacks current defender
 			wave.addEventListener(events.waveFinished, function() {
 				me.triggerEvent(events.waveFinished);
 				wave.removeEventListener(events.waveFinished);
@@ -319,8 +320,8 @@ var GameLogic = Base.extend({
 			me.currentWave = wave;
 		}
 	},
-	buildTower: function(pt, type) {
-		var newTower = new type();
+	buildTower: function(owner, target, pt, type) { // Add owner and target for Tower
+		var newTower = new type(owner, target);
 		var isrock = newTower instanceof Rock;
 		var numShooting = this.getNumShooting();
 		if (pt.x <= this.width && pt.x >= 0 && pt.y <= this.height && pt.y >= 0) { // Modification to guarantee point is valid
@@ -355,20 +356,22 @@ var GameLogic = Base.extend({
 	// Modification to build Towers based on User TowerGenerator
 	buildProgrammedTowers: function() {
 		// Build Tower for player 0
-		var nextTowers = (this.playerData[0].getTowerGenerator())();
+		var nextTowers = (this.playerData[this.playerTurn].getTowerGenerator())(); // Defender Towers
 		for(var i = 0; i < nextTowers.length; i++) {
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
-				this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+				this.buildTower(this.currentDefender, this.currentAttacker, 
+					              new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
 			}
 		}
 
 		// Build Tower for player 1
-		var nextTowers = (this.playerData[1].getTowerGenerator())();
+		var nextTowers = (this.playerData[(this.playerTurn + 1) % 2].getTowerGenerator())(); // Attacker Towers
 		for(var i = 0; i < nextTowers.length; i++) {
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
-				this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+				this.buildTower(this.currentAttacker, this.currentDefender, 
+					              new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
 			}
 		}
 			
@@ -521,12 +524,13 @@ var Wave = Base.extend({
  * The Customized Wave Generator
  */
 var AIWaveGenerator = Wave.extend({
-	init: function(UnitGenerator, target) {
+	init: function(UnitGenerator, owner, target) {
 		this._super();
 		var numUnits = 2;
 		var maxtime = 1300 * numUnits;
 		for (var i = 0; i < numUnits; ++i) {
 			var unit = UnitGenerator();
+			unit.owner = owner;
 			unit.target = target;
 			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
 		}

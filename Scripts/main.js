@@ -1,6 +1,7 @@
 "use strict";
 /*
  * The available images
+ * @override Add owner and target for GameObject and filter for Tower 
  */
 var images = {};
 
@@ -126,7 +127,7 @@ var Player = Base.extend({
  * The base for game objects (units, towers, shots)
  */
 var GameObject = Base.extend({
-	init: function(speed, animationDelay) {
+	init: function(owner, target, speed, animationDelay) {
 		this._super();
 		this.z = 0;
 		this.mazeCoordinates = new Point();
@@ -134,6 +135,11 @@ var GameObject = Base.extend({
 		this.animationDelay = animationDelay || 15;
 		this.dead = false;
 		this.direction = Direction.right;
+
+		// Modification
+		this.owner = owner || {};
+		this.target = target || {};
+
 	},
 	distanceTo: function(point) {
 		return point.subtract(this.mazeCoordinates).norm();
@@ -180,6 +186,9 @@ var GameObject = Base.extend({
 		if (dist <= maximum)
 			return closestTarget;
 	},
+	getOwner: function() {
+		return this.owner;
+	},
 	playSound: function(soundName) {
 		var audio = sounds[soundName];
 		var sound = new Sound(audio);
@@ -219,8 +228,8 @@ var GameObject = Base.extend({
  * The tower base
  */
 var Tower = GameObject.extend({
-	init: function(speed, animationDelay, range, shotType) {
-		this._super(speed, animationDelay);
+	init: function(owner, target, speed, animationDelay, range, shotType) {
+		this._super(owner, target, speed, animationDelay);
 		this.range = range || 0;
 		this.targets = [];
 		this.timeToNextShot = 0;
@@ -230,7 +239,7 @@ var Tower = GameObject.extend({
 		this.registerEvent(events.shot);
 	},
 	targetFilter: function(target) {
-		return target.strategy !== MazeStrategy.air;
+		return target.strategy !== MazeStrategy.air && target.owner !== this.owner;
 	},
 	update: function() {
 		this._super();
@@ -246,12 +255,13 @@ var Tower = GameObject.extend({
 			this.timeToNextShot -= constants.ticks;
 	},
 	shoot: function() {
-		var targets = this.targets.filter(this.targetFilter);
+		var me = this;
+		var targets = this.targets.filter((this.targetFilter), me);
 		var closestTarget = this.getClosestTarget(targets, this.range);
 
 		if (!(this instanceof Rock)) { // Modification here to stop Rock from shooting
 			if (closestTarget) {
-				var shot = new (this.shotType)();
+				var shot = new (this.shotType)(this.owner, this.target);
 	            shot.mazeCoordinates = this.mazeCoordinates;
 	            shot.velocity = closestTarget.mazeCoordinates.subtract(this.mazeCoordinates);
 	            shot.direction = shot.velocity.toDirection();
@@ -267,8 +277,8 @@ var Tower = GameObject.extend({
  * The unit base
  */
 var Unit = GameObject.extend({
- 	init: function(speed, animationDelay, mazeStrategy, hitpoints) {
-		this._super(speed, animationDelay);
+ 	init: function(owner, target, speed, animationDelay, mazeStrategy, hitpoints) {
+		this._super(owner, target, speed, animationDelay);
  		this.timer = 0;
  		this.path = new Path([]);
  		this.mazeCoordinates = new Point();
@@ -277,10 +287,6 @@ var Unit = GameObject.extend({
  		this.hitpoints = hitpoints || 0;
  		this.health = this.hitpoints;
  		this.direction = Direction.right;
- 		// Modification Add target and owner
- 		this.own = undefined;
- 		this.target = undefined;
- 		// End Modification
  		this.registerEvent(events.accomplished);
  		this.registerEvent(events.died);
  	},
@@ -327,8 +333,8 @@ var Unit = GameObject.extend({
  * The shot base
  */
 var Shot = GameObject.extend({
-	init: function(speed, animationDelay, damage, impactRadius) {
-		this._super(speed, animationDelay);
+	init: function(owner, target, speed, animationDelay, damage, impactRadius) {
+		this._super(owner, target, speed, animationDelay);
 		this.damage = damage || 0;
 		this.targets = [];
 		this.impactRadius = impactRadius || 0.5;
