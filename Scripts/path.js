@@ -283,8 +283,9 @@ var Maze = Class.extend({
 		this.pf.diagonals = false;
 		this.paths = {};
 
-		// Modifications to add start point for unit in map
+		// Modifications to add custom start and end points for unit in map
 		this.Ustart = this.start;
+		this.Uend = this.end;
 		// End mofications
 	},
 	isPointInGrid: function(point) {
@@ -305,7 +306,7 @@ var Maze = Class.extend({
 		this.grid[point.x][point.y] = weight || 0;
 		this.pf.formula = MazeStrategy.euclidean;
 
-		if (this.pf.findPath(this.start, this.end)) {
+		if (this.pf.findPath(this.Ustart, this.Uend)) {
 			this.paths = {};
 			return true;
 		} else {
@@ -322,8 +323,10 @@ var Maze = Class.extend({
 		
 		return false;
 	},
-	getPath: function(mazeStrategy, Ustart) { // Modification for Ustart
+	getPath: function(mazeStrategy, Ustart, Uend) { // Modification for Ustart and Uend
 		this.Ustart = Ustart || this.start;
+		this.Uend = Uend || this.end;
+
 		if (mazeStrategy === MazeStrategy.air)
 			return this.getPathAir();
 
@@ -336,7 +339,7 @@ var Maze = Class.extend({
 		var path = [];
 
 		// Modification change this.start to this.Ustart
-		for (var i = this.Ustart.x; i < this.end.x + 1; ++i)
+		for (var i = this.Ustart.x; i < this.Uend.x + 1; ++i)
 			path.push(new Point(i, this.Ustart.y));
 
 		return path;
@@ -347,8 +350,8 @@ var Maze = Class.extend({
 		} else {
 			var path = [];
 			this.pf.formula = mazeStrategy;
-			// Modification change this.start to this.Ustart
-			var nodes = this.pf.findPath(this.Ustart, this.end);
+			// Modification change this.start to this.Ustart and this.end to this.Uend
+			var nodes = this.pf.findPath(this.Ustart, this.Uend);
 
 			for (var i = 0; i < nodes.length; i++)
 				path.push(new Point(nodes[i].x, nodes[i].y));

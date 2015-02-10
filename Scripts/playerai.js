@@ -1,7 +1,7 @@
 /*
  * Bot Class
  */
-var Bot = Base.extend({
+var PlayerAI = Base.extend({
   init: function(initTowers, unitGenerator, towerGenerator) {
     var initTowers = initTowers || [];
     var unitGenerator = unitGenerator || function() { return; };
@@ -17,10 +17,10 @@ var PlayerGenerator = function() {
 }
 
 var TowerGenerator = function() {
-  return [[[Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)], Rock]];
+  return [[[Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)], Rock]];
 }
 
-var player1 = new Bot([
+var player1 = new PlayerAI([
   [[2, 8], GateToHell],
   [[10, 10], Flak]
 ], PlayerGenerator, TowerGenerator);

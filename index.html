@@ -48,7 +48,7 @@
 <script src="Scripts/shots.js"></script>
 <script src="Scripts/towers.js"></script>
 <script src="Scripts/record.js"></script>
-<script src="Scripts/player.js"></script>
+<script src="Scripts/playerai.js"></script>
 <script>
 var Game = (function(bot) {
 	"use strict";
@@ -91,11 +91,12 @@ var Game = (function(bot) {
 		logic.addEventListener(events.waveFinished, function() {
 			timeInfo.textContent = 'All units are out!';
 		});
+		
 		logic.addEventListener(events.waveDefeated, function() {
 			timeInfo.textContent = 'Idle';
 			startWaveButton.disabled = false;
 		});
-		logic.addEventListener(events.playerDefeated, function() {
+		logic.addEventListener(events.playerDefeated0, function() {
 			timeInfo.textContent = 'Game over ...';
 		});
 		logic.addEventListener(events.waveCreated, function(wave) {
@@ -105,10 +106,10 @@ var Game = (function(bot) {
 		logic.addEventListener(events.unitSpawned, function(remaining) {
 			timeInfo.textContent = remaining + ' units remaining';
 		});
-		logic.addEventListener(events.moneyChanged, function(player) {
+		logic.addEventListener(events.moneyChanged0, function(player) {
 			moneyInfo.textContent = player.money;
 		});
-		logic.addEventListener(events.healthChanged, function(player) {
+		logic.addEventListener(events.healthChanged0, function(player) {
 			healthInfo.textContent = player.hitpoints;
 		});
 		logic.addEventListener(events.towerNumberChanged, function(info) {
