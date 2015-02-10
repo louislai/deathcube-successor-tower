@@ -388,10 +388,10 @@ var GameLogic = Base.extend({
 		}
 			
 	},
-	destroyTower: function(pt) {
+	destroyTower: function(owner, pt) {
 		if (this.state == GameState.building) {
 			var towerToRemove = this.towers.filter(function(t) {
-				return t.mazeCoordinates.x === pt.x && t.mazeCoordinates.y === pt.y;
+				return t.mazeCoordinates.x === pt.x && t.mazeCoordinates.y === pt.y && t.owner === owner; // Make sure only owner can remove tower
 			})[0];
 
 			if (towerToRemove) {
@@ -424,7 +424,7 @@ var GameLogic = Base.extend({
 	buyTowerBuildRight: function(owner) {
 		var cost = this.towerBuildCost;
 
-		if (this.currentDefender.money > cost) {
+		if (owner.money > cost) {
 			var numShooting = this.getNumShooting(owner);
 			owner.maxTowerNumber++;
 
@@ -435,7 +435,7 @@ var GameLogic = Base.extend({
 			});
 
 			this.towerBuildCost = ~~(this.towerBuildFactor * cost);
-			this.currentDefender.addMoney(-cost);
+			owner.addMoney(-cost);
 			return true;
 		}
 
