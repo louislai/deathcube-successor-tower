@@ -25,11 +25,7 @@ var GameLogic = Base.extend({
 	init: function(view, mazeWidth, mazeHeight, playerData) {
 		var me = this;
 		me._super();
-
-		// Timer to run towergenerator
-		// me.towerTimer = 20;
-		// me.timer = 0;
-		// Modification to add  player data
+		
 		me.width = mazeWidth;
 		me.height = mazeHeight;
 		me.playerData = playerData || new PlayerAI();
@@ -343,17 +339,15 @@ var GameLogic = Base.extend({
 					this.addTower(newTower);
 
 					if (!isrock) {
-						if (this.playerTurn === 0) {
-							this.triggerEvent(events.towerNumberChanged0, {
-								current: numShooting + 1,
-								maximum: this.maxTowerNumber,
-							});	
-						} else {
-							this.triggerEvent(events.towerNumberChanged1, {
-								current: numShooting + 1,
-								maximum: this.maxTowerNumber,
-							});
-						}
+						this.triggerEvent(events.towerNumberChanged0, {
+							current: numShooting + 1,
+							maximum: this.maxTowerNumber,
+						});
+						this.triggerEvent(events.towerNumberChanged1, {
+							current: numShooting + 1,
+							maximum: this.maxTowerNumber,
+						});
+						
 					}
 
 					return true;
@@ -386,17 +380,14 @@ var GameLogic = Base.extend({
 				this.maze.tryRemove(pt);
 
 				if (!(towerToRemove instanceof Rock)) {
-					if (this.playerTurn === 0 ) {
 						this.triggerEvent(events.towerNumberChanged0, {
 							current: this.getNumShooting(),
 							maximum: this.maxTowerNumber,
 						});
-					} else {
 						this.triggerEvent(events.towerNumberChanged1, {
 							current: this.getNumShooting(),
 							maximum: this.maxTowerNumber,
 						});
-					}
 				}
 			}
 		}
@@ -420,18 +411,15 @@ var GameLogic = Base.extend({
 			var numShooting = this.getNumShooting();
 			this.maxTowerNumber++;
 
-			// Trigger tower number changed depending on current player
-			if (this.playerTurn === 0 ) {
-				this.triggerEvent(events.towerNumberChanged0, {
-					current: numShooting,
-					maximum: this.maxTowerNumber,
-				});
-			} else {
-				this.triggerEvent(events.towerNumberChanged1, {
-					current: numShooting,
-					maximum: this.maxTowerNumber,
-				});
-			}
+			
+			this.triggerEvent(events.towerNumberChanged0, {
+				current: numShooting,
+				maximum: this.maxTowerNumber,
+			});
+			this.triggerEvent(events.towerNumberChanged1, {
+				current: numShooting,
+				maximum: this.maxTowerNumber,
+			});
 
 			this.towerBuildCost = ~~(this.towerBuildFactor * cost);
 			this.currentDefender.addMoney(-cost);
