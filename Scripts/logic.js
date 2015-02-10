@@ -40,7 +40,7 @@ var GameLogic = Base.extend({
 		me.mediPackFactor   = constants.mediPackFactor;
 		me.towerBuildCost   = constants.towerBuildCost;
 		me.towerBuildFactor = constants.towerBuildFactor;
-		me.maxTowerNumber   = constants.towerBuildNumber;
+		// me.maxTowerNumber   = constants.towerBuildNumber; Deprecate to use specific tower number attribute for player
 		me.mediPackHealth   = constants.mediPackHealth;
 
 		me.view            = view;
@@ -64,6 +64,8 @@ var GameLogic = Base.extend({
 		// End Modification
 		me.currentWave   = new Wave();
 
+		me.currentDefender.maxTowerNumber = constants.towerBuildNumber;
+
 		me.currentDefender.addEventListener(events.playerDefeated, function(e) {
 			me.triggerEvent(events.playerDefeated1, e);
 			me.finish();
@@ -77,6 +79,12 @@ var GameLogic = Base.extend({
 			me.triggerEvent(events.healthChanged1, e);
 		});
 
+		me.currentDefender.addEventListener(events.towerNumberChanged, function(e) {
+			me.triggerEvent(events.towerNumberChanged1, e);
+		});
+
+		me.currentAttacker.maxTowerNumber = constants.towerBuildNumber;
+
 		me.currentAttacker.addEventListener(events.playerDefeated, function(e) {
 			me.triggerEvent(events.playerDefeated0, e);
 			me.finish();
@@ -89,6 +97,11 @@ var GameLogic = Base.extend({
 		me.currentAttacker.addEventListener(events.healthChanged, function(e) {
 			me.triggerEvent(events.healthChanged0, e);
 		});
+
+		me.currentAttacker.addEventListener(events.towerNumberChanged, function(e) {
+			me.triggerEvent(events.towerNumberChanged0, e);
+		});
+
 		me.registerEvent(events.refreshed);
 		me.registerEvent(events.waveDefeated);
 		me.registerEvent(events.waveFinished);
@@ -100,7 +113,6 @@ var GameLogic = Base.extend({
 		me.registerEvent(events.healthChanged1);
 		me.registerEvent(events.waveCreated);
 		me.registerEvent(events.unitSpawned);
-		me.registerEvent(events.towerNumberChanged);
 		me.registerEvent(events.towerNumberChanged0);
 		me.registerEvent(events.towerNumberChanged1);
 	},
@@ -110,9 +122,13 @@ var GameLogic = Base.extend({
 			this.currentDefender.setMoney(constants.money);
 			this.currentAttacker.setHitpoints(constants.hitpoints);
 			this.currentAttacker.setMoney(constants.money);
-			this.triggerEvent(events.towerNumberChanged, {
-				current: this.getNumShooting(),
-				maximum: this.maxTowerNumber,
+			this.currentDefender.triggerEvent(events.towerNumberChanged, {
+				current: this.getNumShooting(this.currentDefender),
+				maximum: this.currentDefender.maxTowerNumber,
+			});
+			this.currentAttacker.triggerEvent(events.towerNumberChanged, {
+				current: this.getNumShooting(this.currentAttacker),
+				maximum: this.currentAttacker.maxTowerNumber,
 			});
 			this.state = GameState.building;
 		}
@@ -204,9 +220,9 @@ var GameLogic = Base.extend({
 	getViewSize: function() {
 		return this.view.getSize();
 	},
-	getNumShooting: function() {
+	getNumShooting: function(owner) {
 		return this.towers.filter(function(tower) {
-			return (tower instanceof Rock) === false;
+			return (tower instanceof Rock) === false && tower.owner === owner;
 		}).length;
 	},
 	getMazeSize: function() {
@@ -323,9 +339,9 @@ var GameLogic = Base.extend({
 	buildTower: function(owner, target, pt, type) { // Add owner and target for Tower
 		var newTower = new type(owner, target);
 		var isrock = newTower instanceof Rock;
-		var numShooting = this.getNumShooting();
+		var numShooting = this.getNumShooting(owner);
 		if (pt.x <= this.width && pt.x >= 0 && pt.y <= this.height && pt.y >= 0) { // Modification to guarantee point is valid
-			if (this.state == GameState.building && type.cost <= this.currentDefender.money && (isrock || (numShooting < this.maxTowerNumber))) {
+			if (this.state == GameState.building && type.cost <= this.currentDefender.money && (isrock || (numShooting < owner.maxTowerNumber))) {
 				newTower.mazeCoordinates = pt;
 				newTower.cost = type.cost;
 				newTower.targets = this.units;
@@ -335,13 +351,9 @@ var GameLogic = Base.extend({
 					this.addTower(newTower);
 
 					if (!isrock) {
-						this.triggerEvent(events.towerNumberChanged0, {
+						owner.triggerEvent(events.towerNumberChanged, {
 							current: numShooting + 1,
-							maximum: this.maxTowerNumber,
-						});
-						this.triggerEvent(events.towerNumberChanged1, {
-							current: numShooting + 1,
-							maximum: this.maxTowerNumber,
+							maximum: owner.maxTowerNumber,
 						});
 						
 					}
@@ -383,50 +395,43 @@ var GameLogic = Base.extend({
 			})[0];
 
 			if (towerToRemove) {
+				var owner = towerToRemove.owner;
 				this.currentDefender.addMoney(0.5 * towerToRemove.cost);
 				this.removeTower(towerToRemove);
 				this.maze.tryRemove(pt);
 
 				if (!(towerToRemove instanceof Rock)) {
-						this.triggerEvent(events.towerNumberChanged0, {
-							current: this.getNumShooting(),
-							maximum: this.maxTowerNumber,
-						});
-						this.triggerEvent(events.towerNumberChanged1, {
-							current: this.getNumShooting(),
-							maximum: this.maxTowerNumber,
+						owner.triggerEvent(events.towerNumberChanged, {
+							current: this.getNumShooting(owner),
+							maximum: owner.maxTowerNumber,
 						});
 				}
 			}
 		}
 	},
-	buyMediPack: function() {
+	buyMediPack: function(owner) {
 		var cost = this.mediPackCost;
 
-		if (this.currentDefender.money > cost) {
-			this.currentDefender.addHitpoints(this.mediPackHealth);
+		if (owner.money > cost) {
+			owner.addHitpoints(this.mediPackHealth);
 			this.mediPackCost = ~~(this.mediPackFactor * cost);
-			this.currentDefender.addMoney(-cost);
+			owner.addMoney(-cost);
 			return true;
 		}
 
 		return false;
 	},
-	buyTowerBuildRight: function() {
+	buyTowerBuildRight: function(owner) {
 		var cost = this.towerBuildCost;
 
 		if (this.currentDefender.money > cost) {
-			var numShooting = this.getNumShooting();
-			this.maxTowerNumber++;
+			var numShooting = this.getNumShooting(owner);
+			owner.maxTowerNumber++;
 
 			
-			this.triggerEvent(events.towerNumberChanged0, {
+			owner.triggerEvent(events.towerNumberChanged, {
 				current: numShooting,
-				maximum: this.maxTowerNumber,
-			});
-			this.triggerEvent(events.towerNumberChanged1, {
-				current: numShooting,
-				maximum: this.maxTowerNumber,
+				maximum: owner.maxTowerNumber,
 			});
 
 			this.towerBuildCost = ~~(this.towerBuildFactor * cost);
