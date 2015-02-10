@@ -93,14 +93,14 @@ button:hover:not(:disabled) {
 #buttons {
 	text-align: center;
 }
-/* Modifcation to place player 1*/
-#info-p1 {
+/* Modifcation to place player 0*/
+#info-p0 {
 	padding-right: 28px;
 	left: 0;
 	color: red;
 }
 
-#money-info-p1 {
+#money-info-p0 {
 	background: url(icons/money.png) no-repeat left center;
 	padding-left: 28px;
 	left: 50px;
@@ -112,37 +112,37 @@ button:hover:not(:disabled) {
 	left: 0;
 }
 
-#tower-info-p1 {
+#tower-info-p0 {
 	background: url(icons/tower.png) no-repeat left center;
 	padding-left: 28px;
 	left: 150px;
 }
 
-#health-info-p1 {
+#health-info-p0 {
 	background: url(icons/health.png) no-repeat left center;
 	padding-left: 28px;
 	left: 250px;
 }
-/* Modification to show info for player 2*/
-#info-p2 {
+/* Modification to show info for player 1*/
+#info-p1 {
 	padding-left: 28px;
 	left: 950px;
 	color: green;
 }
 
-#money-info-p2 {
+#money-info-p1 {
 	background: url(icons/money.png) no-repeat left center;
 	padding-left: 28px;
 	right: 300px;
 }
 
-#tower-info-p2 {
+#tower-info-p1 {
 	background: url(icons/tower.png) no-repeat left center;
 	padding-left: 28px;
 	right: 200px;
 }
 
-#health-info-p2 {
+#health-info-p1 {
 	background: url(icons/health.png) no-repeat left center;
 	padding-left: 28px;
 	right: 100px;

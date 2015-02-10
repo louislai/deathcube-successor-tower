@@ -51,7 +51,7 @@ var GameLogic = Base.extend({
 		// Modification here to switch role between player
 		me.playerTurn      = 0;
 		me.currentDefender = me.players[me.playerTurn];
-		me.currentAttacker = me.players[me.playerTurn];
+		me.currentAttacker = me.players[me.playerTurn + 1];
 
 		
 
@@ -68,36 +68,51 @@ var GameLogic = Base.extend({
 		me.currentWave   = new Wave();
 
 		me.currentDefender.addEventListener(events.playerDefeated, function(e) {
-			me.triggerEvent(events.playerDefeated0, e);
+			me.triggerEvent(events.playerDefeated1, e);
 			me.finish();
 		});
 
 		me.currentDefender.addEventListener(events.moneyChanged, function(e) {
-			if (me.playerTurn == 0) {
-				me.triggerEvent(events.moneyChanged0, e);
-			}
+			me.triggerEvent(events.moneyChanged1, e);
 		});
 
 		me.currentDefender.addEventListener(events.healthChanged, function(e) {
-			if (me.playerTurn == 0) {
-				me.triggerEvent(events.healthChanged0, e);
-			}
+			me.triggerEvent(events.healthChanged1, e);
 		});
 
+		me.currentAttacker.addEventListener(events.playerDefeated, function(e) {
+			me.triggerEvent(events.playerDefeated0, e);
+			me.finish();
+		});
+
+		me.currentAttacker.addEventListener(events.moneyChanged, function(e) {
+			me.triggerEvent(events.moneyChanged0, e);
+		});
+
+		me.currentAttacker.addEventListener(events.healthChanged, function(e) {
+			me.triggerEvent(events.healthChanged0, e);
+		});
 		me.registerEvent(events.refreshed);
 		me.registerEvent(events.waveDefeated);
 		me.registerEvent(events.waveFinished);
 		me.registerEvent(events.playerDefeated0);
+		me.registerEvent(events.playerDefeated1);
 		me.registerEvent(events.moneyChanged0);
+		me.registerEvent(events.moneyChanged1);
 		me.registerEvent(events.healthChanged0);
+		me.registerEvent(events.healthChanged1);
 		me.registerEvent(events.waveCreated);
 		me.registerEvent(events.unitSpawned);
 		me.registerEvent(events.towerNumberChanged);
+		me.registerEvent(events.towerNumberChanged0);
+		me.registerEvent(events.towerNumberChanged1);
 	},
 	start: function() {		
 		if (this.state === GameState.unstarted) {
 			this.currentDefender.setHitpoints(constants.hitpoints);
 			this.currentDefender.setMoney(constants.money);
+			this.currentAttacker.setHitpoints(constants.hitpoints);
+			this.currentAttacker.setMoney(constants.money);
 			this.triggerEvent(events.towerNumberChanged, {
 				current: this.getNumShooting(),
 				maximum: this.maxTowerNumber,
@@ -227,6 +242,7 @@ var GameLogic = Base.extend({
 		unit.addEventListener(events.accomplished, function(unt) {
 			var player = unt.target;
 			player.hit(unt); // Modification to only hit target of unit
+			console.log(this.players);
 			// if (player.getHitpoints() == 0) { 
 			// 	this.triggerEvent(events.playerDefeated, player);
 			// 	this.finish();
@@ -270,7 +286,7 @@ var GameLogic = Base.extend({
 			console.log('hello');
 
 			this.maze.rePosition();
-			
+
 			// Modifications to build user Tower
 			this.buildProgrammedTowers();
 
@@ -279,8 +295,11 @@ var GameLogic = Base.extend({
 
 			// Switch attacker and defender
 			this.playerTurn = (this.playerTurn + 1) % 2;
+			console.log("here " + this.players);
 			this.currentAttacker = this.players[(this.playerTurn + 1) % 2];
 			this.currentDefender = this.players[this.playerTurn];
+			// console.log(JSON.stringify(this.currentDefender));
+			// console.log(JSON.stringify(this.currentAttacker));
 
 			this.beginWave(); // Modification to run wave continuously
 		 } else {
@@ -292,9 +311,11 @@ var GameLogic = Base.extend({
 			var me = this;
 			
 			// End Modification
+
 			me.state = GameState.waving;	
 			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
-			var wave = new AIWaveGenerator(this.playerData.getUnitGenerator(), this.currentDefender);
+			var wave = new AIWaveGenerator(this.playerData.getUnitGenerator(), this.currentDefender); // Modification generate unit that attacks current defender
+			console.log(JSON.stringify(this.currentDefender));
 			wave.addEventListener(events.waveFinished, function() {
 				me.triggerEvent(events.waveFinished);
 				wave.removeEventListener(events.waveFinished);
@@ -322,10 +343,17 @@ var GameLogic = Base.extend({
 					this.addTower(newTower);
 
 					if (!isrock) {
-						this.triggerEvent(events.towerNumberChanged, {
-							current: numShooting + 1,
-							maximum: this.maxTowerNumber,
-						});	
+						if (this.playerTurn === 0) {
+							this.triggerEvent(events.towerNumberChanged0, {
+								current: numShooting + 1,
+								maximum: this.maxTowerNumber,
+							});	
+						} else {
+							this.triggerEvent(events.towerNumberChanged1, {
+								current: numShooting + 1,
+								maximum: this.maxTowerNumber,
+							});
+						}
 					}
 
 					return true;
@@ -358,10 +386,17 @@ var GameLogic = Base.extend({
 				this.maze.tryRemove(pt);
 
 				if (!(towerToRemove instanceof Rock)) {
-					this.triggerEvent(events.towerNumberChanged, {
-						current: this.getNumShooting(),
-						maximum: this.maxTowerNumber,
-					});
+					if (this.playerTurn === 0 ) {
+						this.triggerEvent(events.towerNumberChanged0, {
+							current: this.getNumShooting(),
+							maximum: this.maxTowerNumber,
+						});
+					} else {
+						this.triggerEvent(events.towerNumberChanged1, {
+							current: this.getNumShooting(),
+							maximum: this.maxTowerNumber,
+						});
+					}
 				}
 			}
 		}
@@ -385,10 +420,18 @@ var GameLogic = Base.extend({
 			var numShooting = this.getNumShooting();
 			this.maxTowerNumber++;
 
-			this.triggerEvent(events.towerNumberChanged, {
-				current: numShooting,
-				maximum: this.maxTowerNumber,
-			});
+			// Trigger tower number changed depending on current player
+			if (this.playerTurn === 0 ) {
+				this.triggerEvent(events.towerNumberChanged0, {
+					current: numShooting,
+					maximum: this.maxTowerNumber,
+				});
+			} else {
+				this.triggerEvent(events.towerNumberChanged1, {
+					current: numShooting,
+					maximum: this.maxTowerNumber,
+				});
+			}
 
 			this.towerBuildCost = ~~(this.towerBuildFactor * cost);
 			this.currentDefender.addMoney(-cost);

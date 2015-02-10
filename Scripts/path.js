@@ -291,9 +291,6 @@ var Maze = Class.extend({
 				this.paths[path] = this.paths[path].reverse();
 			}
 		}
-		if (this.paths) {
-			console.log(JSON.stringify(this.paths));
-		}
 
 	},
 	rotate: function() {
@@ -302,9 +299,6 @@ var Maze = Class.extend({
 			for (var path in this.paths) {
 				this.paths[path] = this.paths[path].reverse();
 			}
-		}
-		if (this.paths) {
-			console.log(JSON.stringify(this.paths));
 		}
 
 	},
@@ -348,7 +342,6 @@ var Maze = Class.extend({
 			return this.getPathAir();
 
 		if (!this.paths[mazeStrategy]) {
-			console.log('no need');
 			this.calculate(mazeStrategy);
 		}
 		

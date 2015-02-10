@@ -9,16 +9,16 @@
 <div id="wait"><div id="wait-message">Loading ...</div></div>
 <div id="frame" class="hidden">
 	<div id="info">
-		<div id="info-p1"> Player 1 </div>
+		<div id="info-p0"> Player 1 </div>
+		<div id="money-info-p0" title="Money left"></div>
+		<div id="tower-info-p0" title="Towers built"></div>
+		<div id="health-info-p0" title="Health left"></div>
+
+		<!-- // Modfication to add info bar for player 2 -->
+		<div id="info-p1"> Player 2 </div>
 		<div id="money-info-p1" title="Money left"></div>
 		<div id="tower-info-p1" title="Towers built"></div>
 		<div id="health-info-p1" title="Health left"></div>
-
-		<!-- // Modfication to add info bar for player 2 -->
-		<div id="info-p2"> Player 2 </div>
-		<div id="money-info-p2" title="Money left"></div>
-		<div id="tower-info-p2" title="Towers built"></div>
-		<div id="health-info-p2" title="Health left"></div>
 		<!-- // End Modifcation -->
 
 		<div id="time-info">Game started ...</div>
@@ -56,9 +56,13 @@ var Game = (function(bot) {
 	var canvas = document.querySelector('#game');
 	var towerPanel = document.querySelector('#towers');
 	var towerButtons = [];
-	var moneyInfo = document.querySelector('#money-info-p1');
-	var healthInfo = document.querySelector('#health-info-p1');
-	var towerInfo = document.querySelector('#tower-info-p1');
+	var moneyInfo0 = document.querySelector('#money-info-p0');
+	var healthInfo0 = document.querySelector('#health-info-p0');
+	var towerInfo0 = document.querySelector('#tower-info-p0');
+	// Modification add query selecter for player 1
+	var moneyInfo1 = document.querySelector('#money-info-p1');
+	var healthInfo1 = document.querySelector('#health-info-p1');
+	var towerInfo1 = document.querySelector('#tower-info-p1');
 	var timeInfo = document.querySelector('#time-info');
 	var soundInfo = document.querySelector('#sound-info');
 	var startWaveButton = document.querySelector('#startWave');
@@ -99,6 +103,9 @@ var Game = (function(bot) {
 		logic.addEventListener(events.playerDefeated0, function() {
 			timeInfo.textContent = 'Game over ...';
 		});
+		logic.addEventListener(events.playerDefeated1, function() {
+			timeInfo.textContent = 'Game over ...';
+		});
 		logic.addEventListener(events.waveCreated, function(wave) {
 			timeInfo.textContent = wave.units.length + ' units remaining';
 			startWaveButton.disabled = true;
@@ -107,13 +114,22 @@ var Game = (function(bot) {
 			timeInfo.textContent = remaining + ' units remaining';
 		});
 		logic.addEventListener(events.moneyChanged0, function(player) {
-			moneyInfo.textContent = player.money;
+			moneyInfo0.textContent = player.money;
+		});
+		logic.addEventListener(events.moneyChanged1, function(player) {
+			moneyInfo1.textContent = player.money;
 		});
 		logic.addEventListener(events.healthChanged0, function(player) {
-			healthInfo.textContent = player.hitpoints;
+			healthInfo0.textContent = player.hitpoints;
 		});
-		logic.addEventListener(events.towerNumberChanged, function(info) {
-			towerInfo.textContent = info.current + ' / ' + info.maximum;
+		logic.addEventListener(events.healthChanged1, function(player) {
+			healthInfo1.textContent = player.hitpoints;
+		});
+		logic.addEventListener(events.towerNumberChanged0, function(info) {
+			towerInfo0.textContent = info.current + ' / ' + info.maximum;
+		});
+		logic.addEventListener(events.towerNumberChanged1, function(info) {
+			towerInfo1.textContent = info.current + ' / ' + info.maximum;
 		});
 		startWaveButton.addEventListener(events.click, function() {
 			logic.beginWave();

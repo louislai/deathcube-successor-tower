@@ -28,16 +28,21 @@ var events = {
 	hit: 'hit',
 	accomplished : 'accomplished',
 	playerDefeated0 : 'playerDefeated0',
+	playerDefeated1 : 'playerDefeated1',
 	playerDefeated : 'playerDefeated',
 	moneyChanged0 : 'moneyChanged0',
+	moneyChanged1 : 'moneyChanged1',
 	moneyChanged : 'moneyChanged',
-	waveCreated1 : 'waveCreated',
+	waveCreated : 'waveCreated',
 	waveFinished : 'waveFinished',
 	waveDefeated : 'waveDefeated',
 	healthChanged0 : 'healthChanged0',
+	healthChanged1 : 'healthChanged1',
 	healthChanged : 'healthChanged',
 	unitSpawned : 'unitSpawned',
 	towerNumberChanged : 'towerNumberChanged',
+	towerNumberChanged0 : 'towerNumberChanged0',
+	towerNumberChanged1 : 'towerNumberChanged1',
 };
 
 /*
