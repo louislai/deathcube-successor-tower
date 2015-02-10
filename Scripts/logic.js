@@ -38,6 +38,7 @@ var GameLogic = Base.extend({
 		me.units  = [];
 		me.shots  = [];
 
+		
 		me.mediPackCost     = constants.mediPackCost;
 		me.mediPackFactor   = constants.mediPackFactor;
 		me.towerBuildCost   = constants.towerBuildCost;
@@ -52,19 +53,17 @@ var GameLogic = Base.extend({
 		me.currentDefender = me.players[me.playerTurn];
 		me.currentAttacker = me.players[me.playerTurn];
 
+		
+
 		me.state         = GameState.unstarted;
 		var size         = new Size(mazeWidth, mazeHeight);	
 		me.maze          = new Maze(size);
 		me.view.mazeSize = me.getMazeSize();
 
-		// Modification define start and end points so we can swap start and end when required
-		me.Spawn         = new Point(0, ~~(mazeHeight * 0.5));
-		me.Base           = new Point(mazeWidth, ~~(mazeHeight * 0.5));
-
 		// Modification change WaveList to UnitGenerator
 		// me.waves         = new WaveList();
-		me.waves         = new WaveGenerator();
-		me.waves.assignGenerator(playerData.getUnitGenerator());
+		// me.waves         = new WaveGenerator();
+		// me.waves.assignGenerator(playerData.getUnitGenerator());
 		// End Modification
 		me.currentWave   = new Wave();
 
@@ -154,7 +153,7 @@ var GameLogic = Base.extend({
 			for (var i = newUnits.length; i--; ) {
 				var unit = newUnits[i];
 				if (unit) {    // Modifcations check that unit is defined
-					var path = this.maze.getPath(unit.strategy, this.Spawn, this.Base);
+					var path = this.maze.getPath(unit.strategy);
 					unit.mazeCoordinates = this.maze.start;
 					unit.path = new Path(path);
 					this.addUnit(unit);
@@ -268,9 +267,20 @@ var GameLogic = Base.extend({
 
 		if (gameOn) {
 			// Swap start and end points
-			var temp = this.Spawn;
-			this.Spawn = this.Base
-			this.Base = temp;
+			console.log('hello');
+
+			this.maze.rePosition();
+			
+			// Modifications to build user Tower
+			this.buildProgrammedTowers();
+
+			// Reverse map
+			this.maze.rotate();
+
+			// Switch attacker and defender
+			this.playerTurn = (this.playerTurn + 1) % 2;
+			this.currentAttacker = this.players[(this.playerTurn + 1) % 2];
+			this.currentDefender = this.players[this.playerTurn];
 
 			this.beginWave(); // Modification to run wave continuously
 		 } else {
@@ -280,11 +290,11 @@ var GameLogic = Base.extend({
 	beginWave: function() {
 		if (this.state === GameState.building) {
 			var me = this;
-			// Modifications to build user Tower
-			me.buildProgrammedTowers();
+			
 			// End Modification
 			me.state = GameState.waving;	
-			var wave = me.waves.next(this.currentDefender); // Modification to test with player 1
+			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
+			var wave = new AIWaveGenerator(this.playerData.getUnitGenerator(), this.currentDefender);
 			wave.addEventListener(events.waveFinished, function() {
 				me.triggerEvent(events.waveFinished);
 				wave.removeEventListener(events.waveFinished);
@@ -474,34 +484,15 @@ var Wave = Base.extend({
 /*
  * The Customized Wave Generator
  */
-var WaveGenerator = Base.extend({
-	init: function() {
-		this.waves = [];
-		this.index = 0;
-		this.unitNames = Object.keys(types.units);
-		this.generate = {};
-	},
-	assignGenerator: function(f) {
-		this.generate = f;
-	},
-	generateUnit: function(target) {
-		var wave = new Wave();
-		
-		wave.prizeMoney = 1;
+var AIWaveGenerator = Wave.extend({
+	init: function(UnitGenerator, target) {
+		this._super();
 		var numUnits = 2;
 		var maxtime = 1300 * numUnits;
 		for (var i = 0; i < numUnits; ++i) {
-			var unit = this.generate();
+			var unit = new Speedy;
 			unit.target = target;
-			wave.add(unit, i === 0 ? 0 : rand(0, maxtime));
+			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
 		}
-		return wave;
-	},
-	next: function(target) {
-		if (this.index < this.waves.length)
-			return this.waves[this.index++];
-
-		++this.index;
-		return this.generateUnit(target);
-	},
+	}
 });

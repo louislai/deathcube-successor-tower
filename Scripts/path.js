@@ -282,11 +282,31 @@ var Maze = Class.extend({
 		this.pf = new PathFinder(this.grid);
 		this.pf.diagonals = false;
 		this.paths = {};
+		// Modification extra variable to check if direction rotated
+		this.isRotated = false;
+	},
+	rePosition: function() {
+		if (this.isRotated) {
+			for (var path in this.paths) {
+				this.paths[path] = this.paths[path].reverse();
+			}
+		}
+		if (this.paths) {
+			console.log(JSON.stringify(this.paths));
+		}
 
-		// Modifications to add custom start and end points for unit in map
-		this.Ustart = this.start;
-		this.Uend = this.end;
-		// End mofications
+	},
+	rotate: function() {
+		this.isRotated = !this.isRotated;
+		if (this.isRotated) {
+			for (var path in this.paths) {
+				this.paths[path] = this.paths[path].reverse();
+			}
+		}
+		if (this.paths) {
+			console.log(JSON.stringify(this.paths));
+		}
+
 	},
 	isPointInGrid: function(point) {
 		if (point.x > this.gridDim.width - 1 || point.x < 0)
@@ -306,7 +326,7 @@ var Maze = Class.extend({
 		this.grid[point.x][point.y] = weight || 0;
 		this.pf.formula = MazeStrategy.euclidean;
 
-		if (this.pf.findPath(this.Ustart, this.Uend)) {
+		if (this.pf.findPath(this.start, this.end)) {
 			this.paths = {};
 			return true;
 		} else {
@@ -323,15 +343,14 @@ var Maze = Class.extend({
 		
 		return false;
 	},
-	getPath: function(mazeStrategy, Ustart, Uend) { // Modification for Ustart and Uend
-		this.Ustart = Ustart || this.start;
-		this.Uend = Uend || this.end;
-
+	getPath: function(mazeStrategy) { // Modification for Ustart and Uend
 		if (mazeStrategy === MazeStrategy.air)
 			return this.getPathAir();
 
-		if (!this.paths[mazeStrategy])
+		if (!this.paths[mazeStrategy]) {
+			console.log('no need');
 			this.calculate(mazeStrategy);
+		}
 		
 		return this.paths[mazeStrategy];
 	},
@@ -339,8 +358,8 @@ var Maze = Class.extend({
 		var path = [];
 
 		// Modification change this.start to this.Ustart
-		for (var i = this.Ustart.x; i < this.Uend.x + 1; ++i)
-			path.push(new Point(i, this.Ustart.y));
+		for (var i = this.start.x; i < this.end.x + 1; ++i)
+			path.push(new Point(i, this.start.y));
 
 		return path;
 	},
@@ -351,13 +370,14 @@ var Maze = Class.extend({
 			var path = [];
 			this.pf.formula = mazeStrategy;
 			// Modification change this.start to this.Ustart and this.end to this.Uend
-			var nodes = this.pf.findPath(this.Ustart, this.Uend);
+			var nodes = this.pf.findPath(this.start, this.end);
 
 			for (var i = 0; i < nodes.length; i++)
 				path.push(new Point(nodes[i].x, nodes[i].y));
 		}
 
-		this.paths[mazeStrategy] = path;
+		this.paths[mazeStrategy] = this.isRotated ? path.reverse() : path;
+
 	}
 });
 
