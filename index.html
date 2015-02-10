@@ -50,7 +50,7 @@
 <script src="Scripts/record.js"></script>
 <script src="Scripts/playerai.js"></script>
 <script>
-var Game = (function(bot) {
+var Game = (function(playerai0, playerai1) {
 	"use strict";
 
 	var canvas = document.querySelector('#game');
@@ -214,13 +214,21 @@ var Game = (function(bot) {
 		logic.start();
 
 		/* Modifications here */
-		var initTowers = bot.getInitTowers();
+		// Build initial towers for player 0
+		var initTowers = playerai0.getInitTowers();
 
 		for(var i = 0; i < initTowers.length; i++) {
 			var Towerinfo = initTowers[i];
 			logic.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
 		}
 
+		// Build initial towers for player 1
+		var initTowers = playerai1.getInitTowers();
+
+		for(var i = 0; i < initTowers.length; i++) {
+			var Towerinfo = initTowers[i];
+			logic.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+		}
 		/* End Modifications*/
 	};
 	var progress = function(e) {
@@ -228,14 +236,14 @@ var Game = (function(bot) {
 	};
 
 	var view = new CanvasView(canvas);
-	var logic = new GameLogic(view, 30, 15, bot); // Modification to add players
+	var logic = new GameLogic(view, 30, 15, [playerai0, playerai1]); // Modification to add players
 	var loader = new Loader(completed, progress);
 	loader.set('Images', ImageLoader, images, resources.images);
 	loader.set('Sounds', SoundLoader, sounds, resources.sounds);
 	loader.start();
 });
 
-Game(player1);
+Game(player0, player1);
 </script>
 </body>
 </html>

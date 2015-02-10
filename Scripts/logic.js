@@ -25,10 +25,10 @@ var GameLogic = Base.extend({
 	init: function(view, mazeWidth, mazeHeight, playerData) {
 		var me = this;
 		me._super();
-		
+
 		me.width = mazeWidth;
 		me.height = mazeHeight;
-		me.playerData = playerData || new PlayerAI();
+		me.playerData = playerData || [new PlayerAI(), new PlayerAI()];
 
 		me.towers = [];
 		me.units  = [];
@@ -45,9 +45,9 @@ var GameLogic = Base.extend({
 		me.view            = view;
 		me.players         = [new Player(), new Player()];
 		// Modification here to switch role between player
-		me.playerTurn      = 0;
-		me.currentDefender = me.players[me.playerTurn];
-		me.currentAttacker = me.players[me.playerTurn + 1];
+		me.playerTurn      = 1;
+		me.currentDefender = me.players[1];
+		me.currentAttacker = me.players[0];
 
 		
 
@@ -238,7 +238,6 @@ var GameLogic = Base.extend({
 		unit.addEventListener(events.accomplished, function(unt) {
 			var player = unt.target;
 			player.hit(unt); // Modification to only hit target of unit
-			console.log(this.players);
 			// if (player.getHitpoints() == 0) { 
 			// 	this.triggerEvent(events.playerDefeated, player);
 			// 	this.finish();
@@ -278,8 +277,6 @@ var GameLogic = Base.extend({
 		this.triggerEvent(events.waveDefeated, this.currentWave);
 
 		if (gameOn) {
-			// Swap start and end points
-			console.log('hello');
 
 			this.maze.rePosition();
 
@@ -291,7 +288,6 @@ var GameLogic = Base.extend({
 
 			// Switch attacker and defender
 			this.playerTurn = (this.playerTurn + 1) % 2;
-			console.log("here " + this.players);
 			this.currentAttacker = this.players[(this.playerTurn + 1) % 2];
 			this.currentDefender = this.players[this.playerTurn];
 			// console.log(JSON.stringify(this.currentDefender));
@@ -310,8 +306,7 @@ var GameLogic = Base.extend({
 
 			me.state = GameState.waving;	
 			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
-			var wave = new AIWaveGenerator(this.playerData.getUnitGenerator(), this.currentDefender); // Modification generate unit that attacks current defender
-			console.log(JSON.stringify(this.currentDefender));
+			var wave = new AIWaveGenerator(this.playerData[(this.playerTurn + 1) % 2].getUnitGenerator(), this.currentDefender); // Modification generate unit that attacks current defender
 			wave.addEventListener(events.waveFinished, function() {
 				me.triggerEvent(events.waveFinished);
 				wave.removeEventListener(events.waveFinished);
@@ -359,7 +354,17 @@ var GameLogic = Base.extend({
 	},
 	// Modification to build Towers based on User TowerGenerator
 	buildProgrammedTowers: function() {
-		var nextTowers = (this.playerData.getTowerGenerator())();
+		// Build Tower for player 0
+		var nextTowers = (this.playerData[0].getTowerGenerator())();
+		for(var i = 0; i < nextTowers.length; i++) {
+			var Towerinfo = nextTowers[i];
+			if (Towerinfo) {
+				this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+			}
+		}
+
+		// Build Tower for player 1
+		var nextTowers = (this.playerData[1].getTowerGenerator())();
 		for(var i = 0; i < nextTowers.length; i++) {
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
@@ -521,7 +526,7 @@ var AIWaveGenerator = Wave.extend({
 		var numUnits = 2;
 		var maxtime = 1300 * numUnits;
 		for (var i = 0; i < numUnits; ++i) {
-			var unit = new Speedy;
+			var unit = UnitGenerator();
 			unit.target = target;
 			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
 		}
