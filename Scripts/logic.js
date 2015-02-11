@@ -161,19 +161,6 @@ var GameLogic = Base.extend({
 
 		this.update(this.towers);
 		if (this.state === GameState.waving) {
-			// Modification for units to be aware of new rocks
-			// var allUnits = this.units;
-
-			// for (var i = allUnits.length; i--; ) {
-			// 	var unit = allUnits[i];
-			// 	var mazeCoordinates = unit.mazeCoordinates;
-			// 	// console.log(mazeCoordinates);;
-			// 	var path = this.maze.getPath(unit.strategy, Math.ceil(mazeCoordinates));
-			// 	unit.path = new Path(path);			
-			// }
-
-			// End Modifications
-
 			this.update(this.shots);
 			this.update(this.units);
 			this.removeDeadObjects();
@@ -184,23 +171,11 @@ var GameLogic = Base.extend({
 				var unit = newUnits[i];
 				if (unit) {    // Modifcations check that unit is defined
 					var path = this.maze.getPath(unit.strategy);
-					unit.mazeCoordinates = this.maze.start;
+					unit.mazeCoordinates = this.maze.Ustart;
 					unit.path = new Path(path);
 					this.addUnit(unit);
 				}
 			}
-			/* Modifications to build new towers on demand */
-			// if (this.timer % this.towerTimer == 0) {
-			// 	var nextTowers = (this.playerData.getTowerGenerator())();
-			// 	for(var i = 0; i < nextTowers.length; i++) {
-			// 		var Towerinfo = nextTowers[i];
-			// 		if (Towerinfo) {
-			// 			this.buildTower(new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
-			// 		}
-			// 	}
-			// }
-			// this.timer++;
-			/* End Modifications*/
 
 			// Modifications to update gamestate
 			var towers = this.towers;

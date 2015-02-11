@@ -36,16 +36,14 @@ var TowerGenerator1 = function() {
 }
 
 // List of monsters and towers for testing
-var monsters = [Mario, Rope, AirWolf, DarkNut, Speedy, Armos]
-var towers = [Rock, MGNest, CanonTower, FlameTower, Flak, IceTower, GateToHell]
+var monsters = [Mario, Rope, DarkNut, Speedy, Armos]
+var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
 
 
 var player0 = new PlayerAI([
-  [new Point(2, 8), GateToHell],
-  [new Point(10, 10), Flak]
+  [new Point(2, 8), GateToHell]
 ], PlayerGenerator, TowerGenerator);
 
 var player1 = new PlayerAI([
-  [new Point(2, 8), LaserTower],
-  [new Point(13, 10), Flak]
+  [new Point(2, 8), LaserTower]
 ], PlayerGenerator1, TowerGenerator1);

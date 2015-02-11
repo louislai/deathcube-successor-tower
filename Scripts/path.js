@@ -284,13 +284,21 @@ var Maze = Class.extend({
 		this.paths = {};
 		// Modification extra variable to check if direction rotated
 		this.isRotated = false;
+
+		// custom start point for units depending on round
+		this.Ustart = this.start;
 	},
 	rePosition: function() {
 		if (this.isRotated) {
 			for (var path in this.paths) {
 				this.paths[path] = this.paths[path].reverse();
 			}
+
+			// Reposition starting point
+			this.Ustart = this.start;
 		}
+
+
 
 	},
 	rotate: function() {
@@ -299,8 +307,12 @@ var Maze = Class.extend({
 			for (var path in this.paths) {
 				this.paths[path] = this.paths[path].reverse();
 			}
+
+			// Reverse starting point to be end
+			this.Ustart = this.end;
 		}
 
+		
 	},
 	isPointInGrid: function(point) {
 		if (point.x > this.gridDim.width - 1 || point.x < 0)
@@ -354,7 +366,7 @@ var Maze = Class.extend({
 		for (var i = this.start.x; i < this.end.x + 1; ++i)
 			path.push(new Point(i, this.start.y));
 
-		return path;
+		return this.isRotated ? path.reverse() : path;
 	},
 	calculate: function(mazeStrategy) {
 		if (mazeStrategy === MazeStrategy.air) {
