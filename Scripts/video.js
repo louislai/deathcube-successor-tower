@@ -118,16 +118,11 @@ var CanvasView = View.extend({
 		var height = this.height / this.mazeSize.height;
 
 		// Fill border
-		var x_green = (this.mazeSize.width / 2) * width;
-		var x_red = x_green - width / 10;
-		for (var i = 0; i < this.height; i++) {
-			// Draw green cell
-			ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
-			ctx.fillRect(x_green, i, width / 10, height);
+		var x = (this.mazeSize.width / 2) * width - width / 20;
 
-			// Draw red cell
+		for (var i = 0; i < this.height; i++) {
 			ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
-			ctx.fillRect(x_red, i, width / 10, height);
+			ctx.fillRect(x, i, width / 10, height);
 		}
 	},
 	drawGrid: function() {
