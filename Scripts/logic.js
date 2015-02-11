@@ -536,10 +536,14 @@
  		var numUnits = 2;
  		var maxtime = 1300 * numUnits;
  		for (var i = 0; i < numUnits; ++i) {
- 			var unit = UnitGenerator();
- 			unit.owner = owner;
- 			unit.target = target;
- 			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
+ 			var type = UnitGenerator();
+ 			if (owner.money >= type.cost) { // Check cost of unit
+ 				owner.addMoney(-type.cost)
+	 			var unit = new type;
+	 			unit.owner = owner;
+	 			unit.target = target;
+	 			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
+	 		}
  		}
  	}
  });

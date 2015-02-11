@@ -14,11 +14,11 @@ var PlayerAI = Base.extend({
 });
 
 var PlayerGenerator = function() {
-  return new monsters[Math.floor(Math.random() * monsters.length)];
+  return monsters[Math.floor(Math.random() * monsters.length)];
 }
 
 var PlayerGenerator1 = function() {
-  return new monsters[Math.floor(Math.random() * monsters.length)];
+  return monsters[Math.floor(Math.random() * monsters.length)];
 }
 
 function randomTower() {
