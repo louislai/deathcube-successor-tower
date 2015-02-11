@@ -14,12 +14,13 @@ var PlayerAI = Base.extend({
 });
 
 var PlayerGenerator = function() {
-  return new Armos;
+  return new monsters[Math.floor(Math.random() * monsters.length)];
 }
 
 var PlayerGenerator1 = function() {
-  return new Speedy;
+  return new monsters[Math.floor(Math.random() * monsters.length)];
 }
+
 
 var TowerGenerator = function() {
   return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock],
@@ -31,6 +32,8 @@ var TowerGenerator1 = function() {
           [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), IceTower]];
 }
 
+
+var monsters = [Mario, Rope, AirWolf, DarkNut, Speedy, Armos]
 var player0 = new PlayerAI([
   [new Point(2, 8), GateToHell],
   [new Point(10, 10), Flak]
