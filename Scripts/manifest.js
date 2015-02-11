@@ -5,6 +5,7 @@
 var constants = {
 	ticks: 25, // Default is 25
 	tickInterval: 0.001, // To run game faster
+	maxUnitsPerRound: 8,
 	money : 200,
 	hitpoints : 10,
 	mediPackCost : 5,

@@ -280,7 +280,9 @@
 
 		if (gameOn) { // If game still on
 			if (this.numRounds > this.maxRounds) { // If number of rounds exceed maximum number of rounds
-				if (this.players[0].getHitpoints() < this.players[1].getHitpoints() ) { // Player 0 lose if have less health
+				player0_points = this.players[0].getHitpoints() + this.players[0].money / 4;
+				player1_points = this.players[1].getHitpoints() + this.players[1].money / 4;
+				if (player0_points < player1_points ) { // Player 0 lose if have less points
 					this.players[0].triggerEvent(events.playerDefeated, this.players[0]);
 				} else{
 					this.players[1].triggerEvent(events.playerDefeated, this.players[1]);
@@ -533,16 +535,18 @@
  var AIWaveGenerator = Wave.extend({
  	init: function(UnitGenerator, owner, target) {
  		this._super();
- 		var numUnits = 2;
+ 		var units = UnitGenerator();
+ 		var numUnits = Math.min(units.length, constants.maxUnitsPerRound);
  		var maxtime = 1300 * numUnits;
  		for (var i = 0; i < numUnits; ++i) {
- 			var type = UnitGenerator();
+ 			var type = units[i][0];
  			if (owner.money >= type.cost) { // Check cost of unit
  				owner.addMoney(-type.cost)
 	 			var unit = new type;
+	 			var time = units[i][1];
 	 			unit.owner = owner;
 	 			unit.target = target;
-	 			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
+	 			this.add(unit, i === 0 ? 0 : time);
 	 		}
  		}
  	}

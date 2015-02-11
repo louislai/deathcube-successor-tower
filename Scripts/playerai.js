@@ -14,7 +14,8 @@ var PlayerAI = Base.extend({
 });
 
 var PlayerGenerator = function() {
-  return monsters[Math.floor(Math.random() * monsters.length)];
+  return [[monsters[Math.floor(Math.random() * monsters.length)], Math.random() * 1000],
+          [monsters[Math.floor(Math.random() * monsters.length)], Math.random() * 2000]];
 }
 
 var PlayerGenerator1 = function() {
@@ -46,4 +47,4 @@ var player0 = new PlayerAI([
 
 var player1 = new PlayerAI([
   [new Point(2, 8), LaserTower]
-], PlayerGenerator1, TowerGenerator1);
+], PlayerGenerator, TowerGenerator1);
