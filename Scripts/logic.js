@@ -144,7 +144,7 @@
 			this.view.start();
 			this.gameLoop = setInterval(function() {
 				me.tick();
-			}, constants.ticks);	
+			}, constants.tickInterval);	
 		}
 	},
 	pause: function() {

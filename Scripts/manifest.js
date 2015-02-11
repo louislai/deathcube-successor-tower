@@ -4,6 +4,7 @@
  */
 var constants = {
 	ticks: 20, // Default is 20
+	tickInterval: 0.01, // To run game faster
 	money : 100000,
 	hitpoints : 10,
 	mediPackCost : 5,

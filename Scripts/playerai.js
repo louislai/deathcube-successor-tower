@@ -41,7 +41,7 @@ var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
 
 
 var player0 = new PlayerAI([
-  [new Point(2, 8), GateToHell]
+  [new Point(2, 8), LaserTower]
 ], PlayerGenerator, TowerGenerator);
 
 var player1 = new PlayerAI([
