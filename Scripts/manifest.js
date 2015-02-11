@@ -12,6 +12,7 @@ var constants = {
 	towerBuildCost : 5,
 	towerBuildFactor : 1.85,
 	towerBuildNumber : 10,
+	maxRounds: 50
 };
 
 /*

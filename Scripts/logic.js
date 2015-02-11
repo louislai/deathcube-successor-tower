@@ -3,43 +3,43 @@
  * The gamestate enumeration
  * @overrride
  */
-var GameState = {
-	unstarted : 0,
-	building : 1,
-	waving : 2,
-	finished : 3,
-};
+ var GameState = {
+ 	unstarted : 0,
+ 	building : 1,
+ 	waving : 2,
+ 	finished : 3,
+ };
 
 /* 
  * Global objects
  */
-var types = {
-	units : {},
-	towers : {},
-	shots : {},
-};
+ var types = {
+ 	units : {},
+ 	towers : {},
+ 	shots : {},
+ };
 
 /*
  * The GAME
  */
-var GameLogic = Base.extend({
-	init: function(view, mazeWidth, mazeHeight, playerData) {
-		var me = this;
-		me._super();
+ var GameLogic = Base.extend({
+ 	init: function(view, mazeWidth, mazeHeight, playerData) {
+ 		var me = this;
+ 		me._super();
 
-		me.width = mazeWidth;
-		me.height = mazeHeight;
-		me.playerData = playerData || [new PlayerAI(), new PlayerAI()];
+ 		me.width = mazeWidth;
+ 		me.height = mazeHeight;
+ 		me.playerData = playerData || [new PlayerAI(), new PlayerAI()];
 
-		me.towers = [];
-		me.units  = [];
-		me.shots  = [];
+ 		me.towers = [];
+ 		me.units  = [];
+ 		me.shots  = [];
 
-		
-		me.mediPackCost     = constants.mediPackCost;
-		me.mediPackFactor   = constants.mediPackFactor;
-		me.towerBuildCost   = constants.towerBuildCost;
-		me.towerBuildFactor = constants.towerBuildFactor;
+
+ 		me.mediPackCost     = constants.mediPackCost;
+ 		me.mediPackFactor   = constants.mediPackFactor;
+ 		me.towerBuildCost   = constants.towerBuildCost;
+ 		me.towerBuildFactor = constants.towerBuildFactor;
 		// me.maxTowerNumber   = constants.towerBuildNumber; Deprecate to use specific tower number attribute for player
 		me.mediPackHealth   = constants.mediPackHealth;
 
@@ -53,6 +53,10 @@ var GameLogic = Base.extend({
 		// Assign sides for AIs
 		playerData[0].side = 0;
 		playerData[1].side = 1;
+
+		// Tiebreaker when game takes too long
+		me.maxRounds = constants.maxRounds;
+		me.numRounds = 0;
 
 		me.state         = GameState.unstarted;
 		var size         = new Size(mazeWidth, mazeHeight);	
@@ -166,7 +170,7 @@ var GameLogic = Base.extend({
 			this.removeDeadObjects();
 			var newUnits = this.currentWave.update();
 
-			 
+
 			for (var i = newUnits.length; i--; ) {
 				var unit = newUnits[i];
 				if (unit) {    // Modifcations check that unit is defined
@@ -259,7 +263,11 @@ var GameLogic = Base.extend({
 			this.endWave();
 	},
 	endWave: function() {
-		var gameOn = this.state !== 3; // Modification to detect if game not finished
+
+		// Increment Round numbers
+		this.numRounds++;
+
+		var gameOn = this.state !== 3 && this.state !== 0; // Modification to detect if game still laying
 		this.currentDefender.addMoney(this.currentWave.prizeMoney);
 		this.state = GameState.building;
 
@@ -270,25 +278,32 @@ var GameLogic = Base.extend({
 
 		this.triggerEvent(events.waveDefeated, this.currentWave);
 
-		if (gameOn) {
+		if (gameOn) { // If game still on
+			if (this.numRounds > this.maxRounds) { // If number of rounds exceed maximum number of rounds
+				if (this.players[0].getHitpoints() < this.players[1].getHitpoints() ) { // Player 0 lose if have less health
+					this.players[0].triggerEvent(events.playerDefeated, this.players[0]);
+				} else{
+					this.players[1].triggerEvent(events.playerDefeated, this.players[1]);
+				}
+			} else {
+				this.maze.rePosition();
 
-			this.maze.rePosition();
+				// Modifications to build user Tower
+				this.buildProgrammedTowers();
 
-			// Modifications to build user Tower
-			this.buildProgrammedTowers();
+				// Reverse map
+				this.maze.rotate();
 
-			// Reverse map
-			this.maze.rotate();
+				// Switch attacker and defender
+				this.playerTurn = (this.playerTurn + 1) % 2;
+				this.currentAttacker = this.players[(this.playerTurn + 1) % 2];
+				this.currentDefender = this.players[this.playerTurn];
+				// console.log(JSON.stringify(this.currentDefender));
+				// console.log(JSON.stringify(this.currentAttacker));
 
-			// Switch attacker and defender
-			this.playerTurn = (this.playerTurn + 1) % 2;
-			this.currentAttacker = this.players[(this.playerTurn + 1) % 2];
-			this.currentDefender = this.players[this.playerTurn];
-			// console.log(JSON.stringify(this.currentDefender));
-			// console.log(JSON.stringify(this.currentAttacker));
-
-			this.beginWave(); // Modification to run wave continuously
-		 } else {
+				this.beginWave(); // Modification to run wave continuously
+			}
+		} else {
 			this.triggerEvent(events.playerDefeated, this.currentDefender); // Trigger playerDefeated event if gameEnd
 		}
 	},
@@ -360,7 +375,7 @@ var GameLogic = Base.extend({
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
 				this.buildTower(this.currentDefender, this.currentAttacker, 
-					              Towerinfo[0], Towerinfo[1]);
+					Towerinfo[0], Towerinfo[1]);
 			}
 		}
 
@@ -370,10 +385,10 @@ var GameLogic = Base.extend({
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
 				this.buildTower(this.currentAttacker, this.currentDefender, 
-					              Towerinfo[0], Towerinfo[1]);
+					Towerinfo[0], Towerinfo[1]);
 			}
 		}
-			
+
 	},
 	destroyTower: function(owner, pt) {
 		if (this.state == GameState.building) {
@@ -388,10 +403,10 @@ var GameLogic = Base.extend({
 				this.maze.tryRemove(pt);
 
 				if (!(towerToRemove instanceof Rock)) {
-						owner.triggerEvent(events.towerNumberChanged, {
-							current: this.getNumShooting(owner),
-							maximum: owner.maxTowerNumber,
-						});
+					owner.triggerEvent(events.towerNumberChanged, {
+						current: this.getNumShooting(owner),
+						maximum: owner.maxTowerNumber,
+					});
 				}
 			}
 		}
@@ -433,98 +448,98 @@ var GameLogic = Base.extend({
 /*
  * The WAVELIST
  */
-var WaveList = Class.extend({
-	init: function() {
-		this.waves = [];
-		this.index = 0;
-		this.unitNames = Object.keys(types.units);
-	},
-	random: function() {
-		var wave = new Wave();
-		var n = rand(Math.max(~~(this.index * 0.5), 1), this.index);
-		var maxtime = 1300 * n;
-		wave.prizeMoney = n;
+ var WaveList = Class.extend({
+ 	init: function() {
+ 		this.waves = [];
+ 		this.index = 0;
+ 		this.unitNames = Object.keys(types.units);
+ 	},
+ 	random: function() {
+ 		var wave = new Wave();
+ 		var n = rand(Math.max(~~(this.index * 0.5), 1), this.index);
+ 		var maxtime = 1300 * n;
+ 		wave.prizeMoney = n;
 
-		for (var i = 0; i < n; ++i) {
-			var j = rand(0, Math.min(this.unitNames.length, ~~(this.index * 0.2) + 1));
-			var name = this.unitNames[j];
-			var unit = new (types.units[name])();
-			wave.add(unit, i === 0 ? 0 : rand(0, maxtime));
-		}
+ 		for (var i = 0; i < n; ++i) {
+ 			var j = rand(0, Math.min(this.unitNames.length, ~~(this.index * 0.2) + 1));
+ 			var name = this.unitNames[j];
+ 			var unit = new (types.units[name])();
+ 			wave.add(unit, i === 0 ? 0 : rand(0, maxtime));
+ 		}
 
-		return wave;
-	},
-	next: function() {
-		if (this.index < this.waves.length)
-			return this.waves[this.index++];
+ 		return wave;
+ 	},
+ 	next: function() {
+ 		if (this.index < this.waves.length)
+ 			return this.waves[this.index++];
 
-		++this.index;
-		return this.random();
-	},
-});
+ 		++this.index;
+ 		return this.random();
+ 	},
+ });
 
 /*
  * The WAVE
  */
-var Wave = Base.extend({
-	init: function() {
-		this._super();
-		this.startTime = 0;
-		this.units = [];
-		this.prizeMoney = 0;
-		this.finished = false;
-		this.registerEvent(events.unitSpawned)
-		this.registerEvent(events.waveFinished);
-	},
-	add: function(unit, time) {
-		this.units.push({
-			time: time,
-			unit: unit
-		});
-	},
-	update: function() {
-		var unitsToSpawn = [];
+ var Wave = Base.extend({
+ 	init: function() {
+ 		this._super();
+ 		this.startTime = 0;
+ 		this.units = [];
+ 		this.prizeMoney = 0;
+ 		this.finished = false;
+ 		this.registerEvent(events.unitSpawned)
+ 		this.registerEvent(events.waveFinished);
+ 	},
+ 	add: function(unit, time) {
+ 		this.units.push({
+ 			time: time,
+ 			unit: unit
+ 		});
+ 	},
+ 	update: function() {
+ 		var unitsToSpawn = [];
 
-		if (!this.finished) {
-			for (var i = this.units.length; i--; ) {
-				if (this.units[i].time < this.startTime) {
-					unitsToSpawn.push(this.units[i].unit);
-					this.units.splice(i, 1);
-				}
-			}
+ 		if (!this.finished) {
+ 			for (var i = this.units.length; i--; ) {
+ 				if (this.units[i].time < this.startTime) {
+ 					unitsToSpawn.push(this.units[i].unit);
+ 					this.units.splice(i, 1);
+ 				}
+ 			}
 
-			if (this.units.length === 0) {
-				this.finished = true;
-				this.triggerEvent(events.waveFinished);
-			}
+ 			if (this.units.length === 0) {
+ 				this.finished = true;
+ 				this.triggerEvent(events.waveFinished);
+ 			}
 
-			if (unitsToSpawn.length > 0) {
-				var remaining = this.units.length;
-				this.triggerEvent(events.unitSpawned, remaining); 				
-			}
+ 			if (unitsToSpawn.length > 0) {
+ 				var remaining = this.units.length;
+ 				this.triggerEvent(events.unitSpawned, remaining); 				
+ 			}
 
-			this.startTime += constants.ticks;
-		}
+ 			this.startTime += constants.ticks;
+ 		}
 
-		return unitsToSpawn;
-	},
-});
+ 		return unitsToSpawn;
+ 	},
+ });
 
 // Modification
 
 /*
  * The Customized Wave Generator
  */
-var AIWaveGenerator = Wave.extend({
-	init: function(UnitGenerator, owner, target) {
-		this._super();
-		var numUnits = 2;
-		var maxtime = 1300 * numUnits;
-		for (var i = 0; i < numUnits; ++i) {
-			var unit = UnitGenerator();
-			unit.owner = owner;
-			unit.target = target;
-			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
-		}
-	}
-});
+ var AIWaveGenerator = Wave.extend({
+ 	init: function(UnitGenerator, owner, target) {
+ 		this._super();
+ 		var numUnits = 2;
+ 		var maxtime = 1300 * numUnits;
+ 		for (var i = 0; i < numUnits; ++i) {
+ 			var unit = UnitGenerator();
+ 			unit.owner = owner;
+ 			unit.target = target;
+ 			this.add(unit, i === 0 ? 0 : rand(0, maxtime));
+ 		}
+ 	}
+ });

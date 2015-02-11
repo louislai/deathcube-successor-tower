@@ -279,7 +279,7 @@ var Tower = GameObject.extend({
  * The unit base
  */
 var Unit = GameObject.extend({
- 	init: function(owner, target, speed, animationDelay, mazeStrategy, hitpoints) {
+ 	init: function(owner, target, speed, animationDelay, mazeStrategy, hitpoints, prize) {
 		this._super(owner, target, speed, animationDelay);
  		this.timer = 0;
  		this.path = new Path([]);
@@ -289,6 +289,7 @@ var Unit = GameObject.extend({
  		this.hitpoints = hitpoints || 0;
  		this.health = this.hitpoints;
  		this.direction = Direction.right;
+ 		this.prize = prize || 0; // Put prize money
  		this.registerEvent(events.accomplished);
  		this.registerEvent(events.died);
  	},
