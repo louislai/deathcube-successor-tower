@@ -21,19 +21,25 @@ var PlayerGenerator1 = function() {
   return new monsters[Math.floor(Math.random() * monsters.length)];
 }
 
+function randomTower() {
+  return towers[Math.floor(Math.random() * towers.length)];
+}
 
 var TowerGenerator = function() {
   return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock],
-          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), LaserTower]];
+          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), randomTower()]];
 }
 
 var TowerGenerator1 = function() {
   return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock],
-          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), IceTower]];
+          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), randomTower()]];
 }
 
-
+// List of monsters and towers for testing
 var monsters = [Mario, Rope, AirWolf, DarkNut, Speedy, Armos]
+var towers = [Rock, MGNest, CanonTower, FlameTower, Flak, IceTower, GateToHell]
+
+
 var player0 = new PlayerAI([
   [new Point(2, 8), GateToHell],
   [new Point(10, 10), Flak]

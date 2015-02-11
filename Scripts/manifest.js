@@ -11,7 +11,7 @@ var constants = {
 	mediPackHealth : 1,
 	towerBuildCost : 5,
 	towerBuildFactor : 1.85,
-	towerBuildNumber : 4,
+	towerBuildNumber : 10,
 };
 
 /*
