@@ -3,9 +3,9 @@
  * Global constants
  */
 var constants = {
-	ticks: 20, // Default is 20
-	tickInterval: 0.01, // To run game faster
-	money : 100000,
+	ticks: 25, // Default is 25
+	tickInterval: 0.001, // To run game faster
+	money : 200,
 	hitpoints : 10,
 	mediPackCost : 5,
 	mediPackFactor : 1.5,

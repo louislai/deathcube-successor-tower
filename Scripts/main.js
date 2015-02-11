@@ -149,7 +149,7 @@ var GameObject = Base.extend({
 	update: function() {
 		var visual = this.visual;
 		var direction = visual.frames.length === 4 ? this.direction : 0;
-		visual.time += constants.ticks;
+		visual.time += constants.ticks; 
 
 		if (visual.direction !== this.direction) {
 			visual.direction = this.direction;
@@ -327,6 +327,7 @@ var Unit = GameObject.extend({
  			this.health = 0;
  			this.dead = true;
  			this.triggerEvent(events.died, this);
+ 			this.target.addMoney(this.prize); // Add money for opponent if shot dead
  			this.playDeathSound();
  		}
  	},

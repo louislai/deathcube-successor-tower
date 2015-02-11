@@ -5,7 +5,7 @@
  */
 var Mario = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, Mario.speed, 100, MazeStrategy.manhattan, Mario.hitpoints);
+		this._super(owner, target, Mario.speed, 100, MazeStrategy.manhattan, Mario.hitpoints, 1);
 		this.createVisual(Mario.sprite, [8,8,8,8]);
 	},
 }, function(enemy) {
@@ -15,6 +15,7 @@ var Mario = Unit.extend({
 	enemy.nickName = 'Mario';
 	enemy.sprite = 'mario';
 	enemy.rating = enemy.speed * enemy.hitpoints;
+	enemy.cost = Math.round(enemy.rating / 20.0 + 1.0);
 	types.units['Mario'] = enemy;
 });
 
@@ -23,7 +24,7 @@ var Mario = Unit.extend({
  */
 var Rope = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, Rope.speed, 80, MazeStrategy.euclideanNoSQR, Rope.hitpoints);
+		this._super(owner, target, Rope.speed, 80, MazeStrategy.euclideanNoSQR, Rope.hitpoints, 2);
 		this.createVisual(Rope.sprite, [4, 4, 4, 4], 0.8);
 	},
 }, function(rope) {
@@ -32,7 +33,8 @@ var Rope = Unit.extend({
 	rope.description = 'An ugly rope that tries to conquer the zone. Watch out when they mass up!';
 	rope.nickName = 'Rope';
 	rope.sprite = 'rope';
-	rope.rating = rope.speed * rope.hitpoints;
+	rope.rating = rope.speed * rope.hitpoints;	
+	rope.cost = Math.round(rope.rating / 20.0 + 1.0);
 	types.units['Rope'] = rope;
 });
 
@@ -41,7 +43,7 @@ var Rope = Unit.extend({
  */
 var FireWizzrobe = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, FireWizzrobe.speed, 70, MazeStrategy.manhattan, FireWizzrobe.hitpoints);
+		this._super(owner, target, FireWizzrobe.speed, 70, MazeStrategy.manhattan, FireWizzrobe.hitpoints, 5);
 		this.createVisual(FireWizzrobe.sprite, [3, 3, 3, 3], 1.4);
 	},
 }, function(wizz) {
@@ -51,6 +53,7 @@ var FireWizzrobe = Unit.extend({
 	wizz.nickName = 'Wizzrobe';
 	wizz.sprite = 'firewizzrobe';
 	wizz.rating = wizz.speed * wizz.hitpoints;
+	wizz.cost = Math.round(wizz.rating / 20.0 + 1.0);
 	types.units['FireWizzrobe'] = wizz;
 });
 
@@ -59,7 +62,7 @@ var FireWizzrobe = Unit.extend({
  */
 var AirWolf = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, AirWolf.speed, 50, MazeStrategy.air, AirWolf.hitpoints);
+		this._super(owner, target, AirWolf.speed, 50, MazeStrategy.air, AirWolf.hitpoints, 5);
 		this.createVisual(AirWolf.sprite, [4]);
 	},
 }, function(wolf) {
@@ -69,6 +72,7 @@ var AirWolf = Unit.extend({
 	wolf.nickName = 'Wolf';
 	wolf.sprite = 'airwolf';
 	wolf.rating = wolf.speed * wolf.hitpoints * 1.2;
+	wolf.cost = Math.round(wolf.rating / 20.0 + 1.0);
 	types.units['AirWolf'] = wolf;
 });
 
@@ -77,7 +81,7 @@ var AirWolf = Unit.extend({
  */
 var DarkNut = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, DarkNut.speed, 80, MazeStrategy.euclideanNoSQR, DarkNut.hitpoints);
+		this._super(owner, target, DarkNut.speed, 80, MazeStrategy.euclideanNoSQR, DarkNut.hitpoints, 19);
 		this.createVisual(DarkNut.sprite, [4, 4, 4, 4]);
 	},
 }, function(nut) {
@@ -87,6 +91,7 @@ var DarkNut = Unit.extend({
 	nut.nickName = 'Dark Nut';
 	nut.sprite = 'darknut';
 	nut.rating = nut.speed * nut.hitpoints;
+	nut.cost = Math.round(nut.rating / 20.0 + 1.0);
 	types.units['DarkNut'] = nut;
 });
 
@@ -95,7 +100,7 @@ var DarkNut = Unit.extend({
  */
 var Speedy = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, Speedy.speed, 25, MazeStrategy.diagonalShortCut, Speedy.hitpoints);
+		this._super(owner, target, Speedy.speed, 25, MazeStrategy.diagonalShortCut, Speedy.hitpoints, 45);
 		this.createVisual(Speedy.sprite, [20]);
 	},
 }, function(unit) {
@@ -105,6 +110,7 @@ var Speedy = Unit.extend({
 	unit.nickName = 'HAL';
 	unit.sprite = 'newunit';
 	unit.rating = unit.speed * unit.hitpoints;
+	unit.cost = Math.round(unit.rating / 20.0 + 1.0) - 15;
 	types.units['Speedy'] = unit;
 });
 
@@ -113,7 +119,7 @@ var Speedy = Unit.extend({
  */
 var Armos = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, Armos.speed, 125, MazeStrategy.euclidean, Armos.hitpoints);
+		this._super(owner, target, Armos.speed, 125, MazeStrategy.euclidean, Armos.hitpoints, 40);
 		this.createVisual(Armos.sprite, [4, 4, 4, 4], 1.2);
 	},
 }, function(armos) {
@@ -123,5 +129,6 @@ var Armos = Unit.extend({
 	armos.nickName = 'Armos';
 	armos.sprite = 'armos';
 	armos.rating = armos.speed * armos.hitpoints;
+	armos.cost = Math.round(armos.rating / 20.0 + 1.0) + 10;
 	types.units['Armos'] = armos;
 });

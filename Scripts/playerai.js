@@ -26,13 +26,13 @@ function randomTower() {
 }
 
 var TowerGenerator = function() {
-  return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock],
-          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), randomTower()]];
+  return [[new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)), Rock],
+          [new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)), randomTower()]];
 }
 
 var TowerGenerator1 = function() {
-  return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock],
-          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), randomTower()]];
+  return [[new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)), Rock],
+          [new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)), randomTower()]];
 }
 
 // List of monsters and towers for testing
