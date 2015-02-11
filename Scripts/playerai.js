@@ -22,11 +22,13 @@ var PlayerGenerator1 = function() {
 }
 
 var TowerGenerator = function() {
-  return [[new Point(Math.floor(Math.random() * 30), Math.floor(Math.random() * 10)), Rock]];
+  return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock],
+          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), LaserTower]];
 }
 
 var TowerGenerator1 = function() {
-  return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock]];
+  return [[new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), Rock],
+          [new Point(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)), IceTower]];
 }
 
 var player0 = new PlayerAI([
@@ -35,6 +37,6 @@ var player0 = new PlayerAI([
 ], PlayerGenerator, TowerGenerator);
 
 var player1 = new PlayerAI([
-  [new Point(2, 8), GateToHell],
+  [new Point(2, 8), LaserTower],
   [new Point(13, 10), Flak]
 ], PlayerGenerator1, TowerGenerator1);

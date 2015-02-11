@@ -34,7 +34,7 @@ var View = Class.extend({
 		this.drawBackground();
 		this.drawSpawn();
 		this.drawHome();
-
+		this.drawBorder(); // Modification Add draw border
 		if (this.showGrid)
 			this.drawGrid();
 
@@ -111,6 +111,24 @@ var CanvasView = View.extend({
 		var height = this.height / this.mazeSize.height;
 		ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
 		ctx.fillRect(x, y, width, height);
+	},
+	drawBorder: function() {
+		var ctx = this.context;
+		var width = this.width / this.mazeSize.width;
+		var height = this.height / this.mazeSize.height;
+
+		// Fill border
+		var x_green = (this.mazeSize.width / 2) * width;
+		var x_red = x_green - width / 10;
+		for (var i = 0; i < this.height; i++) {
+			// Draw green cell
+			ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
+			ctx.fillRect(x_green, i, width / 10, height);
+
+			// Draw red cell
+			ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
+			ctx.fillRect(x_red, i, width / 10, height);
+		}
 	},
 	drawGrid: function() {
 		var ctx = this.context;
