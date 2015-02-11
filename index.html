@@ -102,9 +102,11 @@ var Game = (function(playerai0, playerai1) {
 		});
 		logic.addEventListener(events.playerDefeated0, function() {
 			timeInfo.textContent = 'Game over ...';
+			alert("Player 2 won");
 		});
 		logic.addEventListener(events.playerDefeated1, function() {
 			timeInfo.textContent = 'Game over ...';
+			alert("Player 1 won");
 		});
 		logic.addEventListener(events.waveCreated, function(wave) {
 			timeInfo.textContent = wave.units.length + ' units remaining';
