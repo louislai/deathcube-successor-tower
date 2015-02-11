@@ -50,7 +50,9 @@ var GameLogic = Base.extend({
 		me.currentDefender = me.players[1];
 		me.currentAttacker = me.players[0];
 
-		
+		// Assign sides for AIs
+		playerData[0].side = 0;
+		playerData[1].side = 1;
 
 		me.state         = GameState.unstarted;
 		var size         = new Size(mazeWidth, mazeHeight);	
@@ -343,6 +345,16 @@ var GameLogic = Base.extend({
 		if (pt.x <= this.width && pt.x >= 0 && pt.y <= this.height && pt.y >= 0) { // Modification to guarantee point is valid
 			if (this.state == GameState.building && type.cost <= this.currentDefender.money && (isrock || (numShooting < owner.maxTowerNumber))) {
 				newTower.mazeCoordinates = pt;
+
+				// Modification Add Width / 2 to coordinates.x if builder is player 1
+				if (owner === this.players[1]) {
+					newTower.mazeCoordinates.x += this.width / 2;
+				} else {
+					if (newTower.mazeCoordinates.x >= this.width / 2) {
+						return false;
+					} // Return false if player 0 tries to build towers outside of range
+				}
+
 				newTower.cost = type.cost;
 				newTower.targets = this.units;
 
@@ -373,7 +385,7 @@ var GameLogic = Base.extend({
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
 				this.buildTower(this.currentDefender, this.currentAttacker, 
-					              new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+					              Towerinfo[0], Towerinfo[1]);
 			}
 		}
 
@@ -383,7 +395,7 @@ var GameLogic = Base.extend({
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
 				this.buildTower(this.currentAttacker, this.currentDefender, 
-					              new Point(Math.round(Towerinfo[0][0]), Math.round(Towerinfo[0][1])), Towerinfo[1]);
+					              Towerinfo[0], Towerinfo[1]);
 			}
 		}
 			
