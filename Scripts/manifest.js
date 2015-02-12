@@ -3,10 +3,11 @@
  * Global constants
  */
 var constants = {
-	ticks: 25, // Default is 25
-	tickInterval: 0.001, // To run game faster
+	ticks: 25, // Default is 25. DO NOT CHANGE THIS
+	tickInterval: 25, // Engine call tick at interval. Will not change game semantic
+	speedMultiplier: 1, // Multiplier for game object speed. Range from 1 to 100. Will change game semantic
 	maxUnitsPerRound: 8,
-	money : 200,
+	money : 2000,
 	hitpoints : 10,
 	mediPackCost : 5,
 	mediPackFactor : 1.5,
@@ -14,7 +15,7 @@ var constants = {
 	towerBuildCost : 5,
 	towerBuildFactor : 1.85,
 	towerBuildNumber : 10,
-	maxRounds: 50
+	maxRounds: 5000
 };
 
 /*

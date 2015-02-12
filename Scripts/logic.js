@@ -1,7 +1,7 @@
 "use strict";
 /*
  * The gamestate enumeration
- * @overrride
+ * @override
  */
  var GameState = {
  	unstarted : 0,
@@ -46,7 +46,7 @@
 		me.view            = view;
 		me.players         = [new Player(), new Player()];
 		// Modification here to switch role between player
-		me.playerTurn      = 1;   // Right player defends first
+		me.defenderSide      = 1;   // Right player defends first
 		me.currentDefender = me.players[1];
 		me.currentAttacker = me.players[0];
 
@@ -290,18 +290,21 @@
 			} else {
 				this.maze.rePosition();
 
-				// Modifications to build user Tower
-				this.buildProgrammedTowers();
+				
 
 				// Reverse map
 				this.maze.rotate();
 
 				// Switch attacker and defender
-				this.playerTurn = (this.playerTurn + 1) % 2;
-				this.currentAttacker = this.players[(this.playerTurn + 1) % 2];
-				this.currentDefender = this.players[this.playerTurn];
-				// console.log(JSON.stringify(this.currentDefender));
-				// console.log(JSON.stringify(this.currentAttacker));
+				this.defenderSide = (this.defenderSide + 1) % 2;
+				this.currentAttacker = this.players[(this.defenderSide + 1) % 2];
+				this.currentDefender = this.players[this.defenderSide];
+				
+				// Players build towers before player 0 attacks again
+				if (this.defenderSide == 1) {
+					// Modifications to build user Tower
+					this.buildProgrammedTowers();
+				}
 
 				this.beginWave(); // Modification to run wave continuously
 			}
@@ -317,7 +320,7 @@
 
 			me.state = GameState.waving;	
 			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
-			var wave = new AIWaveGenerator(this.playerData[(this.playerTurn + 1) % 2].getUnitGenerator(), this.currentAttacker, this.currentDefender); // Modification generate unit that attacks current defender
+			var wave = new AIWaveGenerator(this.playerData[(this.defenderSide + 1) % 2].getUnitGenerator(), this.currentAttacker, this.currentDefender); // Modification generate unit that attacks current defender
 			wave.addEventListener(events.waveFinished, function() {
 				me.triggerEvent(events.waveFinished);
 				wave.removeEventListener(events.waveFinished);
@@ -372,7 +375,7 @@
 	// Modification to build Towers based on User TowerGenerator
 	buildProgrammedTowers: function() {
 		// Build Tower for player 0
-		var nextTowers = (this.playerData[this.playerTurn].getTowerGenerator())(); // Defender Towers
+		var nextTowers = (this.playerData[this.defenderSide].getTowerGenerator())(); // Defender Towers
 		for(var i = 0; i < nextTowers.length; i++) {
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {
@@ -382,7 +385,7 @@
 		}
 
 		// Build Tower for player 1
-		var nextTowers = (this.playerData[(this.playerTurn + 1) % 2].getTowerGenerator())(); // Attacker Towers
+		var nextTowers = (this.playerData[(this.defenderSide + 1) % 2].getTowerGenerator())(); // Attacker Towers
 		for(var i = 0; i < nextTowers.length; i++) {
 			var Towerinfo = nextTowers[i];
 			if (Towerinfo) {

@@ -133,8 +133,8 @@ var GameObject = Base.extend({
 		this._super();
 		this.z = 0;
 		this.mazeCoordinates = new Point();
-		this.speed = speed || 0;
-		this.animationDelay = animationDelay || 15;
+		this.speed = speed * constants.speedMultiplier || 0;
+		this.animationDelay = animationDelay  / constants.tickInterval || 15;
 		this.dead = false;
 		this.direction = Direction.right;
 
@@ -324,6 +324,7 @@ var Unit = GameObject.extend({
  		this.health -= shot.damage;
 
  		if (!this.dead && this.health <= 0) {
+ 			console.log('dead');
  			this.health = 0;
  			this.dead = true;
  			this.triggerEvent(events.died, this);
