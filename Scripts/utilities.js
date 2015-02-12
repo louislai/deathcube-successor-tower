@@ -15,3 +15,10 @@ window.nextAnimationFrame = (function() {
 	};
 })();
 
+
+/*
+ * Define AIUnit Class
+ * Using JediScript
+ */
+
+
