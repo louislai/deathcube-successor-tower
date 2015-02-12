@@ -14,8 +14,8 @@ var PlayerAI = Base.extend({
 });
 
 var PlayerGenerator = function() {
-  return [[monsters[Math.floor(Math.random() * monsters.length)], Math.random() * 1000],
-          [monsters[Math.floor(Math.random() * monsters.length)], Math.random() * 2000]];
+  return list(new AIUnit(monsters[Math.floor(Math.random() * monsters.length)], Math.random() * 1000),
+              new AIUnit(monsters[Math.floor(Math.random() * monsters.length)], Math.random() * 2000));
 }
 
 var PlayerGenerator1 = function() {
@@ -27,8 +27,7 @@ function randomTower() {
 }
 
 var TowerGenerator = function() {
-  return [[new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)), Rock],
-          [new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)), randomTower()]];
+  return list(new AITower(randomTower(), new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15))));
 }
 
 var TowerGenerator1 = function() {
@@ -41,10 +40,6 @@ var monsters = [Mario, Rope, DarkNut, Speedy, Armos]
 var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
 
 
-var player0 = new PlayerAI([
-  [new Point(2, 8), LaserTower]
-], PlayerGenerator, TowerGenerator);
+var player0 = new PlayerAI(list(new AITower(LaserTower, new Point(2, 8))), PlayerGenerator, TowerGenerator);
 
-var player1 = new PlayerAI([
-  [new Point(2, 8), LaserTower]
-], PlayerGenerator, TowerGenerator1);
+var player1 = new PlayerAI(list(new AITower(LaserTower, new Point(2, 8))), PlayerGenerator, TowerGenerator);

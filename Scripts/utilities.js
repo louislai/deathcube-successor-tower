@@ -21,4 +21,31 @@ window.nextAnimationFrame = (function() {
  * Using JediScript
  */
 
+function AIUnit(type, time) {
+  var type = type;
+  var time = time;
+  this.getType = function() {
+    return type;
+  };
+  this.getTime = function() {
+    return time;
+  };
+}
+
+/*
+ * Define AITower Class
+ * Using JediScript
+ */
+
+function AITower(type, pt) {
+  var coordinates = pt;
+  var type = type;
+  this.getType = function() {
+    return type;
+  };
+  this.getCoordinates = function() {
+    return coordinates
+  }
+}
+
 

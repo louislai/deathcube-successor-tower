@@ -376,24 +376,19 @@
 	buildProgrammedTowers: function() {
 		// Build Tower for player 0
 		var nextTowers = (this.playerData[this.defenderSide].getTowerGenerator())(); // Defender Towers
-		for(var i = 0; i < nextTowers.length; i++) {
-			var Towerinfo = nextTowers[i];
-			if (Towerinfo) {
-				this.buildTower(this.currentDefender, this.currentAttacker, 
-					Towerinfo[0], Towerinfo[1]);
-			}
-		}
+		this.buildAITower(this.currentDefender, this.currentAttacker, nextTowers);
 
 		// Build Tower for player 1
 		var nextTowers = (this.playerData[(this.defenderSide + 1) % 2].getTowerGenerator())(); // Attacker Towers
-		for(var i = 0; i < nextTowers.length; i++) {
-			var Towerinfo = nextTowers[i];
-			if (Towerinfo) {
-				this.buildTower(this.currentAttacker, this.currentDefender, 
-					Towerinfo[0], Towerinfo[1]);
-			}
-		}
+		this.buildAITower(this.currentAttacker, this.currentDefender, nextTowers);
 
+	},
+	buildAITower: function(owner, target, towerlist) {
+		if (!is_empty_list(towerlist)) {
+			var tw = head(towerlist);
+			this.buildTower(owner, target, tw.getCoordinates(), tw.getType());
+			this.buildAITower(owner, target, tail(towerlist));
+		}
 	},
 	destroyTower: function(owner, pt) {
 		if (this.state == GameState.building) {
@@ -539,17 +534,24 @@
  	init: function(UnitGenerator, owner, target) {
  		this._super();
  		var units = UnitGenerator();
- 		var numUnits = Math.min(units.length, constants.maxUnitsPerRound);
- 		var maxtime = 1300 * numUnits;
- 		for (var i = 0; i < numUnits; ++i) {
- 			var type = units[i][0];
- 			var time = units[i][1];
- 			if (owner.money >= type.cost && time <= maxtime) { // Check cost of unit and time does not exceed maxtime
- 				owner.addMoney(-type.cost)
+ 		this.owner = owner;
+ 		this.target = target;
+ 		this.numUnits = Math.min(length(units), constants.maxUnitsPerRound);
+ 		this.maxtime = 1300 * this.numUnits;
+ 		this.buildAIUnit(units, 0, this);
+ 	}, 
+ 	buildAIUnit: function(unitlist, n, me) {
+ 		if (!is_empty_list(unitlist) && n < me.numUnits) {
+ 			var unt = head(unitlist);
+ 			var type = unt.getType();
+ 			var time = unt.getTime();
+ 			if (me.owner.money >= type.cost && time <= me.maxtime) { // Check cost of unit and time does not exceed maxtime
+ 				this.owner.addMoney(-type.cost)
 	 			var unit = new type;
-	 			unit.owner = owner;
-	 			unit.target = target;
-	 			this.add(unit, i === 0 ? 0 : time);
+	 			unit.owner = me.owner;
+	 			unit.target = me.target;
+	 			this.add(unit, n === 0 ? 0 : time);
+	 			this.buildAIUnit(tail(unitlist), n + 1, me);
 	 		}
  		}
  	}
