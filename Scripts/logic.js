@@ -197,6 +197,9 @@
 	},
 	finish: function() {
 		this.state = GameState.finished;
+		// Should I put these here?
+		this.gameLoop = true;
+		this.pause();
 	},
 	getViewSize: function() {
 		return this.view.getSize();
@@ -276,7 +279,7 @@
 		this.triggerEvent(events.waveDefeated, this.currentWave);
 
 		if (gameOn) { // If game still on
-			if (this.numRounds > this.maxRounds) { // If number of rounds exceed maximum number of rounds
+			if (this.numRounds > this.maxRounds &&  this.defenderSide === 0) { // If number of rounds exceed maximum number of rounds
 				var player0_points = this.players[0].getHitpoints() + this.players[0].money / 4;
 				var player1_points = this.players[1].getHitpoints() + this.players[1].money / 4;
 				if (player0_points < player1_points ) { // Player 0 lose if have less points

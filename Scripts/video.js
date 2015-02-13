@@ -99,14 +99,14 @@ var CanvasView = View.extend({
 		var width = this.width / this.mazeSize.width;
 		var height = this.height / this.mazeSize.height;
 		var x = (this.mazeSize.width - 1) * width;
-		var y = ~~(this.mazeSize.height * 0.5) * height;
+		var y = ~~(this.mazeSize.height * 0) * height;
 		ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
 		ctx.fillRect(x, y, width, height);
 	},
 	drawSpawn: function() {
 		var ctx = this.context;
 		var x = 0;
-		var y = ~~(this.mazeSize.height * 0.5) * this.height / this.mazeSize.height;
+		var y = ~~(this.mazeSize.height * 0.95) * this.height / this.mazeSize.height; 
 		var width = this.width / this.mazeSize.width;
 		var height = this.height / this.mazeSize.height;
 		ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
