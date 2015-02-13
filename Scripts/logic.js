@@ -297,7 +297,7 @@
 				this.currentAttacker = this.players[(this.defenderSide + 1) % 2];
 				this.currentDefender = this.players[this.defenderSide];
 				
-				// Players build towers before player 0 attacks again
+				// Players build towers before player 0 attacks again. Only happen after the 1st round
 				if (this.defenderSide == 1) {
 					// Modifications to destroy user Tower
 					this.destroyProgrammedTowers();

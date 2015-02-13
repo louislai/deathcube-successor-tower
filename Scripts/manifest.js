@@ -7,7 +7,7 @@ var constants = {
 	tickInterval: 25, // Engine call tick at interval. Will not change game semantic. 
 	speedMultiplier: 1, // 1 Speedy . Shot ~ 40 at 1. No of on-target shots halved when speedMultiplier incremented
 	maxUnitsPerRound: 8,
-	money : 2000,
+	money : 500,
 	hitpoints : 10,
 	mediPackCost : 5,
 	mediPackFactor : 1.5,
