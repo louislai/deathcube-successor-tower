@@ -15,7 +15,7 @@ var constants = {
 	towerBuildCost : 5,
 	towerBuildFactor : 1.85,
 	towerBuildNumber : 10,
-	maxRounds: 1 // 0  means 1 round
+	maxRounds: 100 // 0  means 1 round
 };
 
 /*
