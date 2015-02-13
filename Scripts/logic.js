@@ -143,7 +143,9 @@
 			var me = this;
 			this.view.start();
 			this.gameLoop = setInterval(function() {
-				me.tick();
+				for (var i=0; i <= constants.speedMultiplier; i++) {
+					me.tick();
+				}
 			}, constants.tickInterval);	
 		}
 	},

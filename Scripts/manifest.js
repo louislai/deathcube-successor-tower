@@ -4,8 +4,8 @@
  */
 var constants = {
 	ticks: 25, // Default is 25. DO NOT CHANGE THIS
-	tickInterval: 25, // Engine call tick at interval. Will not change game semantic. 
-	speedMultiplier: 3, // 1 Speedy . Shot ~ 40 at 1. No of on-target shots halved when speedMultiplier incremented
+	tickInterval: 25, // Engine call tick at interval. Will not change game semantic. Dont use this
+	speedMultiplier: 20, // Use this to increase speed.
 	maxUnitsPerRound: 8,
 	money : 5000,
 	hitpoints : 10,
@@ -15,7 +15,7 @@ var constants = {
 	towerBuildCost : 5,
 	towerBuildFactor : 1.85,
 	towerBuildNumber : 10,
-	maxRounds: 100 // 0  means 1 round
+	maxRounds: 1000 // 0  means 1 round
 };
 
 /*

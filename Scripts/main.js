@@ -239,7 +239,6 @@ var Tower = GameObject.extend({
 		this.direction = Direction.left;
 		this.shotType = shotType || {};
 		this.registerEvent(events.shot);
-		this.speed *= constants.speedMultiplier;
 	},
 	targetFilter: function(target) {
 		return target.strategy !== MazeStrategy.air && target.owner !== this.owner;
@@ -291,7 +290,6 @@ var Unit = GameObject.extend({
  		this.health = this.hitpoints;
  		this.direction = Direction.right;
  		this.prize = prize || 0; // Put prize money
-		this.speed *= constants.speedMultiplier;  // Adjustable speed
  		this.registerEvent(events.accomplished);
  		this.registerEvent(events.died);
  	},
