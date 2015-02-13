@@ -86,9 +86,19 @@ var TowerGenerator = function() {
   return append(randomTower(4), randomRock(10));
 };
 
-var randomPoint = function() {
-  return list(new Point(Math.floor(Math.random() * 15, Math.floor(Math.random() * 15))));
+function randomPoint(n) {
+  if (n === 0) { 
+    return [];
+  } else {
+    return pair(new Point(Math.floor(Math.random() * 15, Math.floor(Math.random() * 15))),
+                randomPoint(n - 1));
+  }
 };
+
+function rn() {
+  return randomPoint(5);
+}
+
 
 function numberToPoint(lst) {
   var pts = [];
@@ -112,7 +122,7 @@ var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
 var initTowers0 = pair(new AITower(LaserTower, new Point(7, 8)), numberToPoint(presetRock0));
 var initTowers1 = pair(new AITower(LaserTower, new Point(7, 8)), numberToPoint(presetRock0));
 
-var player0 = new PlayerAI(initTowers1, PlayerGenerator1, TowerGenerator, randomPoint);
+var player0 = new PlayerAI(initTowers1, PlayerGenerator1, TowerGenerator, rn);
 
-var player1 = new PlayerAI(initTowers0, PlayerGenerator1, TowerGenerator, randomPoint);
+var player1 = new PlayerAI(initTowers0, PlayerGenerator1, TowerGenerator, rn);
   

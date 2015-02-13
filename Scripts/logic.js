@@ -183,18 +183,7 @@
 				}
 			}
 
-			// Modifications to update gamestate
-			var towers = this.towers;
-			GameRecord.rocks = [];
-			GameRecord.towers = [];
-			for (var i=0; i < towers.length; i++) {
-				if (towers[i] instanceof Rock) {
-					GameRecord.rocks.push(towers[i]);
-				} else {
-					GameRecord.towers.push(towers[i]);
-				}
-			}
-			GameRecord.units = this.units;
+			
 		}
 	},
 	finish: function() {
@@ -268,6 +257,9 @@
 			this.endWave();
 	},
 	endWave: function() {
+		// Modifications to update gamestate
+		GameRecord.towers = clone(this.towers);
+		GameRecord.units = clone(this.units);
 
 		var gameOn = this.state !== 3 && this.state !== 0; // Modification to detect if game still laying
 		this.currentDefender.addMoney(this.currentWave.prizeMoney);
