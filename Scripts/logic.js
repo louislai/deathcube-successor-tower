@@ -264,9 +264,6 @@
 	},
 	endWave: function() {
 
-		// Increment Round numbers
-		this.numRounds++;
-
 		var gameOn = this.state !== 3 && this.state !== 0; // Modification to detect if game still laying
 		this.currentDefender.addMoney(this.currentWave.prizeMoney);
 		this.state = GameState.building;
@@ -302,6 +299,9 @@
 				
 				// Players build towers before player 0 attacks again
 				if (this.defenderSide == 1) {
+					// Modifications to destroy user Tower
+					this.destroyProgrammedTowers();
+
 					// Modifications to build user Tower
 					this.buildProgrammedTowers();
 				}
@@ -319,6 +319,11 @@
 			// End Modification
 
 			me.state = GameState.waving;	
+
+			if (this.defenderSide) {
+				// Increment Round numbers before both player commence their waves
+				this.numRounds++;
+			}
 			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
 			var wave = new AIWaveGenerator(this.playerData[(this.defenderSide + 1) % 2].getUnitGenerator(), this.currentAttacker, this.currentDefender); // Modification generate unit that attacks current defender
 			wave.addEventListener(events.waveFinished, function() {
@@ -384,19 +389,27 @@
 
 	},
 	buildAITower: function(owner, target, towerlist) {
-		if (!is_empty_list(towerlist)) {
-			var tw = head(towerlist);
+		var lst = towerlist;
+		while (!is_empty_list(lst)) {
+			var tw = head(lst);
 			this.buildTower(owner, target, tw.getCoordinates(), tw.getType());
-			this.buildAITower(owner, target, tail(towerlist));
+			lst = tail(lst);
 		}
 	},
 	destroyTower: function(owner, pt) {
 		if (this.state == GameState.building) {
+			// Modification Add Width / 2 to coordinates.x if owner is player 1
+			if (owner === this.players[1]) {
+				pt.x += this.width / 2;
+			}
+
 			var towerToRemove = this.towers.filter(function(t) {
 				return t.mazeCoordinates.x === pt.x && t.mazeCoordinates.y === pt.y && t.owner === owner; // Make sure only owner can remove tower
 			})[0];
 
-			if (towerToRemove) {
+			
+			if (towerToRemove && towerToRemove.owner == owner) { // Check owner before destroying towers
+
 				var owner = towerToRemove.owner;
 				this.currentDefender.addMoney(0.5 * towerToRemove.cost);
 				this.removeTower(towerToRemove);
@@ -409,6 +422,24 @@
 					});
 				}
 			}
+		}
+	},
+	// Allow engine to remove towers automatically based on user ai
+	destroyProgrammedTowers: function() {
+		// Destroy Tower for defender
+		var destroy = (this.playerData[this.defenderSide].getTowerDestroyer())(); // Defender Towers
+		this.destroyAITower(this.currentDefender, destroy);
+
+		// Destroy Tower for attacker
+		var destroy = (this.playerData[(this.defenderSide + 1) % 2].getTowerDestroyer())(); // Attacker Towers
+		this.destroyAITower(this.currentAttacker, destroy);
+	},
+	destroyAITower: function(owner, towerlist) {
+		var lst = towerlist;
+		if (!is_empty_list(lst)) {
+			var pt = head(lst);
+			this.destroyTower(owner, pt);
+			lst = tail(lst);
 		}
 	},
 	buyMediPack: function(owner) {

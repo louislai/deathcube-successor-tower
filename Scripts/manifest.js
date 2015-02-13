@@ -4,8 +4,8 @@
  */
 var constants = {
 	ticks: 25, // Default is 25. DO NOT CHANGE THIS
-	tickInterval: 25, // Engine call tick at interval. Will not change game semantic
-	speedMultiplier: 1, // Multiplier for game object speed. Range from 1 to 100. Will change game semantic
+	tickInterval: 25, // Engine call tick at interval. Will not change game semantic. 
+	speedMultiplier: 1, // 1 Speedy . Shot ~ 40 at 1. No of on-target shots halved when speedMultiplier incremented
 	maxUnitsPerRound: 8,
 	money : 2000,
 	hitpoints : 10,

@@ -51,7 +51,7 @@
 <script src="Scripts/shots.js"></script>
 <script src="Scripts/towers.js"></script>
 <script src="Scripts/record.js"></script>
-<script src="Scripts/playerai.js"></script>
+<script src="Scripts/ai.js"></script>
 <script>
 var Game = (function(playerai0, playerai1) {
 	"use strict";
@@ -220,21 +220,14 @@ var Game = (function(playerai0, playerai1) {
 
 		/* Modifications here */
 		// Build initial towers for player 0
-		function buildAITower(owner, target, towerlist) {
-			if (!is_empty_list(towerlist)) {
-				var tw = head(towerlist);
-				logic.buildTower(owner, target, tw.getCoordinates(), tw.getType());
-				buildAITower(owner, target, tail(towerlist));
-			}
-		}
 		var initTowers = playerai0.getInitTowers();
 
-		buildAITower(logic.players[0], logic.players[1], initTowers);
+		logic.buildAITower(logic.players[0], logic.players[1], initTowers);
 
 		// Build initial towers for player 1
 		var initTowers = playerai1.getInitTowers();
 
-		buildAITower(logic.players[1], logic.players[0], initTowers);
+		logic.buildAITower(logic.players[1], logic.players[0], initTowers);
 		/* End Modifications*/
 	};
 	var progress = function(e) {

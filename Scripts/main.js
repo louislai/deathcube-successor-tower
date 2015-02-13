@@ -133,7 +133,7 @@ var GameObject = Base.extend({
 		this._super();
 		this.z = 0;
 		this.mazeCoordinates = new Point();
-		this.speed = speed * constants.speedMultiplier || 0;
+		this.speed = speed || 0;
 		this.animationDelay = animationDelay  / constants.tickInterval || 15;
 		this.dead = false;
 		this.direction = Direction.right;
@@ -239,6 +239,7 @@ var Tower = GameObject.extend({
 		this.direction = Direction.left;
 		this.shotType = shotType || {};
 		this.registerEvent(events.shot);
+		this.speed *= constants.speedMultiplier;
 	},
 	targetFilter: function(target) {
 		return target.strategy !== MazeStrategy.air && target.owner !== this.owner;
@@ -290,6 +291,7 @@ var Unit = GameObject.extend({
  		this.health = this.hitpoints;
  		this.direction = Direction.right;
  		this.prize = prize || 0; // Put prize money
+		this.speed *= constants.speedMultiplier;  // Adjustable speed
  		this.registerEvent(events.accomplished);
  		this.registerEvent(events.died);
  	},
@@ -322,6 +324,7 @@ var Unit = GameObject.extend({
  	},
  	hit: function(shot) {
  		this.health -= shot.damage;
+ 		console.log("shot");
 
  		if (!this.dead && this.health <= 0) {
  			this.health = 0;
