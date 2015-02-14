@@ -1,11 +1,12 @@
 "use strict";
+// Use Object.defineProperty, supported in IE 9+, Chrome 5+, Firefox 4+, Opera 11.6+, Safari 5.1+
+
 /*
  * Global constants
  */
 var constants = {
 	ticks: 25, // Default is 25. DO NOT CHANGE THIS
-	tickInterval: 25, // Engine call tick at interval. Will not change game semantic. Dont use this
-	speedMultiplier: 20, // Use this to increase speed.
+	speedMultiplier: 10, // Use this to increase speed. Should not exceed 50x
 	maxUnitsPerRound: 8,
 	money : 5000,
 	hitpoints : 10,
@@ -17,6 +18,7 @@ var constants = {
 	towerBuildNumber : 10,
 	maxRounds: 1000 // 0  means 1 round
 };
+
 
 /*
  * A list of possible events
@@ -96,4 +98,26 @@ var resources = {
 		{ name : 'mgnest', value : { ogg : 'Content/effects/mgnest.ogg', mp3 : 'Content/effects/mgnest.mp3' }},
 		{ name : 'wowpulse', value : { ogg : 'Content/effects/wowpulse.ogg', mp3 : 'Content/effects/wowpulse.mp3' }},
 	],
+}
+
+// Make all constant values un-writable
+for (var prop in constants) {
+ // Set property (+descriptor)
+ Object.defineProperty(constants, prop, {
+     writable: false
+ });
+}
+
+for (var prop in events) {
+ // Set property (+descriptor)
+ Object.defineProperty(events, prop, {
+     writable: false
+ });
+}
+
+for (var prop in resources) {
+ // Set property (+descriptor)
+ Object.defineProperty(resources, prop, {
+     writable: false
+ });
 }

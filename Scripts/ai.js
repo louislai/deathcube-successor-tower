@@ -43,6 +43,7 @@ var PlayerAI = function(initTowers, unitGenerator, towerGenerator, towerDestroye
     this.getUnitGenerator = function() { return unitGenerator; };
     this.getTowerGenerator = function() { return towerGenerator; };
     this.getTowerDestroyer = function() { return towerDestroyer; };
+    this.getSide = function() { return this.side; };
 };
 
 var PlayerGenerator = function() {

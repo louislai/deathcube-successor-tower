@@ -54,6 +54,14 @@
 		playerData[0].side = 0;
 		playerData[1].side = 1;
 
+		// Set playerai side attribute to immutable
+		Object.defineProperty(playerData[0], 'side', function() {
+			writable: false;
+		});
+		Object.defineProperty(playerData[1], 'side', function() {
+			writable: false;
+		});
+
 		// Tiebreaker when game takes too long
 		me.maxRounds = constants.maxRounds;
 		me.numRounds = 0;
@@ -146,7 +154,7 @@
 				for (var i=0; i <= constants.speedMultiplier; i++) {
 					me.tick();
 				}
-			}, constants.tickInterval);	
+			}, constants.ticks);	
 		}
 	},
 	pause: function() {

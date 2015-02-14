@@ -134,7 +134,7 @@ var GameObject = Base.extend({
 		this.z = 0;
 		this.mazeCoordinates = new Point();
 		this.speed = speed || 0;
-		this.animationDelay = animationDelay  / constants.tickInterval || 15;
+		this.animationDelay = animationDelay || 15;
 		this.dead = false;
 		this.direction = Direction.right;
 
