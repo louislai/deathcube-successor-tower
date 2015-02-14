@@ -56,6 +56,14 @@
 var Game = (function(playerai0, playerai1) {
 	"use strict";
 
+	var name0 = playerai0.name; 
+	var name1 = playerai1.name; // Put name for two players
+
+	var info0 = document.querySelector('#info-p0');
+	var info1 = document.querySelector('#info-p1');
+	info0.textContent = name0;
+	info1.textContent = name1;
+
 	var canvas = document.querySelector('#game');
 	var towerPanel = document.querySelector('#towers');
 	var towerButtons = [];
@@ -100,16 +108,16 @@ var Game = (function(playerai0, playerai1) {
 		});
 		
 		logic.addEventListener(events.waveDefeated, function() {
-			timeInfo.textContent = 'Idle';
-			startWaveButton.disabled = false;
+			// timeInfo.textContent = 'Idle';
+			// startWaveButton.disabled = false; // Comment these out
 		});
 		logic.addEventListener(events.playerDefeated0, function() {
 			timeInfo.textContent = 'Game over ...';
-			alert("Player 2 won");
+			alert(name1 +" won");
 		});
 		logic.addEventListener(events.playerDefeated1, function() {
 			timeInfo.textContent = 'Game over ...';
-			alert("Player 1 won");
+			alert(name0 + " won");
 		});
 		logic.addEventListener(events.waveCreated, function(wave) {
 			timeInfo.textContent = wave.units.length + ' units remaining';
