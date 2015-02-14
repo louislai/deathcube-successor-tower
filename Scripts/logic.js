@@ -328,6 +328,10 @@
 			if (this.defenderSide) {
 				// Increment Round numbers before both player commence their waves
 				this.numRounds++;
+
+				// Regen some amt of money
+				this.players[0].addMoney(constants.moneyRegenPerRound);
+				this.players[1].addMoney(constants.moneyRegenPerRound);
 			}
 			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
 			var wave = new AIWaveGenerator(this.playerData[(this.defenderSide + 1) % 2].getUnitGenerator(), this.currentAttacker, this.currentDefender); // Modification generate unit that attacks current defender

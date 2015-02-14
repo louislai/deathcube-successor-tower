@@ -8,15 +8,16 @@ var constants = {
 	ticks: 25, // Default is 25. DO NOT CHANGE THIS
 	speedMultiplier: 10, // Use this to increase speed. Should not exceed 50x
 	maxUnitsPerRound: 8,
-	money : 5000,
-	hitpoints : 10,
+	money : 1000,
+	moneyRegenPerRound : 10,
+	hitpoints : 30,
 	mediPackCost : 5,
 	mediPackFactor : 1.5,
 	mediPackHealth : 1,
 	towerBuildCost : 5,
 	towerBuildFactor : 1.85,
 	towerBuildNumber : 10,
-	maxRounds: 1000 // 0  means 1 round
+	maxRounds: 10000 // 0  means 1 round
 };
 
 

@@ -82,8 +82,8 @@ function randomUnit(n, t) {
   }
 }
 
-var presetRock0 = [[2, 1], [5, 0], [8, 1], [11, 0]];
-var presetRock1 = [[3, 1], [6, 0], [9, 1], [12, 0]];
+var presetRock0 = [[2, 1], [5, 0], [8, 1], [11, 0], [13, 1]];
+var presetRock1 = [[1, 0], [3, 1], [6, 0], [9, 1], [12, 0]];
 
 var TowerGenerator = function() {
   return append(randomTower(4), randomRock(10));
@@ -99,7 +99,7 @@ function randomPoint(n) {
 };
 
 function rn() {
-  return randomPoint(5);
+  return randomPoint(20);
 }
 
 
@@ -122,8 +122,8 @@ var basicinit = list()
 var monsters = [Mario, Rope, DarkNut, Speedy, Armos]
 var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
 
-var initTowers0 = pair(new AITower(LaserTower, new Point(7, 8)), numberToPoint(presetRock0));
-var initTowers1 = pair(new AITower(LaserTower, new Point(7, 8)), numberToPoint(presetRock1));
+var initTowers0 = pair(new AITower(CanonTower, new Point(7, 8)), numberToPoint(presetRock0));
+var initTowers1 = pair(new AITower(CanonTower, new Point(7, 8)), numberToPoint(presetRock1));
 
 var player0 = new PlayerAI("Yoda", initTowers0, PlayerGenerator1, TowerGenerator, rn);
 

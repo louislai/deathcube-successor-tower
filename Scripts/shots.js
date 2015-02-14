@@ -153,7 +153,7 @@ var LaserShot = Shot.extend({
 var ShellShot = Shot.extend({
 	init: function(owner, target) {
 		this._super(owner, target, ShellShot.speed, 25, ShellShot.damage, ShellShot.impactRadius);
-		this.createVisual(ShellShot.sprite, [1, 1, 1, 1], 0.3);
+		this.createVisual(ShellShot.sprite, [1, 1, 1, 1], 0.5);
 		this.playSound('artillery');
 	},
 }, function(shell) {
