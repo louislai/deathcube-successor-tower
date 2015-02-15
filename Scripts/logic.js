@@ -368,7 +368,7 @@
 				newTower.targets = this.units;
 
 				if (this.maze.tryBuild(pt, newTower.mazeWeight)) {
-					this.currentDefender.addMoney(-type.cost);
+					owner.addMoney(-type.cost);
 					this.addTower(newTower);
 
 					if (!isrock) {
