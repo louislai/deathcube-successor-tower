@@ -116,7 +116,6 @@ function numberToPoint(lst) {
   return pts;
 }
 
-var basicinit = list()
 
 // List of monsters and towers for testing
 var monsters = [Mario, Rope, DarkNut, Speedy, Armos]
@@ -125,7 +124,7 @@ var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
 var initTowers0 = pair(new AITower(CanonTower, new Point(7, 8)), numberToPoint(presetRock0));
 var initTowers1 = pair(new AITower(CanonTower, new Point(7, 8)), numberToPoint(presetRock1));
 
-var player0 = new PlayerAI("Yoda", initTowers0, PlayerGenerator1, TowerGenerator, rn);
+var player0 = new PlayerAI("Yoda", initTowers0, PlayerGenerator, TowerGenerator, rn);
 
-var player1 = new PlayerAI("Darth Vader", initTowers1, PlayerGenerator1, TowerGenerator, rn);
+var player1 = new PlayerAI("Darth Vader", initTowers1, PlayerGenerator, TowerGenerator, rn);
   
