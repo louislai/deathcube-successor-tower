@@ -6,7 +6,7 @@
  */
 var constants = {
 	ticks: 25, // Default is 25. DO NOT CHANGE THIS
-	speedMultiplier: 10, // Use this to increase speed. Should not exceed 50x
+	speedMultiplier: 20, // Use this to increase speed. Should not exceed 15x
 	maxUnitsPerRound: 8,
 	money : 1000,
 	moneyRegenPerRound : 10,
