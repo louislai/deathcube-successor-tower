@@ -100,10 +100,9 @@ Function.prototype.clone = function() {
   return this.maze.grid;
  }
 
- MazeRecord.findPath = function(player, unit) { // This one may cause private variable to be overridden 
+ MazeRecord.findPath = function(player, unit) {
   var path;
-  // Return original path if owner is player 0
-  console.log(player.side + ' ' + this.maze.isRotated);
+  
   if (player.side === 0) {
     if (this.maze.isRotated) {
       path = this.maze.getPath(unit.strategy).reverse();

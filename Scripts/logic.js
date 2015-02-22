@@ -453,7 +453,13 @@
 	saveGameState: function() {
 		MazeRecord.towers = clone(this.towers);
 		MazeRecord.players = clone(this.players);
-		MazeRecord.maze = this.maze;
+		MazeRecord.maze = clone(this.maze);
+
+		// The following lines are to clone functions required by the path finder not cloneable with json parsing
+		MazeRecord.maze.getPath = this.maze.getPath.clone();
+		MazeRecord.maze.calculate = this.maze.calculate.clone();
+		MazeRecord.maze.pf.findPath = this.maze.pf.findPath.clone();
+		MazeRecord.maze.pf.reset = this.maze.pf.reset.clone();
 	},
 	buyMediPack: function(owner) {
 		var cost = this.mediPackCost;
