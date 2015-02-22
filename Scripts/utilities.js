@@ -11,7 +11,7 @@ var rand = function(min, max) {
  */
 window.nextAnimationFrame = (function() {
 	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
-		window.setTimeout(callback, 1000 / 100);
+		window.setTimeout(callback, 1000 / 500);
 	};
 })();
 

@@ -266,8 +266,9 @@
 	},
 	endWave: function() {
 		// Modifications to update gamestate
-		GameRecord.towers = clone(this.towers);
-		GameRecord.units = clone(this.units);
+		MazeRecord.towers = clone(this.towers);
+		MazeRecord.towers = clone(this.players);
+		MazeRecord.maze = clone(this.maze);
 
 		var gameOn = this.state !== 3 && this.state !== 0; // Modification to detect if game still laying
 		this.currentDefender.addMoney(this.currentWave.prizeMoney);
