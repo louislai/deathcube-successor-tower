@@ -55,7 +55,7 @@
                       ));
  }
 
- MazeRecord.getOpponentSelfShootingTowers = function(target) {
+ MazeRecord.getOpponentShootingTowers = function(target) {
   var real_target = this.players[target.side];
   return array_to_list(this.towers.filter(
                         function(tower) {
@@ -76,6 +76,31 @@
 /*
  * Method to determine the path of a unit that would be generated
  */
+ MazeRecord.showGrid = function() {
+  return this.maze.grid;
+ }
 
- 
+ MazeRecord.findPath = function(unit) { // This one may cause private variable to be overridden
+  var player = unit.owner; 
+  var path;
+  // Return original path if owner is player 0
+  if (player === this.players[0]) {
+    path = this.maze.getPath(unit.strategy);
+  } else {
+    path = this.maze.getPath(unit.strategy).reverse();
+  }
+  return path;
+ }
+
+/*
+ * Method to view the player info
+ */
+ MazeRecord.showSelfInfo = function(player) {
+  return this.players[player.side];
+ }
+
+ MazeRecord.showOpponentInfo = function(player) {
+  return this.players[(player.side + 1) % 2];
+ }
+
 
