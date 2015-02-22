@@ -3,10 +3,30 @@
  * MazeRecord
  */
 
+/*
+ * Clone function
+ */ 
+
+Function.prototype.clone = function() {
+    var that = this;
+    var temp = function temporary() { return that.apply(this, arguments); };
+    for(var key in this) {
+        if (this.hasOwnProperty(key)) {
+            temp[key] = this[key];
+        }
+    }
+    return temp;
+};
+
+
+
+// To clone object with deep nesting
+
  function clone(obj) {
   return JSON.parse(JSON.stringify(obj)); // Work on IE8+, Firefox 34+, Chrome 31+, Safari 7.1+, Opera 26+
  }
  
+
  function array_to_list(arr) {
     var result = [];
     for (var i = 0; i < arr.length; i++) {
@@ -80,14 +100,22 @@
   return this.maze.grid;
  }
 
- MazeRecord.findPath = function(unit) { // This one may cause private variable to be overridden
-  var player = unit.owner; 
+ MazeRecord.findPath = function(player, unit) { // This one may cause private variable to be overridden 
   var path;
   // Return original path if owner is player 0
-  if (player === this.players[0]) {
-    path = this.maze.getPath(unit.strategy);
+  console.log(player.side + ' ' + this.maze.isRotated);
+  if (player.side === 0) {
+    if (this.maze.isRotated) {
+      path = this.maze.getPath(unit.strategy).reverse();
+    } else {
+      path = this.maze.getPath(unit.strategy);
+    }
   } else {
-    path = this.maze.getPath(unit.strategy).reverse();
+    if (this.maze.isRotated) {
+      path = this.maze.getPath(unit.strategy);
+    } else {
+      path = this.maze.getPath(unit.strategy).reverse();
+    }
   }
   return path;
  }

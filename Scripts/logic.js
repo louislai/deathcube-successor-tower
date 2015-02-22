@@ -66,16 +66,14 @@
 		me.maxRounds = constants.maxRounds;
 		me.numRounds = 0;
 
+
+
+
 		me.state         = GameState.unstarted;
 		var size         = new Size(mazeWidth, mazeHeight);	
 		me.maze          = new Maze(size);
 		me.view.mazeSize = me.getMazeSize();
 
-		// Modification change WaveList to UnitGenerator
-		// me.waves         = new WaveList();
-		// me.waves         = new WaveGenerator();
-		// me.waves.assignGenerator(playerData.getUnitGenerator());
-		// End Modification
 		me.currentWave   = new Wave();
 
 		me.currentDefender.maxTowerNumber = constants.towerBuildNumber;
@@ -115,6 +113,9 @@
 		me.currentAttacker.addEventListener(events.towerNumberChanged, function(e) {
 			me.triggerEvent(events.towerNumberChanged0, e);
 		});
+
+
+		me.saveGameState();
 
 		me.registerEvent(events.refreshed);
 		me.registerEvent(events.waveDefeated);
@@ -265,10 +266,7 @@
 			this.endWave();
 	},
 	endWave: function() {
-		// Modifications to update gamestate
-		MazeRecord.towers = clone(this.towers);
-		MazeRecord.players = clone(this.players);
-		MazeRecord.maze = this.maze; // This one is not cloned
+		this.saveGameState();
 
 		var gameOn = this.state !== 3 && this.state !== 0; // Modification to detect if game still laying
 		this.currentDefender.addMoney(this.currentWave.prizeMoney);
@@ -451,6 +449,11 @@
 			this.destroyTower(owner, pt);
 			lst = tail(lst);
 		}
+	},
+	saveGameState: function() {
+		MazeRecord.towers = clone(this.towers);
+		MazeRecord.players = clone(this.players);
+		MazeRecord.maze = this.maze;
 	},
 	buyMediPack: function(owner) {
 		var cost = this.mediPackCost;

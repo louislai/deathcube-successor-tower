@@ -322,7 +322,6 @@ var Unit = GameObject.extend({
  	},
  	hit: function(shot) {
  		this.health -= shot.damage;
- 		console.log("shot");
 
  		if (!this.dead && this.health <= 0) {
  			this.health = 0;
