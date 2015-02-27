@@ -51,8 +51,8 @@
 		me.currentAttacker = me.players[0];
 
 		// Assign sides for AIs
-		playerData[0].side = 0;
-		playerData[1].side = 1;
+		playerData[0].__side = 0;
+		playerData[1].__side = 1;
 
 		// Set playerai side attribute to immutable
 		Object.defineProperty(playerData[0], 'side', function() {

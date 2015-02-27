@@ -38,13 +38,15 @@ var PlayerAI = function(name, initTowers, unitGenerator, towerGenerator, towerDe
     var unitGenerator = unitGenerator || function() { return; };
     var towerGenerator = towerGenerator || function() { return []; };
     var towerDestroyer = towerDestroyer || function() { return []; };
-    this.side = undefined;
-    this.name = name;
+    var name = name;
+
+    this.__side = undefined;
     this.getInitTowers = function() { return initTowers; };
     this.getUnitGenerator = function() { return unitGenerator; };
     this.getTowerGenerator = function() { return towerGenerator; };
     this.getTowerDestroyer = function() { return towerDestroyer; };
-    this.getSide = function() { return this.side; };
+    this.getSide = function() { return this.__side; };
+    this.getName = function() { return name; };
 };
 
 var PlayerGenerator = function() {

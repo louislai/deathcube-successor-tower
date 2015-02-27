@@ -11,15 +11,20 @@ Each player needs to write his/her own PlayerAI object. An AI Object is called w
 * TowerDestroyer: This is the generator that will generate the list of Point to be cleared of towers during the building phase. Note that TowerDestroyer is called before TowerGenerator is called.
 
 __Gamestate Specification__
+MazeRecord is the gamestate recorder which can be called with following methods to display the following gamestates:
 
+* getShootingTower: Nullary function. Return the list of the current shooting towers on the map
+* getRocks: Nullary function. Return the list of the current rocks on the map
+* getSelfShootingTowers: Receive an AIPlayer object as the input. Return
+* showGrid: Nullary function. Return a 2D array that represent the status of the map
 
 ##### TODOs: #####
-* Research strategies to run the game in JFDI environment
-* Re-balance the game by updating tower's cost, unit's cost, unit's prize
+* Research strategies to run the game in JFDI environment (done)
+* Re-balance the game by updating tower's cost, unit's cost, unit's prize (Xiaodong)
 * Re-implement ai generator so it can accept Jediscript list-style inputs (done)
-* Decide what game state to be record
+* Decide what game state to be record (done)
 * Modify WaveGenerator so it decide the time a unit appears based on used algorithm. Also decide a constraint on no of units or lapse time of each round. (Done)
 * Implement another winning condition (in the case where no players die) (Done)
-* Find some ways to prevent the  students from overriding engine attributes
+* Find some ways to prevent the  students from overriding engine attributes (Partially)
 * Implement an 'act' method for PlayerAI so that game engine can just call .act() to execute what the AI needs to do (May not be necessary)
-* Think of other possible towers/units. Or should we leave it to the user imagination to customise their tower/unit?
+* Think of other possible towers/units. Or should we leave it to the user imagination to customise their tower/unit? (Xiaodong)

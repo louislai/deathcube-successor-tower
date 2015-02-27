@@ -58,7 +58,7 @@ Function.prototype.clone = function() {
  }
 
  MazeRecord.getSelfShootingTowers = function(owner) {
-  var real_owner = this.players[owner.side];
+  var real_owner = this.players[owner.__side];
   return array_to_list(this.towers.filter(
                         function(tower) {
                           return !(tower instanceof Rock) && tower.owner === real_owner;
@@ -67,7 +67,7 @@ Function.prototype.clone = function() {
  }
 
  MazeRecord.getRocks = function(owner) {
-  var real_owner = this.players[owner.side];
+  var real_owner = this.players[owner.__side];
   return array_to_list(this.towers.filter(
                         function(tower) {
                           return (tower instanceof Rock) && tower.owner === real_owner;
@@ -76,7 +76,7 @@ Function.prototype.clone = function() {
  }
 
  MazeRecord.getOpponentShootingTowers = function(target) {
-  var real_target = this.players[target.side];
+  var real_target = this.players[target.__side];
   return array_to_list(this.towers.filter(
                         function(tower) {
                           return !(tower instanceof Rock) && tower.target === real_target;
@@ -85,7 +85,7 @@ Function.prototype.clone = function() {
  }
 
  MazeRecord.getOpponentRocks = function(target) {
-  var real_target = this.players[target.side];
+  var real_target = this.players[target.__side];
   return array_to_list(this.towers.filter(
                         function(tower) {
                           return (tower instanceof Rock) && tower.target === real_target;
@@ -100,10 +100,10 @@ Function.prototype.clone = function() {
   return this.maze.grid;
  }
 
- MazeRecord.findPath = function(player, unit) {
+ MazeRecord.findPath = function(side, unit) {
   var path;
   
-  if (player.side === 0) {
+  if (side === 0) {
     if (this.maze.isRotated) {
       path = this.maze.getPath(unit.strategy).reverse();
     } else {
@@ -123,11 +123,11 @@ Function.prototype.clone = function() {
  * Method to view the player info
  */
  MazeRecord.showSelfInfo = function(player) {
-  return this.players[player.side];
+  return clone(this.players[player.__side]);
  }
 
  MazeRecord.showOpponentInfo = function(player) {
-  return this.players[(player.side + 1) % 2];
+  return clone(this.players[(player.__side + 1) % 2]);
  }
 
 

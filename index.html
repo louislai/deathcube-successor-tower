@@ -14,8 +14,9 @@
 		<div id="money-info-p0" title="Money left"></div>
 		<div id="tower-info-p0" title="Towers built"></div>
 		<div id="health-info-p0" title="Health left"></div>
+		<div 
 
-		<!-- // Modfication to add info bar for player 2 -->
+		<!-- // Modification to add info bar for player 2 -->
 		<div id="info-p1"> Player 2 </div>
 		<div id="money-info-p1" title="Money left"></div>
 		<div id="tower-info-p1" title="Towers built"></div>
@@ -56,8 +57,8 @@
 var Game = (function(playerai0, playerai1) {
 	"use strict";
 
-	var name0 = playerai0.name; 
-	var name1 = playerai1.name; // Put name for two players
+	var name0 = playerai0.getName(); 
+	var name1 = playerai1.getName(); // Put name for two players
 
 	var info0 = document.querySelector('#info-p0');
 	var info1 = document.querySelector('#info-p1');
