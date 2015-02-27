@@ -14,13 +14,14 @@
 		<div id="money-info-p0" title="Money left"></div>
 		<div id="tower-info-p0" title="Towers built"></div>
 		<div id="health-info-p0" title="Health left"></div>
-		<div 
+		<div id="point-info-p0" title="Points"></div>
 
 		<!-- // Modification to add info bar for player 2 -->
 		<div id="info-p1"> Player 2 </div>
 		<div id="money-info-p1" title="Money left"></div>
 		<div id="tower-info-p1" title="Towers built"></div>
 		<div id="health-info-p1" title="Health left"></div>
+		<div id="point-info-p1" title="Points"></div>
 		<!-- // End Modifcation -->
 
 		<div id="time-info">Game started ...</div>
@@ -71,10 +72,12 @@ var Game = (function(playerai0, playerai1) {
 	var moneyInfo0 = document.querySelector('#money-info-p0');
 	var healthInfo0 = document.querySelector('#health-info-p0');
 	var towerInfo0 = document.querySelector('#tower-info-p0');
+	var pointInfo0 = document.querySelector('#point-info-p0');
 	// Modification add query selecter for player 1
 	var moneyInfo1 = document.querySelector('#money-info-p1');
 	var healthInfo1 = document.querySelector('#health-info-p1');
 	var towerInfo1 = document.querySelector('#tower-info-p1');
+	var pointInfo1 = document.querySelector('#point-info-p1');
 	var timeInfo = document.querySelector('#time-info');
 	var soundInfo = document.querySelector('#sound-info');
 	var startWaveButton = document.querySelector('#startWave');
@@ -144,6 +147,12 @@ var Game = (function(playerai0, playerai1) {
 		});
 		logic.addEventListener(events.towerNumberChanged1, function(info) {
 			towerInfo1.textContent = info.current + ' / ' + info.maximum;
+		});
+		logic.addEventListener(events.pointChanged0, function(player) {
+			pointInfo0.textContent = player.points;
+		});
+		logic.addEventListener(events.pointChanged1, function(player) {
+			pointInfo1.textContent = player.points;
 		});
 		startWaveButton.addEventListener(events.click, function() {
 			logic.beginWave();

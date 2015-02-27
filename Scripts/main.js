@@ -95,13 +95,13 @@ var Player = Base.extend({
 		this.registerEvent(events.playerDefeated);
 		this.registerEvent(events.moneyChanged);
 		this.registerEvent(events.healthChanged);
+		this.registerEvent(events.pointChanged);
 	},
 	setMoney: function(value) {
 		this.money = value;
 		this.triggerEvent(events.moneyChanged, this);
 	},
 	addMoney: function(value) {
-		this.points += Math.max(0, value);
 		this.setMoney(this.money + value);
 	},
 	getMoney: function() {
@@ -123,6 +123,10 @@ var Player = Base.extend({
 	hit: function(unit) {
 		this.setHitpoints(this.hitpoints - unit.damage);
 	},
+	updatePoints: function() {
+		this.points = this.hitpoints + ~~(this.money / 4);
+		this.triggerEvent(events.pointChanged, this);
+	}
 });
 
 /*

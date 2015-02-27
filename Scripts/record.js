@@ -127,7 +127,8 @@ Function.prototype.clone = function() {
  }
 
  MazeRecord.showOpponentInfo = function(player) {
-  return clone(this.players[(player.__side + 1) % 2]);
+  var p = clone(this.players[(player.__side + 1) % 2]);
+  return p;
  }
 
 

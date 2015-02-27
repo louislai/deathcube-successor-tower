@@ -95,6 +95,10 @@
 			me.triggerEvent(events.towerNumberChanged1, e);
 		});
 
+		me.currentDefender.addEventListener(events.pointChanged, function(e) {
+			me.triggerEvent(events.pointChanged1, e);
+		});
+
 		me.currentAttacker.maxTowerNumber = constants.towerBuildNumber;
 
 		me.currentAttacker.addEventListener(events.playerDefeated, function(e) {
@@ -114,6 +118,13 @@
 			me.triggerEvent(events.towerNumberChanged0, e);
 		});
 
+		me.currentAttacker.addEventListener(events.pointChanged, function(e) {
+			me.triggerEvent(events.pointChanged0, e);
+		});
+
+
+		this.players[0].updatePoints();
+		this.players[1].updatePoints();
 
 		me.saveGameState();
 
@@ -130,6 +141,8 @@
 		me.registerEvent(events.unitSpawned);
 		me.registerEvent(events.towerNumberChanged0);
 		me.registerEvent(events.towerNumberChanged1);
+		me.registerEvent(events.pointChanged0);
+		me.registerEvent(events.pointChanged1);
 	},
 	start: function() {		
 		if (this.state === GameState.unstarted) {
@@ -175,6 +188,9 @@
 			return;
 
 		this.update(this.towers);
+		this.players[0].updatePoints();
+		this.players[1].updatePoints();
+
 		if (this.state === GameState.waving) {
 			this.update(this.shots);
 			this.update(this.units);
@@ -281,8 +297,8 @@
 
 		if (gameOn) { // If game still on
 			if (this.numRounds > this.maxRounds &&  this.defenderSide === 0) { // If number of rounds exceed maximum number of rounds
-				var player0_points = this.players[0].getHitpoints() + this.players[0].money / 4;
-				var player1_points = this.players[1].getHitpoints() + this.players[1].money / 4;
+				var player0_points = this.players[0].points;
+				var player1_points = this.players[1].points;
 				if (player0_points < player1_points ) { // Player 0 lose if have less points
 					this.players[0].triggerEvent(events.playerDefeated, this.players[0]);
 				} else{

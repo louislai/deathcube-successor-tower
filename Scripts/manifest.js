@@ -50,6 +50,9 @@ var events = {
 	towerNumberChanged : 'towerNumberChanged',
 	towerNumberChanged0 : 'towerNumberChanged0',
 	towerNumberChanged1 : 'towerNumberChanged1',
+	pointChanged: 'pointChanged',
+	pointChanged0 : 'pointChanged0',
+	pointChanged1 : 'pointChanged1'
 };
 
 /*
