@@ -87,7 +87,6 @@ var resources = {
 		{ name : 'mario', value : 'Content/sprites/mario.png' },
 	],
 	sounds : [
-		{ name : 'hold_the_line', value : { ogg : 'Content/music/hold_the_line.ogg', mp3 : 'Content/music/hold_the_line.mp3' }},
 		{ name : 'burn_them_down', value : { ogg : 'Content/music/burn_them_down.ogg', mp3 : 'Content/music/burn_them_down.mp3' }},
 		{ name : 'ak47-1', value : { ogg : 'Content/effects/ak47-1.ogg', mp3 : 'Content/effects/ak47-1.mp3' }},
 		{ name : 'artillery', value : { ogg : 'Content/effects/artillery.ogg', mp3 : 'Content/effects/artillery.mp3' }},
