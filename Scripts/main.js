@@ -100,6 +100,8 @@ var Player = Base.extend({
 	setMoney: function(value) {
 		this.money = value;
 		this.triggerEvent(events.moneyChanged, this);
+
+		this.updatePoints();
 	},
 	addMoney: function(value) {
 		this.setMoney(this.money + value);
@@ -110,6 +112,8 @@ var Player = Base.extend({
 	setHitpoints: function(value) {
 		this.hitpoints = Math.max(0, value);
 		this.triggerEvent(events.healthChanged, this);
+
+		this.updatePoints();
 
 		if (this.hitpoints === 0)
 			this.triggerEvent(events.playerDefeated, this);

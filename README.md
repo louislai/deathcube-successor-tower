@@ -16,7 +16,7 @@ MazeRecord is the gamestate recorder which can be called with following methods 
 * getShootingTower: Nullary function. Return the list of the current shooting towers on the map
 * getRocks: Nullary function. Return the list of the current rocks on the map
 * getSelfShootingTowers: Receive an AIPlayer object as the input. Return
-* showGrid: Nullary function. Return a 2D array that represent the status of the map
+* showGrid: Nullary function. Return a 2D array that represent the status of the map. 1 denotes available cell, 0 denotes occupied cells
 
 ##### TODOs: #####
 * Research strategies to run the game in JFDI environment (done)

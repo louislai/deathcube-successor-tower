@@ -35,7 +35,7 @@ Function.prototype.clone = function() {
     return result;
  }
 
- var MazeRecord = {};
+ var MazeRecord = {__lastUnits: [[],[]]};
 
 /*
  * Method to get towers
@@ -122,13 +122,20 @@ Function.prototype.clone = function() {
 /*
  * Method to view the player info
  */
- MazeRecord.showSelfInfo = function(player) {
-  return clone(this.players[player.__side]);
+ MazeRecord.showSelfInfo = function(aiplayer) {
+  return clone(this.players[aiplayer.__side]);
  }
 
- MazeRecord.showOpponentInfo = function(player) {
-  var p = clone(this.players[(player.__side + 1) % 2]);
-  return p;
+ MazeRecord.showOpponentInfo = function(aiplayer) {
+  return clone(this.players[(aiplayer.__side + 1) % 2]);
  }
 
+
+/*
+ * Method to view the last attacking units
+ */
+
+ MazeRecord.showLastUnits = function(side) {
+  return MazeRecord.__lastUnits[side];
+ }
 

@@ -122,12 +122,7 @@
 			me.triggerEvent(events.pointChanged0, e);
 		});
 
-
-		this.players[0].updatePoints();
-		this.players[1].updatePoints();
-
 		me.saveGameState();
-
 		me.registerEvent(events.refreshed);
 		me.registerEvent(events.waveDefeated);
 		me.registerEvent(events.waveFinished);
@@ -188,8 +183,6 @@
 			return;
 
 		this.update(this.towers);
-		this.players[0].updatePoints();
-		this.players[1].updatePoints();
 
 		if (this.state === GameState.waving) {
 			this.update(this.shots);
@@ -200,11 +193,14 @@
 
 			for (var i = newUnits.length; i--; ) {
 				var unit = newUnits[i];
-				if (unit) {    // Modifcations check that unit is defined
+				if (unit) {    // Modifications check that unit is defined
 					var path = this.maze.getPath(unit.strategy);
 					unit.mazeCoordinates = this.maze.Ustart;
 					unit.path = new Path(path);
 					this.addUnit(unit);
+
+					// Save the type of this unit to MazeRecorder
+					MazeRecord.__lastUnits[(this.defenderSide + 1) % 2] = pair(unit, MazeRecord.__lastUnits[(this.defenderSide + 1) % 2]);
 				}
 			}
 
@@ -334,6 +330,10 @@
 	},
 	beginWave: function() {
 		if (this.state === GameState.building) {
+
+			// Reset MazeRecord lastUnits 
+			MazeRecord.__lastUnits = [[],[]];
+
 			var me = this;
 			
 			// End Modification
