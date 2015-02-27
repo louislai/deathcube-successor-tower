@@ -11,12 +11,7 @@ var constants = {
 	money : 1000,
 	moneyRegenPerRound : 10,
 	hitpoints : 30,
-	mediPackCost : 5,
-	mediPackFactor : 1.5,
-	mediPackHealth : 1,
-	towerBuildCost : 5,
-	towerBuildFactor : 1.85,
-	towerBuildNumber : 10,
+	towerNumberMax : 10,
 	maxRounds: 10000 // 0  means 1 round
 };
 

@@ -33,9 +33,7 @@
 	</canvas>
 	<div id="towers" hidden=""></div>
 	<div id="buttons">
-		<button id="startWave">Start Game</button>
-		<button id="buyMedipack" hidden="">Buy Medipack</button>
-		<button id="buyTowerbuild" hidden="">Buy Towerbuild</button>
+		<button id="startGame">Start Game</button>
 	</div>
 </div>
 
@@ -80,9 +78,7 @@ var Game = (function(playerai0, playerai1) {
 	var pointInfo1 = document.querySelector('#point-info-p1');
 	var timeInfo = document.querySelector('#time-info');
 	var soundInfo = document.querySelector('#sound-info');
-	var startWaveButton = document.querySelector('#startWave');
-	var buyMedipackButton = document.querySelector('#buyMedipack');
-	var buyTowerbuildButton = document.querySelector('#buyTowerbuild');
+	var startGameButton = document.querySelector('#startGame');
 
 	var towerType = undefined;
 	var getMousePosition = function(evt) {
@@ -125,7 +121,7 @@ var Game = (function(playerai0, playerai1) {
 		});
 		logic.addEventListener(events.waveCreated, function(wave) {
 			timeInfo.textContent = wave.units.length + ' units remaining';
-			startWaveButton.disabled = true;
+			startGameButton.disabled = true;
 		});
 		logic.addEventListener(events.unitSpawned, function(remaining) {
 			timeInfo.textContent = remaining + ' units remaining';
@@ -154,15 +150,9 @@ var Game = (function(playerai0, playerai1) {
 		logic.addEventListener(events.pointChanged1, function(player) {
 			pointInfo1.textContent = player.points;
 		});
-		startWaveButton.addEventListener(events.click, function() {
-			logic.beginWave();
+		startGameButton.addEventListener(events.click, function() {
+			logic.beginGame();
 		});
-		// buyMedipackButton.addEventListener(events.click, function() {
-		// 	logic.buyMediPack();
-		// });
-		// buyTowerbuildButton.addEventListener(events.click, function() {
-		// 	logic.buyTowerBuildRight();
-		// }); // no longer relevant
 		soundInfo.addEventListener(events.click, function() {
 			var on = 'on';
 			var off = 'off'
@@ -235,18 +225,6 @@ var Game = (function(playerai0, playerai1) {
 		document.querySelector('#wait').classList.add('hidden');
 		startMusic();
 		logic.start();
-
-		/* Modifications here */
-		// Build initial towers for player 0
-		var initTowers = playerai0.getInitTowers();
-
-		logic.buildAITower(logic.players[0], logic.players[1], initTowers);
-
-		// Build initial towers for player 1
-		var initTowers = playerai1.getInitTowers();
-
-		logic.buildAITower(logic.players[1], logic.players[0], initTowers);
-		/* End Modifications*/
 	};
 	var progress = function(e) {
 		document.querySelector('#wait-message').textContent = 'Loading (' + e.name + ', ' + ~~(e.progress * 100) + '% of ' + e.total + ')';

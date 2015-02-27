@@ -23,42 +23,37 @@
  * The GAME
  */
  var GameLogic = Base.extend({
- 	init: function(view, mazeWidth, mazeHeight, playerData) {
+ 	init: function(view, mazeWidth, mazeHeight, AIPlayerData) {
  		var me = this;
  		me._super();
 
  		me.width = mazeWidth;
  		me.height = mazeHeight;
- 		me.playerData = playerData || [new PlayerAI(), new PlayerAI()];
+ 		me.AIPlayerData = AIPlayerData || [new PlayerAI(), new PlayerAI()];
 
  		me.towers = [];
  		me.units  = [];
  		me.shots  = [];
 
-
- 		me.mediPackCost     = constants.mediPackCost;
- 		me.mediPackFactor   = constants.mediPackFactor;
- 		me.towerBuildCost   = constants.towerBuildCost;
- 		me.towerBuildFactor = constants.towerBuildFactor;
-		// me.maxTowerNumber   = constants.towerBuildNumber; Deprecate to use specific tower number attribute for player
 		me.mediPackHealth   = constants.mediPackHealth;
 
 		me.view            = view;
 		me.players         = [new Player(), new Player()];
+
 		// Modification here to switch role between player
 		me.defenderSide      = 1;   // Right player defends first
 		me.currentDefender = me.players[1];
 		me.currentAttacker = me.players[0];
 
 		// Assign sides for AIs
-		playerData[0].__side = 0;
-		playerData[1].__side = 1;
+		AIPlayerData[0].__side = 0;
+		AIPlayerData[1].__side = 1;
 
 		// Set playerai side attribute to immutable
-		Object.defineProperty(playerData[0], 'side', function() {
+		Object.defineProperty(AIPlayerData[0], 'side', function() {
 			writable: false;
 		});
-		Object.defineProperty(playerData[1], 'side', function() {
+		Object.defineProperty(AIPlayerData[1], 'side', function() {
 			writable: false;
 		});
 
@@ -76,7 +71,7 @@
 
 		me.currentWave   = new Wave();
 
-		me.currentDefender.maxTowerNumber = constants.towerBuildNumber;
+		me.currentDefender.maxTowerNumber = constants.towerNumberMax;
 
 		me.currentDefender.addEventListener(events.playerDefeated, function(e) {
 			me.triggerEvent(events.playerDefeated1, e);
@@ -99,7 +94,7 @@
 			me.triggerEvent(events.pointChanged1, e);
 		});
 
-		me.currentAttacker.maxTowerNumber = constants.towerBuildNumber;
+		me.currentAttacker.maxTowerNumber = constants.towerNumberMax;
 
 		me.currentAttacker.addEventListener(events.playerDefeated, function(e) {
 			me.triggerEvent(events.playerDefeated0, e);
@@ -141,6 +136,7 @@
 	},
 	start: function() {		
 		if (this.state === GameState.unstarted) {
+
 			this.currentDefender.setHitpoints(constants.hitpoints);
 			this.currentDefender.setMoney(constants.money);
 			this.currentAttacker.setHitpoints(constants.hitpoints);
@@ -173,6 +169,10 @@
 			this.gameLoop = undefined;	
 		}
 	},
+	beginGame: function() {
+		this.buildInitialTowers();
+		this.beginWave();
+	},
 	update: function(objects) {
 		for (var i = objects.length; i--; ) {
 			objects[i].update();
@@ -190,7 +190,6 @@
 			this.removeDeadObjects();
 			var newUnits = this.currentWave.update();
 
-
 			for (var i = newUnits.length; i--; ) {
 				var unit = newUnits[i];
 				if (unit) {    // Modifications check that unit is defined
@@ -202,9 +201,7 @@
 					// Save the type of this unit to MazeRecorder
 					MazeRecord.__lastUnits[(this.defenderSide + 1) % 2] = pair(unit, MazeRecord.__lastUnits[(this.defenderSide + 1) % 2]);
 				}
-			}
-
-			
+			}			
 		}
 	},
 	finish: function() {
@@ -251,10 +248,6 @@
 		unit.addEventListener(events.accomplished, function(unt) {
 			var player = unt.target;
 			player.hit(unt); // Modification to only hit target of unit
-			// if (player.getHitpoints() == 0) { 
-			// 	this.triggerEvent(events.playerDefeated, player);
-			// 	this.finish();
-			// } // Modification trigger PlayerDefeated event if hitpoint is 0
 		});
 		unit.playInitSound();
 		me.units.push(unit);
@@ -277,12 +270,21 @@
 		if (this.currentWave.finished && this.units.length === 0)
 			this.endWave();
 	},
+	startBuild: function() {
+		this.state = GameState.building;
+
+		// destroy user Tower
+		this.destroyProgrammedTowers();
+
+		// build user Tower
+		this.buildProgrammedTowers();
+
+		this.beginWave();
+	},
 	endWave: function() {
 		this.saveGameState();
 
 		var gameOn = this.state !== 3 && this.state !== 0; // Modification to detect if game still laying
-		this.currentDefender.addMoney(this.currentWave.prizeMoney);
-		this.state = GameState.building;
 
 		for (var i = this.shots.length; i--; ) {
 			this.view.remove(this.shots[i]);
@@ -315,74 +317,68 @@
 				
 				// Players build towers before player 0 attacks again. Only happen after the 1st round
 				if (this.defenderSide == 1) {
-					// Modifications to destroy user Tower
-					this.destroyProgrammedTowers();
-
-					// Modifications to build user Tower
-					this.buildProgrammedTowers();
+					this.startBuild();
+				} else {
+					this.beginWave();
 				}
-
-				this.beginWave(); // Modification to run wave continuously
 			}
 		} else {
 			this.triggerEvent(events.playerDefeated, this.currentDefender); // Trigger playerDefeated event if gameEnd
 		}
 	},
 	beginWave: function() {
-		if (this.state === GameState.building) {
+		// Reset MazeRecord lastUnits 
+		MazeRecord.__lastUnits = [[],[]];
 
-			// Reset MazeRecord lastUnits 
-			MazeRecord.__lastUnits = [[],[]];
+		var me = this;
 
-			var me = this;
-			
-			// End Modification
+		me.state = GameState.waving;	
 
-			me.state = GameState.waving;	
+		if (me.defenderSide) {
+			// Increment Round numbers before both player commence their waves
+			me.numRounds++;
 
-			if (this.defenderSide) {
-				// Increment Round numbers before both player commence their waves
-				this.numRounds++;
-
-				// Regen some amt of money
-				this.players[0].addMoney(constants.moneyRegenPerRound);
-				this.players[1].addMoney(constants.moneyRegenPerRound);
-			}
-			//var wave = me.waves.next(this.currentDefender); // Modification to test with player 1 
-			var wave = new AIWaveGenerator(this.playerData[(this.defenderSide + 1) % 2].getUnitGenerator(), this.currentAttacker, this.currentDefender); // Modification generate unit that attacks current defender
-			wave.addEventListener(events.waveFinished, function() {
-				me.triggerEvent(events.waveFinished);
-				wave.removeEventListener(events.waveFinished);
-				wave.removeEventListener(events.unitSpawned);
-			});
-			wave.addEventListener(events.unitSpawned, function(e) {
-				me.triggerEvent(events.unitSpawned, e);
-			});
-			me.triggerEvent(events.waveCreated, wave);
-			me.currentWave = wave;
+			// Regen some amt of money
+			me.players[0].addMoney(constants.moneyRegenPerRound);
+			me.players[1].addMoney(constants.moneyRegenPerRound);
 		}
+
+		var wave = new AIWaveGenerator(this.AIPlayerData[(this.defenderSide + 1) % 2].getUnitGenerator(), this.currentAttacker, this.currentDefender); // Modification generate unit that attacks current defender
+		wave.addEventListener(events.waveFinished, function() {
+			me.triggerEvent(events.waveFinished);
+			wave.removeEventListener(events.waveFinished);
+			wave.removeEventListener(events.unitSpawned);
+		});
+		wave.addEventListener(events.unitSpawned, function(e) {
+			me.triggerEvent(events.unitSpawned, e);
+		});
+		me.triggerEvent(events.waveCreated, wave);
+		me.currentWave = wave;
+		
 	},
 	buildTower: function(owner, target, pt, type) { // Add owner and target for Tower
+		var me = this;
+
 		var newTower = new type(owner, target);
 		var isrock = newTower instanceof Rock;
-		var numShooting = this.getNumShooting(owner);
-		if (pt.x <= this.width && pt.x >= 0 && pt.y <= this.height && pt.y >= 0) { // Modification to guarantee point is valid
-			if (this.state == GameState.building && type.cost <= this.currentDefender.money && (isrock || (numShooting < owner.maxTowerNumber))) {
+		var numShooting = me.getNumShooting(owner);
+		if (pt.x <= me.width && pt.x >= 0 && pt.y <= me.height && pt.y >= 0) { // Modification to guarantee point is valid
+			if (me.state == GameState.building && type.cost <= me.currentDefender.money && (isrock || (numShooting < owner.maxTowerNumber))) {
 				newTower.mazeCoordinates = pt;
 
 				// Modification Add Width / 2 to coordinates.x if builder is player 1
-				if (owner === this.players[1]) {
-					newTower.mazeCoordinates.x += this.width / 2;
+				if (owner === me.players[1]) {
+					newTower.mazeCoordinates.x += me.width / 2;
 				} else {
-					if (newTower.mazeCoordinates.x >= this.width / 2) {
+					if (newTower.mazeCoordinates.x >= me.width / 2) {
 						return false;
 					} // Return false if player 0 tries to build towers outside of range
 				}
 
 				newTower.cost = type.cost;
-				newTower.targets = this.units;
+				newTower.targets = me.units;
 
-				if (this.maze.tryBuild(pt, newTower.mazeWeight)) {
+				if (me.maze.tryBuild(pt, newTower.mazeWeight)) {
 					owner.addMoney(-type.cost);
 					this.addTower(newTower);
 
@@ -400,16 +396,18 @@
 		}
 
 		return false;
-	},
-	// Modification to build Towers based on User TowerGenerator
+	},	
+	// build Towers based on User TowerGenerator
 	buildProgrammedTowers: function() {
+		var me = this;
+
 		// Build Tower for player 0
-		var nextTowers = (this.playerData[this.defenderSide].getTowerGenerator())(); // Defender Towers
-		this.buildAITower(this.currentDefender, this.currentAttacker, nextTowers);
+		var nextTowers = (me.AIPlayerData[me.defenderSide].getTowerGenerator())(); // Defender Towers
+		me.buildAITower(me.currentDefender, me.currentAttacker, nextTowers);
 
 		// Build Tower for player 1
-		var nextTowers = (this.playerData[(this.defenderSide + 1) % 2].getTowerGenerator())(); // Attacker Towers
-		this.buildAITower(this.currentAttacker, this.currentDefender, nextTowers);
+		var nextTowers = (me.AIPlayerData[(me.defenderSide + 1) % 2].getTowerGenerator())(); // Attacker Towers
+		me.buildAITower(me.currentAttacker, me.currentDefender, nextTowers);
 
 	},
 	buildAITower: function(owner, target, towerlist) {
@@ -421,13 +419,16 @@
 		}
 	},
 	destroyTower: function(owner, pt) {
-		if (this.state == GameState.building) {
+		var me = this;
+
+		if (me.state == GameState.building) {
+
 			// Modification Add Width / 2 to coordinates.x if owner is player 1
-			if (owner === this.players[1]) {
-				pt.x += this.width / 2;
+			if (owner === me.players[1]) {
+				pt.x += me.width / 2;
 			}
 
-			var towerToRemove = this.towers.filter(function(t) {
+			var towerToRemove = me.towers.filter(function(t) {
 				return t.mazeCoordinates.x === pt.x && t.mazeCoordinates.y === pt.y && t.owner === owner; // Make sure only owner can remove tower
 			})[0];
 
@@ -435,13 +436,13 @@
 			if (towerToRemove && towerToRemove.owner == owner) { // Check owner before destroying towers
 
 				var owner = towerToRemove.owner;
-				this.currentDefender.addMoney(0.5 * towerToRemove.cost);
-				this.removeTower(towerToRemove);
-				this.maze.tryRemove(pt);
+				me.currentDefender.addMoney(0.5 * towerToRemove.cost);
+				me.removeTower(towerToRemove);
+				me.maze.tryRemove(pt);
 
 				if (!(towerToRemove instanceof Rock)) {
 					owner.triggerEvent(events.towerNumberChanged, {
-						current: this.getNumShooting(owner),
+						current: me.getNumShooting(owner),
 						maximum: owner.maxTowerNumber,
 					});
 				}
@@ -450,13 +451,15 @@
 	},
 	// Allow engine to remove towers automatically based on user ai
 	destroyProgrammedTowers: function() {
+		var me = this;
+
 		// Destroy Tower for defender
-		var destroy = (this.playerData[this.defenderSide].getTowerDestroyer())(); // Defender Towers
-		this.destroyAITower(this.currentDefender, destroy);
+		var destroy = (me.AIPlayerData[me.defenderSide].getTowerDestroyer())(); // Defender Towers
+		me.destroyAITower(me.currentDefender, destroy);
 
 		// Destroy Tower for attacker
-		var destroy = (this.playerData[(this.defenderSide + 1) % 2].getTowerDestroyer())(); // Attacker Towers
-		this.destroyAITower(this.currentAttacker, destroy);
+		var destroy = (me.AIPlayerData[(me.defenderSide + 1) % 2].getTowerDestroyer())(); // Attacker Towers
+		me.destroyAITower(me.currentAttacker, destroy);
 	},
 	destroyAITower: function(owner, towerlist) {
 		var lst = towerlist;
@@ -467,82 +470,30 @@
 		}
 	},
 	saveGameState: function() {
-		MazeRecord.towers = clone(this.towers);
-		MazeRecord.players = clone(this.players);
-		MazeRecord.maze = clone(this.maze);
+		var me = this;
+
+		MazeRecord.towers = clone(me.towers);
+		MazeRecord.players = clone(me.players);
+		MazeRecord.maze = clone(me.maze);
 
 		// The following lines are to clone functions required by the path finder not cloneable with json parsing
-		MazeRecord.maze.getPath = this.maze.getPath.clone();
-		MazeRecord.maze.calculate = this.maze.calculate.clone();
-		MazeRecord.maze.pf.findPath = this.maze.pf.findPath.clone();
-		MazeRecord.maze.pf.reset = this.maze.pf.reset.clone();
+		MazeRecord.maze.getPath = me.maze.getPath.clone();
+		MazeRecord.maze.calculate = me.maze.calculate.clone();
+		MazeRecord.maze.pf.findPath = me.maze.pf.findPath.clone();
+		MazeRecord.maze.pf.reset = me.maze.pf.reset.clone();
 	},
-	buyMediPack: function(owner) {
-		var cost = this.mediPackCost;
+	buildInitialTowers: function() {
+		// Build initial towers for player 0
+		var initTowers = this.AIPlayerData[0].getInitTowers();
 
-		if (owner.money > cost) {
-			owner.addHitpoints(this.mediPackHealth);
-			this.mediPackCost = ~~(this.mediPackFactor * cost);
-			owner.addMoney(-cost);
-			return true;
-		}
+		this.buildAITower(this.players[0], this.players[1], initTowers);
 
-		return false;
-	},
-	buyTowerBuildRight: function(owner) {
-		var cost = this.towerBuildCost;
+		// Build initial towers for player 1
+		initTowers = this.AIPlayerData[1].getInitTowers();
 
-		if (owner.money > cost) {
-			var numShooting = this.getNumShooting(owner);
-			owner.maxTowerNumber++;
-
-			
-			owner.triggerEvent(events.towerNumberChanged, {
-				current: numShooting,
-				maximum: owner.maxTowerNumber,
-			});
-
-			this.towerBuildCost = ~~(this.towerBuildFactor * cost);
-			owner.addMoney(-cost);
-			return true;
-		}
-
-		return false;
-	},
+		this.buildAITower(this.players[1], this.players[0], initTowers);
+	}
 });
-
-/*
- * The WAVELIST
- */
- var WaveList = Class.extend({
- 	init: function() {
- 		this.waves = [];
- 		this.index = 0;
- 		this.unitNames = Object.keys(types.units);
- 	},
- 	random: function() {
- 		var wave = new Wave();
- 		var n = rand(Math.max(~~(this.index * 0.5), 1), this.index);
- 		var maxtime = 1300 * n;
- 		wave.prizeMoney = n;
-
- 		for (var i = 0; i < n; ++i) {
- 			var j = rand(0, Math.min(this.unitNames.length, ~~(this.index * 0.2) + 1));
- 			var name = this.unitNames[j];
- 			var unit = new (types.units[name])();
- 			wave.add(unit, i === 0 ? 0 : rand(0, maxtime));
- 		}
-
- 		return wave;
- 	},
- 	next: function() {
- 		if (this.index < this.waves.length)
- 			return this.waves[this.index++];
-
- 		++this.index;
- 		return this.random();
- 	},
- });
 
 /*
  * The WAVE
@@ -552,7 +503,6 @@
  		this._super();
  		this.startTime = 0;
  		this.units = [];
- 		this.prizeMoney = 0;
  		this.finished = false;
  		this.registerEvent(events.unitSpawned)
  		this.registerEvent(events.waveFinished);
@@ -590,8 +540,6 @@
  		return unitsToSpawn;
  	},
  });
-
-// Modification
 
 /*
  * The Customized Wave Generator

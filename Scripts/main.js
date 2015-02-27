@@ -128,7 +128,7 @@ var Player = Base.extend({
 		this.setHitpoints(this.hitpoints - unit.damage);
 	},
 	updatePoints: function() {
-		this.points = this.hitpoints + ~~(this.money / 4);
+		this.points = this.hitpoints + ~~(this.money / 10);
 		this.triggerEvent(events.pointChanged, this);
 	}
 });
