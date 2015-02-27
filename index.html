@@ -26,6 +26,10 @@
 
 		<div id="time-info">Game started ...</div>
 		<div id="sound-info" class="on" title="Sound status"></div>
+		<div id="speed-slider">
+		<input type=range id="gameSpeed" min=1 value=1 max=20 step=1>
+		<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspGame Speed
+	</div>
 	</div>
 	<canvas id="game" width=900 height=450>
 		<p><b>Your browser does not support the canvas element.</b></p>
@@ -79,6 +83,9 @@ var Game = (function(playerai0, playerai1) {
 	var timeInfo = document.querySelector('#time-info');
 	var soundInfo = document.querySelector('#sound-info');
 	var startGameButton = document.querySelector('#startGame');
+	var speedSlider = document.querySelector('#gameSpeed');
+
+	console.log(speedSlider);
 
 	var towerType = undefined;
 	var getMousePosition = function(evt) {
@@ -107,9 +114,8 @@ var Game = (function(playerai0, playerai1) {
 			timeInfo.textContent = 'All units are out!';
 		});
 		
-		logic.addEventListener(events.waveDefeated, function() {
-			// timeInfo.textContent = 'Idle';
-			// startWaveButton.disabled = false; // Comment these out
+		speedSlider.addEventListener(events.input, function() {
+			speedMultiplier = speedSlider.value;
 		});
 		logic.addEventListener(events.playerDefeated0, function() {
 			timeInfo.textContent = 'Game over ...';

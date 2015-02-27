@@ -15,6 +15,7 @@ var constants = {
 	maxRounds: 10000 // 0  means 1 round
 };
 
+var speedMultiplier = 10; // For testing only. Dont use this
 
 /*
  * A list of possible events
@@ -47,7 +48,8 @@ var events = {
 	towerNumberChanged1 : 'towerNumberChanged1',
 	pointChanged: 'pointChanged',
 	pointChanged0 : 'pointChanged0',
-	pointChanged1 : 'pointChanged1'
+	pointChanged1 : 'pointChanged1',
+	input : 'input'
 };
 
 /*

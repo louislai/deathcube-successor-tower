@@ -156,7 +156,7 @@
 			var me = this;
 			this.view.start();
 			this.gameLoop = setInterval(function() {
-				for (var i=0; i <= constants.speedMultiplier; i++) {
+				for (var i=0; i <= speedMultiplier; i++) {
 					me.tick();
 				}
 			}, constants.ticks);	

@@ -238,3 +238,7 @@ div.preview-image {
 #towers > div:hover > .info {
 	display: block;
 }
+
+#speed-slider {
+	margin-top: 500px;
+}
