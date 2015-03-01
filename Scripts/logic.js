@@ -270,14 +270,11 @@
 		if (this.currentWave.finished && this.units.length === 0)
 			this.endWave();
 	},
-	startBuild: function() {
+	build: function() {
 		this.state = GameState.building;
 
-		// destroy user Tower
-		this.destroyProgrammedTowers();
-
 		// build user Tower
-		this.buildProgrammedTowers();
+		this.generateProgrammedTowers();
 
 		this.beginWave();
 	},
@@ -317,7 +314,7 @@
 				
 				// Players build towers before player 0 attacks again. Only happen after the 1st round
 				if (this.defenderSide == 1) {
-					this.startBuild();
+					this.build();
 				} else {
 					this.beginWave();
 				}
@@ -398,23 +395,27 @@
 		return false;
 	},	
 	// build Towers based on User TowerGenerator
-	buildProgrammedTowers: function() {
+	generateProgrammedTowers: function() {
 		var me = this;
 
 		// Build Tower for player 0
 		var nextTowers = (me.AIPlayerData[me.defenderSide].getTowerGenerator())(); // Defender Towers
-		me.buildAITower(me.currentDefender, me.currentAttacker, nextTowers);
+		me.generateAITower(me.currentDefender, me.currentAttacker, nextTowers);
 
 		// Build Tower for player 1
 		var nextTowers = (me.AIPlayerData[(me.defenderSide + 1) % 2].getTowerGenerator())(); // Attacker Towers
-		me.buildAITower(me.currentAttacker, me.currentDefender, nextTowers);
+		me.generateAITower(me.currentAttacker, me.currentDefender, nextTowers);
 
 	},
-	buildAITower: function(owner, target, towerlist) {
+	generateAITower: function(owner, target, towerlist) {
 		var lst = towerlist;
 		while (!is_empty_list(lst)) {
 			var tw = head(lst);
-			this.buildTower(owner, target, tw.getCoordinates(), tw.getType());
+			if (tw instanceof AITowerToBuild) {
+				this.buildTower(owner, target, tw.getCoordinates(), tw.getType());
+			} else if (tw instanceof AITowerToDestroy) {
+				this.destroyTower(owner, tw.getCoordinates);
+			} else {}
 			lst = tail(lst);
 		}
 	},
@@ -449,26 +450,6 @@
 			}
 		}
 	},
-	// Allow engine to remove towers automatically based on user ai
-	destroyProgrammedTowers: function() {
-		var me = this;
-
-		// Destroy Tower for defender
-		var destroy = (me.AIPlayerData[me.defenderSide].getTowerDestroyer())(); // Defender Towers
-		me.destroyAITower(me.currentDefender, destroy);
-
-		// Destroy Tower for attacker
-		var destroy = (me.AIPlayerData[(me.defenderSide + 1) % 2].getTowerDestroyer())(); // Attacker Towers
-		me.destroyAITower(me.currentAttacker, destroy);
-	},
-	destroyAITower: function(owner, towerlist) {
-		var lst = towerlist;
-		if (!is_empty_list(lst)) {
-			var pt = head(lst);
-			this.destroyTower(owner, pt);
-			lst = tail(lst);
-		}
-	},
 	saveGameState: function() {
 		var me = this;
 
@@ -486,12 +467,12 @@
 		// Build initial towers for player 0
 		var initTowers = this.AIPlayerData[0].getInitTowers();
 
-		this.buildAITower(this.players[0], this.players[1], initTowers);
+		this.generateAITower(this.players[0], this.players[1], initTowers);
 
 		// Build initial towers for player 1
 		initTowers = this.AIPlayerData[1].getInitTowers();
 
-		this.buildAITower(this.players[1], this.players[0], initTowers);
+		this.generateAITower(this.players[1], this.players[0], initTowers);
 	}
 });
 

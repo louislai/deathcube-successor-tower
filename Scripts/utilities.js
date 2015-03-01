@@ -16,5 +16,7 @@ window.nextAnimationFrame = (function() {
 })();
 
 
+var AITowerList = list;
+
 
 

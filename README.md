@@ -7,7 +7,7 @@ Each player needs to write his/her own PlayerAI object. An AI Object is called w
 
 * InitTowers: This is a list of AITowers to be built before the game start
 * UnitGenerator: This is generator that will be invoked to generate the AIUnits to attack the opponent during the player's attacking turn
-* TowerGenerator: This is the generator that will be invoked to generate the AITowers to be built during the building phase of each round
+* TowerGenerator: This is the generator that will be invoked to generate the AITowers to be built during the building phase of each round (Only start from round 2)
 * TowerDestroyer: This is the generator that will generate the list of Point to be cleared of towers during the building phase. Note that TowerDestroyer is called before TowerGenerator is called.
 
 __Gamestate Specification__
