@@ -19,6 +19,8 @@ function AIUnit(type, time) {
  * Using JediScript
  */
 
+var AITowerList = list;
+
 function AITowerToBuild(type, pt) {
   var coordinates = pt;
   var type = type;
@@ -40,7 +42,7 @@ function AITowerToDestroy(pt) {
 /*
  * AI Class
  */
-var PlayerAI = function(name, initTowers, unitGenerator, towerGenerator, towerDestroyer) {
+var PlayerAI = function(name, initTowers, unitGenerator, towerGenerator) {
     var initTowers = initTowers || [];
     var unitGenerator = unitGenerator || function() { return; };
     var towerGenerator = towerGenerator || function() { return AITowerList(); };
