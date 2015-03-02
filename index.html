@@ -163,7 +163,7 @@ var Game = (function(playerai0, playerai1) {
 			var status = this.classList.contains('on');
 			this.classList.remove(status ? on : off);
 			this.classList.add(status ? off : on);
-			Sound.setVolume(status ? 0 : 1);
+			Sound.setVolume(status ? 0 : 0.3);
 		});
 		canvas.addEventListener(events.click, function(evt) {
 			var mousePos = getMousePosition(evt);

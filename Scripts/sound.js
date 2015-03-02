@@ -98,10 +98,9 @@ var Sound = Class.extend({
 	};
 	sounds.setVolume = function(volume) {
 		var volume = Math.min(Math.max(volume, 0), 1);
-		var change = volume / sounds.volume;
 		sounds.volume = volume;
 
 		for (var i = deposit.length; i--; )
-			deposit[i].element.volume = change * deposit[i].element.volume;
+			deposit[i].element.volume = volume;
 	};
 });
