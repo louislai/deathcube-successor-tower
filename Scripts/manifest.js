@@ -59,7 +59,6 @@ var resources = {
 	images : [
 		{ name : 'background', value : 'Content/background.png' },
 		{ name : 'airshot', value : 'Content/sprites/airshot.png' },
-		{ name : 'airwolf', value : 'Content/sprites/airwolf.png' },
 		{ name : 'armos', value : 'Content/sprites/armos.png' },
 		{ name : 'canontower', value : 'Content/sprites/canontower.png' },
 		{ name : 'darknut', value : 'Content/sprites/darknut.png' },

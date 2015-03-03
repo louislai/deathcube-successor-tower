@@ -20,8 +20,7 @@ var MazeStrategy = {
 	diagonalShortCut : 3,
 	euclidean        : 4,
 	euclideanNoSQR   : 5,
-	custom           : 6,
-	air              : 7
+	custom           : 6
 };
 
 /*
@@ -350,8 +349,6 @@ var Maze = Class.extend({
 		return false;
 	},
 	getPath: function(mazeStrategy) { // Modification for Ustart and Uend
-		if (mazeStrategy === MazeStrategy.air)
-			return this.getPathAir();
 
 		if (!this.paths[mazeStrategy]) {
 			this.calculate(mazeStrategy);
@@ -359,27 +356,15 @@ var Maze = Class.extend({
 		
 		return this.paths[mazeStrategy];
 	},
-	getPathAir: function() {
-		var path = [];
-
-		// Modification change this.start to this.Ustart
-		for (var i = this.start.x; i < this.end.x + 1; ++i)
-			path.push(new Point(i, this.start.y));
-
-		return this.isRotated ? path.reverse() : path;
-	},
 	calculate: function(mazeStrategy) {
-		if (mazeStrategy === MazeStrategy.air) {
-			var path = this.getPathAir();
-		} else {
-			var path = [];
-			this.pf.formula = mazeStrategy;
-			// Modification change this.start to this.Ustart and this.end to this.Uend
-			var nodes = this.pf.findPath(this.start, this.end);
+	
+		var path = [];
+		this.pf.formula = mazeStrategy;
+		// Modification change this.start to this.Ustart and this.end to this.Uend
+		var nodes = this.pf.findPath(this.start, this.end);
 
-			for (var i = 0; i < nodes.length; i++)
-				path.push(new Point(nodes[i].x, nodes[i].y));
-		}
+		for (var i = 0; i < nodes.length; i++)
+			path.push(new Point(nodes[i].x, nodes[i].y));
 
 		this.paths[mazeStrategy] = this.isRotated ? path.reverse() : path;
 
