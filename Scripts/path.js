@@ -418,6 +418,7 @@ var PathFinder = Class.extend({
 		var parentNode = new PathFinderNode();
 		var found = false;
 		var gridX = me.grid.length;
+
 		var gridY = me.grid[0].length;
 		me.stop = false;
 		me.stopped = false;

@@ -23,7 +23,8 @@ Function.prototype.clone = function() {
 // To clone object with deep nesting
 
  function clone(obj) {
-  return JSON.parse(JSON.stringify(obj)); // Work on IE8+, Firefox 34+, Chrome 31+, Safari 7.1+, Opera 26+
+  // return JSON.parse(JSON.stringify(obj)); // Work on IE8+, Firefox 34+, Chrome 31+, Safari 7.1+, Opera 26+
+  return deepCopy(obj);
  }
  
 
@@ -66,7 +67,7 @@ Function.prototype.clone = function() {
                       ));
  }
 
- MazeRecord.getRocks = function(owner) {
+ MazeRecord.getSelfRocks = function(owner) {
   var real_owner = this.players[owner.__side];
   return array_to_list(this.towers.filter(
                         function(tower) {
@@ -102,7 +103,7 @@ Function.prototype.clone = function() {
 
  MazeRecord.findPath = function(side, unit) {
   var path;
-  
+
   if (side === 0) {
     if (this.maze.isRotated) {
       path = this.maze.getPath(unit.strategy).reverse();

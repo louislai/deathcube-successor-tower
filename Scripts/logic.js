@@ -198,8 +198,8 @@
 					unit.path = new Path(path);
 					this.addUnit(unit);
 
-					// Save the type of this unit to MazeRecorder
-					MazeRecord.__lastUnits[(this.defenderSide + 1) % 2] = pair(unit, MazeRecord.__lastUnits[(this.defenderSide + 1) % 2]);
+					// Save a copy of this unit to MazeRecorder
+					MazeRecord.__lastUnits[(this.defenderSide + 1) % 2] = pair(clone(unit), MazeRecord.__lastUnits[(this.defenderSide + 1) % 2]);
 				}
 			}			
 		}
@@ -458,10 +458,10 @@
 		MazeRecord.maze = clone(me.maze);
 
 		// The following lines are to clone functions required by the path finder not cloneable with json parsing
+		MazeRecord.maze.grid = clone(me.maze.grid);
 		MazeRecord.maze.getPath = me.maze.getPath.clone();
 		MazeRecord.maze.calculate = me.maze.calculate.clone();
-		MazeRecord.maze.pf.findPath = me.maze.pf.findPath.clone();
-		MazeRecord.maze.pf.reset = me.maze.pf.reset.clone();
+		MazeRecord.maze.pf = new PathFinder(MazeRecord.maze.grid);
 	},
 	buildInitialTowers: function() {
 		// Build initial towers for player 0
@@ -473,6 +473,8 @@
 		initTowers = this.AIPlayerData[1].getInitTowers();
 
 		this.generateAITower(this.players[1], this.players[0], initTowers);
+
+		this.saveGameState();
 	}
 });
 
