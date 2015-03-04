@@ -117,7 +117,7 @@ Function.prototype.clone = function() {
       path = this.maze.getPath(unit.strategy).reverse();
     }
   }
-  return path;
+  return array_to_list(path);
  }
 
 /*

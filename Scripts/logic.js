@@ -156,13 +156,14 @@
 			var me = this;
 			this.view.start();
 			this.gameLoop = setInterval(function() {
+				var countTick = 0;
+
 				function callTick() {
 					me.tick();
 				}
 
-				for (var i=0; i <= speedMultiplier; i++) {
-					me.tick();
-				}
+
+
 			}, constants.ticks);	
 		}
 	},
@@ -366,9 +367,6 @@
 		if (pt.x <= me.width && pt.x >= 0 && pt.y <= me.height && pt.y >= 0) { // Modification to guarantee point is valid
 			if (me.state == GameState.building && type.cost <= me.currentDefender.money && (isrock || (numShooting < owner.maxTowerNumber))) {
 				newTower.mazeCoordinates = pt;
-
-				if (owner === me.players[1])
-					console.log(pt.x);
 
 				// Prevent player 1 building on player 0 ground
 				if (owner === me.players[1] && newTower.mazeCoordinates.x < me.width / 2) {
