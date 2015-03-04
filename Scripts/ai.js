@@ -131,8 +131,7 @@ function numberToPoint(lst) {
 
 
 // List of monsters and towers for testing
-var monsters = [Mario, Rope, DarkNut, Speedy, Armos]
-var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
+var monsters = [Mario, Rope, DarkNut, Speedy, Armos];
 
 var initTowers0 = pair(new AITowerToBuild(LaserTower, new Point(7, 8)), numberToPoint(presetRock0));
 var initTowers1 = pair(new AITowerToBuild(LaserTower, new Point(22, 8)), numberToPoint(presetRock1));

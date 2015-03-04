@@ -42,8 +42,10 @@
 
 		// Modification here to switch role between player
 		me.defenderSide      = 1;   // Right player defends first
-		me.currentDefender = me.players[1];
-		me.currentAttacker = me.players[0];
+		me.currentDefender      = me.players[1];
+		me.currentDefender.side = 1;
+		me.currentAttacker      = me.players[0];
+		me.currentAttacker.side = 0;
 
 		// Assign sides for AIs
 		AIPlayerData[0].__side = 0;
@@ -199,9 +201,6 @@
 					unit.mazeCoordinates = this.maze.Ustart;
 					unit.path = new Path(path);
 					this.addUnit(unit);
-
-					// Save a copy of this unit to MazeRecorder
-					MazeRecord.__lastUnits[(this.defenderSide + 1) % 2] = pair(clone(unit), MazeRecord.__lastUnits[(this.defenderSide + 1) % 2]);
 				}
 			}			
 		}
@@ -278,6 +277,9 @@
 		// build user Tower
 		this.generateProgrammedTowers();
 
+		// Reset MazeRecord last units
+ 		MazeRecord.__lastUnits = [[],[]];
+
 		this.beginWave();
 	},
 	endWave: function() {
@@ -326,9 +328,6 @@
 		}
 	},
 	beginWave: function() {
-		// Reset MazeRecord lastUnits 
-		MazeRecord.__lastUnits = [[],[]];
-
 		var me = this;
 
 		me.state = GameState.waving;	
@@ -542,7 +541,11 @@
  			var type = unt.getType();
  			var time = unt.getTime();
  			if (me.owner.money >= type.cost && time <= me.maxtime) { // Check cost of unit and time does not exceed maxtime
- 				this.owner.addMoney(-type.cost)
+ 				this.owner.addMoney(-type.cost);
+ 				
+ 				// Save AIUnit to MazeRecord
+ 				MazeRecord.__lastUnits[this.owner.side] = append(MazeRecord.__lastUnits[this.owner.side], list(new AIUnit(type, time)));
+
 	 			var unit = new type;
 	 			unit.owner = me.owner;
 	 			unit.target = me.target;
