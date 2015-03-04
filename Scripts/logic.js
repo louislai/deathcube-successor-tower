@@ -156,13 +156,10 @@
 			var me = this;
 			this.view.start();
 			this.gameLoop = setInterval(function() {
-				var countTick = 0;
-
-				function callTick() {
+				
+				for (var i = 0; i < speedMultiplier; i++) {
 					me.tick();
 				}
-
-
 
 			}, constants.ticks);	
 		}
