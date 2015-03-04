@@ -48,7 +48,7 @@ var PlayerAI = function(name, initTowers, unitGenerator, towerGenerator) {
     var towerGenerator = towerGenerator || function() { return AITowerList(); };
     var name = name;
 
-    this.__side = undefined;
+    this.__side = 0;
     this.getInitTowers = function() { return initTowers; };
     this.getUnitGenerator = function() { return unitGenerator; };
     this.getTowerGenerator = function() { return towerGenerator; };
@@ -64,22 +64,22 @@ var PlayerGenerator1 = function() {
   return list(new AIUnit(Speedy, 0));
 }
 
-function randomTower(n) {
+function randomTower(n, c) {
   if (n === 0) {
     return [];
   } else {
     return pair(new AITowerToBuild(towers[Math.floor(Math.random() * towers.length)], 
-                new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15))),
-                randomTower(n - 1));
+                new Point(Math.floor(Math.random() * 15) + c, Math.floor(Math.random() * 15))),
+                randomTower(n - 1, c));
   }
 }
 
-function randomRock(n) {
+function randomRock(n, c) {
   if (n === 0) {
     return [];
   } else {
-    return pair(new AITowerToBuild(Rock, new Point(Math.floor(Math.random() * 15), Math.floor(Math.random() * 15))),
-                randomRock(n - 1));
+    return pair(new AITowerToBuild(Rock, new Point(Math.floor(Math.random() * 15) + c, Math.floor(Math.random() * 15))),
+                randomRock(n - 1, c));
   }
 }
 function randomUnit(n, t) {
@@ -92,23 +92,27 @@ function randomUnit(n, t) {
 }
 
 var presetRock0 = [[2, 1], [5, 0], [8, 1], [11, 0], [13, 1]];
-var presetRock1 = [[1, 0], [3, 1], [6, 0], [9, 1], [12, 0]];
+var presetRock1 = [[16, 0], [18, 1], [21, 0], [24, 1], [27, 0]];
 
 var TowerGenerator = function() {
-  return append(append(randomTower(4), randomRock(10)), rn());
+  return append(append(randomTower(4, 0), randomRock(10, 0)), rn(0));
 };
 
-function randomPoint(n) {
+var TowerGenerator1 = function() {
+  return append(append(randomTower(4, 15), randomRock(10, 15)), rn(15));
+};
+
+function randomPoint(n, c) {
   if (n === 0) { 
     return [];
   } else {
-    return pair(new AITowerToDestroy(Math.floor(Math.random() * 15, Math.floor(Math.random() * 15))),
-                randomPoint(n - 1));
+    return pair(new AITowerToDestroy(Math.floor(Math.random() * 15 + c, Math.floor(Math.random() * 15))),
+                randomPoint(n - 1, c));
   }
 };
 
-function rn() {
-  return randomPoint(20);
+function rn(c) {
+  return randomPoint(20, c);
 }
 
 
@@ -131,9 +135,9 @@ var monsters = [Mario, Rope, DarkNut, Speedy, Armos]
 var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, GateToHell];
 
 var initTowers0 = pair(new AITowerToBuild(LaserTower, new Point(7, 8)), numberToPoint(presetRock0));
-var initTowers1 = pair(new AITowerToBuild(LaserTower, new Point(7, 8)), numberToPoint(presetRock1));
+var initTowers1 = pair(new AITowerToBuild(LaserTower, new Point(22, 8)), numberToPoint(presetRock1));
 
 var player0 = new PlayerAI("Yoda", initTowers0, PlayerGenerator, TowerGenerator);
 
-var player1 = new PlayerAI("Darth Vader", initTowers1, PlayerGenerator, TowerGenerator);
+var player1 = new PlayerAI("Darth Vader", initTowers1, PlayerGenerator, TowerGenerator1);
   

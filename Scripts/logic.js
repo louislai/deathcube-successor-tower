@@ -156,6 +156,10 @@
 			var me = this;
 			this.view.start();
 			this.gameLoop = setInterval(function() {
+				function callTick() {
+					me.tick();
+				}
+
 				for (var i=0; i <= speedMultiplier; i++) {
 					me.tick();
 				}
@@ -363,14 +367,19 @@
 			if (me.state == GameState.building && type.cost <= me.currentDefender.money && (isrock || (numShooting < owner.maxTowerNumber))) {
 				newTower.mazeCoordinates = pt;
 
-				// Modification Add Width / 2 to coordinates.x if builder is player 1
-				if (owner === me.players[1]) {
-					newTower.mazeCoordinates.x += me.width / 2;
-				} else {
-					if (newTower.mazeCoordinates.x >= me.width / 2) {
-						return false;
-					} // Return false if player 0 tries to build towers outside of range
+				if (owner === me.players[1])
+					console.log(pt.x);
+
+				// Prevent player 1 building on player 0 ground
+				if (owner === me.players[1] && newTower.mazeCoordinates.x < me.width / 2) {
+					return false;
+				} 
+
+				// Prevent player 0 building on player 1 ground
+				if (owner === me.players[0] && newTower.mazeCoordinates.x >= me.width / 2) {
+					return false;
 				}
+				
 
 				newTower.cost = type.cost;
 				newTower.targets = me.units;
@@ -398,11 +407,11 @@
 	generateProgrammedTowers: function() {
 		var me = this;
 
-		// Build Tower for player 0
+		// Build Tower for player D
 		var nextTowers = (me.AIPlayerData[me.defenderSide].getTowerGenerator())(); // Defender Towers
 		me.generateAITower(me.currentDefender, me.currentAttacker, nextTowers);
 
-		// Build Tower for player 1
+		// Build Tower for player A
 		var nextTowers = (me.AIPlayerData[(me.defenderSide + 1) % 2].getTowerGenerator())(); // Attacker Towers
 		me.generateAITower(me.currentAttacker, me.currentDefender, nextTowers);
 
@@ -423,11 +432,6 @@
 		var me = this;
 
 		if (me.state == GameState.building) {
-
-			// Modification Add Width / 2 to coordinates.x if owner is player 1
-			if (owner === me.players[1]) {
-				pt.x += me.width / 2;
-			}
 
 			var towerToRemove = me.towers.filter(function(t) {
 				return t.mazeCoordinates.x === pt.x && t.mazeCoordinates.y === pt.y && t.owner === owner; // Make sure only owner can remove tower

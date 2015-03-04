@@ -15,7 +15,7 @@ var constants = {
 	maxRounds: 10000 // 0  means 1 round
 };
 
-var speedMultiplier = 1; // For testing only. Dont use this
+var speedMultiplier = 2; // For testing only. Dont use this
 
 /*
  * A list of possible events
