@@ -14,10 +14,11 @@ _Building Phase_
 This is the 'preparation' part of a round. This phase is when the engine will call the players' ai program to generate the towers, create mazes, destroy existing towers, etc
 
 _Waving Phase_  
-This is the 'action' part of a round. In this phase, player 1 will attack player 2 first with his group of soldier. After all of player 1's soldier either successfully reach player 2's base or perish, player 2 will attack player 1. Throughout the phase, the engine will call the players' ai programs to generate the soldiers to be sent out. One player's attacker can have at most 8 soldiers attacking, and can last as long as (number of units * 1300) time units.  
+This is the 'action' part of a round. In this phase, player 1 will attack player 2 first with his group of soldier. After all of player 1's soldier either successfully reach player 2's base or perish, player 2 will attack player 1.  
+ Throughout the phase, the engine will call the players' ai programs to generate the soldiers to be sent out. One player's attacker can have at most 8 soldiers attacking, and can last as long as (number of units * 1300) time units.  The list of units that would be sent out during a player's attack turn is generated at the start of the turn based on the AI's algorithm.  
 Also note the coloured squares on the left and the right only represent the spawning points for the units. The players should not assume that his opponent's soldier needs to reach exactly the coloured square on the his side to damage him. In fact, anywhere along the left or right edge is fair game.
 
-__AI Class Specifications__  
+__AI APIs__  
 Here are the classes/constructors that players need to be aware of:  
 
 _Point_: can be instanized with 2 parameters: x-coordinate and y-coordinate  (e.g. new Point(0, 0)).
@@ -37,7 +38,7 @@ _PlayerAI_: This is the main AI class the players need to subclass. An AI Object
 
 _(Special Note:)_: Players need to spend money to buy a tower or unit, but will gain back some money if they destroy their towers or if they kill an enemy unit.
 
-__Gamestate Specification__
+__Gamestate APIs__  
 MazeRecord is the game state holder that will be prove useful to the players in determining the current state of the game. This can also serve as strategic aid for the AI programs' generators
 
 MazeRecord contains the following methods:  

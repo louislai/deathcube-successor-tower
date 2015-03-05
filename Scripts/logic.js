@@ -158,10 +158,22 @@
 			var me = this;
 			this.view.start();
 			this.gameLoop = setInterval(function() {
-				
-				for (var i = 0; i < speedMultiplier; i++) {
-					me.tick();
+
+				// Use speedMultiplier here for adjusting speed. 
+				// But constants.speedMultiplier should be used in the mature version
+				var count = 0;
+				var delay = Math.floor(constants.ticks / speedMultiplier);
+
+				function callTick() {
+					if (count < speedMultiplier) {
+						me.tick();
+						console.log(count);
+						count++;
+						setTimeout(callTick, delay);
+					}
 				}
+
+				callTick();
 
 			}, constants.ticks);	
 		}

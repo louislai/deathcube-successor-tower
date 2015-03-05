@@ -1,0 +1,246 @@
+<!doctype html>
+<!-- @override Start the game with player 1 and 2 (In actual the engine perceive player 1 as player 0, and player 2 as player 1, coz we CS people start counting from 0) -->
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Tower Defense Demo</title>
+<link href="Content/style.css" rel="stylesheet" />
+</head>
+<body>
+<div id="wait"><div id="wait-message">Loading ...</div></div>
+<div id="frame" class="hidden">
+  <div id="info">
+    <div id="info-p0"> Player 1 </div>
+    <div id="money-info-p0" title="Money left"></div>
+    <div id="tower-info-p0" title="Towers built"></div>
+    <div id="health-info-p0" title="Health left"></div>
+    <div id="point-info-p0" title="Points"></div>
+
+    <!-- // Modification to add info bar for player 2 -->
+    <div id="info-p1"> Player 2 </div>
+    <div id="money-info-p1" title="Money left"></div>
+    <div id="tower-info-p1" title="Towers built"></div>
+    <div id="health-info-p1" title="Health left"></div>
+    <div id="point-info-p1" title="Points"></div>
+    <!-- // End Modifcation -->
+
+    <div id="time-info">Game started ...</div>
+    <div id="sound-info" class="on" title="Sound status"></div>
+    <div id="speed-slider">
+    <input type=range id="gameSpeed" min=2 value=2 max=20 step=1>
+    <br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspGame Speed
+  </div>
+  </div>
+  <canvas id="game" width=900 height=450>
+    <p><b>Your browser does not support the canvas element.</b></p>
+    <p>This indicates that you are really stuck in the past (sorry!). Please get a new browser.</p>
+  </canvas>
+  <div id="towers" hidden=""></div>
+  <div id="buttons">
+    <button id="startGame">Start Game</button>
+  </div>
+</div>
+
+<script src="Scripts/jediscript-week-13.js"></script>
+<script src="Scripts/manifest.js"></script>
+<script src="Scripts/oop.js"></script>
+<script src="Scripts/utilities.js"></script>
+<script src="Scripts/path.js"></script>
+<script src="Scripts/resources.js"></script>
+<script src="Scripts/video.js"></script>
+<script src="Scripts/sound.js"></script>
+<script src="Scripts/main.js"></script>
+<script src="Scripts/logic.js"></script>
+<script src="Scripts/units.js"></script>
+<script src="Scripts/shots.js"></script>
+<script src="Scripts/towers.js"></script>
+<script src="Scripts/record.js"></script>
+<script src="Scripts/ai.js"></script>
+<script>
+var Game = (function(playerai0, playerai1) {
+  "use strict";
+
+  var name0 = playerai0.getName(); 
+  var name1 = playerai1.getName(); // Put name for two players
+
+  var info0 = document.querySelector('#info-p0');
+  var info1 = document.querySelector('#info-p1');
+  info0.textContent = name0;
+  info1.textContent = name1;
+
+  var canvas = document.querySelector('#game');
+  var towerPanel = document.querySelector('#towers');
+  var towerButtons = [];
+  var moneyInfo0 = document.querySelector('#money-info-p0');
+  var healthInfo0 = document.querySelector('#health-info-p0');
+  var towerInfo0 = document.querySelector('#tower-info-p0');
+  var pointInfo0 = document.querySelector('#point-info-p0');
+  // Modification add query selecter for player 1
+  var moneyInfo1 = document.querySelector('#money-info-p1');
+  var healthInfo1 = document.querySelector('#health-info-p1');
+  var towerInfo1 = document.querySelector('#tower-info-p1');
+  var pointInfo1 = document.querySelector('#point-info-p1');
+  var timeInfo = document.querySelector('#time-info');
+  var soundInfo = document.querySelector('#sound-info');
+  var startGameButton = document.querySelector('#startGame');
+  var speedSlider = document.querySelector('#gameSpeed');
+
+  var towerType = undefined;
+  var getMousePosition = function(evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+  };
+  var buildPhase = function() {
+    var time = 10;
+    var f = function() {
+      setTimeout(function() {
+        time--;
+        timeInfo.textContent = time + ' seconds left';
+
+        if (time > 0) f();
+        else logic.beginWave();
+      }, 1000);
+    };
+
+    f();
+  };
+  var addHandlers = function() {
+    logic.addEventListener(events.waveFinished, function() {
+      timeInfo.textContent = 'All units are out!';
+    });
+    
+    speedSlider.addEventListener(events.input, function() {
+      speedMultiplier = speedSlider.value;
+    });
+    logic.addEventListener(events.playerDefeated0, function() {
+      timeInfo.textContent = 'Game over ...';
+      alert(name1 +" won");
+    });
+    logic.addEventListener(events.playerDefeated1, function() {
+      timeInfo.textContent = 'Game over ...';
+      alert(name0 + " won");
+    });
+    logic.addEventListener(events.waveCreated, function(wave) {
+      timeInfo.textContent = wave.units.length + ' units remaining';
+      startGameButton.disabled = true;
+    });
+    logic.addEventListener(events.unitSpawned, function(remaining) {
+      timeInfo.textContent = remaining + ' units remaining';
+    });
+    logic.addEventListener(events.moneyChanged0, function(player) {
+      moneyInfo0.textContent = player.money;
+    });
+    logic.addEventListener(events.moneyChanged1, function(player) {
+      moneyInfo1.textContent = player.money;
+    });
+    logic.addEventListener(events.healthChanged0, function(player) {
+      healthInfo0.textContent = player.hitpoints;
+    });
+    logic.addEventListener(events.healthChanged1, function(player) {
+      healthInfo1.textContent = player.hitpoints;
+    });
+    logic.addEventListener(events.towerNumberChanged0, function(info) {
+      towerInfo0.textContent = info.current + ' / ' + info.maximum;
+    });
+    logic.addEventListener(events.towerNumberChanged1, function(info) {
+      towerInfo1.textContent = info.current + ' / ' + info.maximum;
+    });
+    logic.addEventListener(events.pointChanged0, function(player) {
+      pointInfo0.textContent = player.points;
+    });
+    logic.addEventListener(events.pointChanged1, function(player) {
+      pointInfo1.textContent = player.points;
+    });
+    startGameButton.addEventListener(events.click, function() {
+      logic.beginGame();
+    });
+    soundInfo.addEventListener(events.click, function() {
+      var on = 'on';
+      var off = 'off'
+      var status = this.classList.contains('on');
+      this.classList.remove(status ? on : off);
+      this.classList.add(status ? off : on);
+      Sound.setVolume(status ? 0 : 0.3);
+    });
+    canvas.addEventListener(events.click, function(evt) {
+      var mousePos = getMousePosition(evt);
+      var pos = logic.transformCoordinates(mousePos.x, mousePos.y);
+      evt.preventDefault();
+      if (towerType) {
+        logic.buildTower(pos, towerType);
+      }
+      else logic.destroyTower(pos);
+    });
+    canvas.addEventListener(events.contextmenu, function(evt) {
+      var mousePos = getMousePosition(evt);
+      var pos = logic.transformCoordinates(mousePos.x, mousePos.y);
+      evt.preventDefault();
+      logic.destroyTower(pos);
+    });
+    canvas.addEventListener(events.mouseover, function(evt) {
+      view.showGrid = true;
+    });
+    canvas.addEventListener(events.mouseout, function(evt) {
+      view.showGrid = false;
+    });
+  };
+  var addTower = function(tower) {
+    var img = images[tower.sprite];
+    var div = document.createElement('div');
+    div.innerHTML = [
+      '<div class=preview><div style="background: url(', img.src, ') no-repeat; width: ', ~~(img.naturalWidth / tower.frames), 'px; height: ', img.naturalHeight, 'px" class="preview-image"></div></div>',
+      '<div class=title>', tower.nickName, '</div><div class=info>',
+      '<div class=description>', tower.description, '</div>',
+      '<div class=rating>', ~~tower.rating, '</div>',
+      '<div class=speed>', tower.speed, '</div>',
+      '<div class=damage>', tower.shotType.damage, '</div>',
+      '<div class=range>', tower.range, '</div>',
+      '<div class=cost>', tower.cost, '</div></div>',
+    ].join('');
+    towerButtons.push(div);
+    div.addEventListener(events.click, function() {
+      towerType = tower;
+
+      for (var i = towerButtons.length; i--; )
+        towerButtons[i].classList.remove('selected-tower');
+
+      this.classList.add('selected-tower');
+    });
+    towerPanel.appendChild(div);
+  };
+  var addTowers = function() {
+    for (var key in types.towers)
+      addTower(types.towers[key]);
+  };
+  var startMusic = function() {
+    var sound = new Sound(sounds['burn_them_down'], true);
+    sound.setVolume(0.3);
+    sound.play();
+  };
+  var completed = function(e) {
+    addTowers();
+    addHandlers();
+    view.background = images.background;
+    view.showGrid = false;
+    document.querySelector('#frame').classList.remove('hidden');
+    document.querySelector('#wait').classList.add('hidden');
+    startMusic();
+    logic.start();
+  };
+  var progress = function(e) {
+    document.querySelector('#wait-message').textContent = 'Loading (' + e.name + ', ' + ~~(e.progress * 100) + '% of ' + e.total + ')';
+  };
+
+  var view = new CanvasView(canvas);
+  var logic = new GameLogic(view, 30, 15, [playerai0, playerai1]); // Modification to add players
+  var loader = new Loader(completed, progress);
+  loader.set('Images', ImageLoader, images, resources.images);
+  loader.set('Sounds', SoundLoader, sounds, resources.sounds);
+  loader.start();
+});
+</script>
+</body>
+</html>
