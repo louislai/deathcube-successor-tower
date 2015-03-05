@@ -47,6 +47,16 @@ Function.prototype.clone = function() {
     return result;
  }
 
+ function player_to_playerai(player) {
+    var p = new PlayerAI();
+    p.__side = player.side;
+    p.__health = player.hitpoints;
+    p.__money = player.money;
+    p.__points = player.points;
+    p.__shootingTowerNumber = player.shootingTowerNumber;
+    return p;
+ }
+
  var MazeRecord = {__lastUnits: [[],[]]};
 
 /*
@@ -135,11 +145,11 @@ Function.prototype.clone = function() {
  * Method to view the player info
  */
  MazeRecord.showSelfInfo = function(aiplayer) {
-  return clone(this.players[aiplayer.__side]);
+  return player_to_playerai(this.players[aiplayer.__side]);
  }
 
  MazeRecord.showOpponentInfo = function(aiplayer) {
-  return clone(this.players[(aiplayer.__side + 1) % 2]);
+  return player_to_playerai(this.players[(aiplayer.__side + 1) % 2]);
  }
 
 

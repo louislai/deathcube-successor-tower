@@ -91,7 +91,8 @@ var Player = Base.extend({
 		this.points = 0;
 		this.hitpoints = 0;
 		this.side = 0;
-		this.maxTowerNumber = 0;  // Modification for specific Tower number
+		this.maxTowerNumber = 0;
+		this.shootingTowerNumber = 0;
 		this.registerEvent(events.towerNumberChanged);
 		this.registerEvent(events.playerDefeated);
 		this.registerEvent(events.moneyChanged);

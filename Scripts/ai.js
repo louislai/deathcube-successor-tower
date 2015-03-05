@@ -46,14 +46,24 @@ var PlayerAI = function(name, initTowers, unitGenerator, towerGenerator) {
     var initTowers = initTowers || [];
     var unitGenerator = unitGenerator || function() { return; };
     var towerGenerator = towerGenerator || function() { return AITowerList(); };
-    var name = name;
+    var name = name || "Player";
 
+    this.__health = constants.hitpoints;
+    this.__money = constants.money;
+    this.__points = 0;
+    this.__maxTowerNumber = constants.towerNumberMax;
+    this.__shootingTowerNumber = 0;
     this.__side = 0;
     this.getInitTowers = function() { return initTowers; };
     this.getUnitGenerator = function() { return unitGenerator; };
     this.getTowerGenerator = function() { return towerGenerator; };
     this.getSide = function() { return this.__side; };
     this.getName = function() { return name; };
+    this.getHealth = function() { return this.__health; };
+    this.getMoney = function() { return this.__money; };
+    this.getPoints = function() { return this.__points; };
+    this.getMaxTowerNumber = function() { return this.__maxTowerNumber; };
+    this.getShootingTowerNumber = function() { return this.__shootingTowerNumber; };
 };
 
 var PlayerGenerator = function() {

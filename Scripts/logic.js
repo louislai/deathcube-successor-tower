@@ -339,6 +339,8 @@
 		}
 	},
 	beginWave: function() {
+		this.saveGameState();
+
 		var me = this;
 
 		me.state = GameState.waving;	
@@ -394,6 +396,7 @@
 					this.addTower(newTower);
 
 					if (!isrock) {
+						owner.shootingTowerNumber++;
 						owner.triggerEvent(events.towerNumberChanged, {
 							current: numShooting + 1,
 							maximum: owner.maxTowerNumber,
@@ -451,6 +454,7 @@
 				me.maze.tryRemove(pt);
 
 				if (!(towerToRemove instanceof Rock)) {
+					owner.shootingTowerNumber--;
 					owner.triggerEvent(events.towerNumberChanged, {
 						current: me.getNumShooting(owner),
 						maximum: owner.maxTowerNumber,
