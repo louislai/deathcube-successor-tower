@@ -1,22 +1,31 @@
 ## CS1010R: Tower Defense/Attack Multiplayer Game ##
 
-__Gameplay__:   
-The game has two players, player 1 occupying the left base, player 2 occupying the right base. The game begins by loading up the AIs defined by the players. Then there will be multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will build whatever they want to build. They can destroy their existing building to get back spaces or money during this phase too. Next, during the waving phase, player 1 and 2 take turns to attack each other. The game continues until until someone dies or if the maximum number of rounds is reached.
+__Gameplay__:    
+The game has two players, player 1 occupying the left half of the map, player 2 occupying the right half. The two player are controlled by two AI programs to be written by the student. In this game, the two players will take part in both sending out soldier to attack the opponent's base and building towers to defend themselves against each other's attack. There are multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will prepare their towers. Next, during the waving phase, player 1 and 2 take turns to attack each other. The game continues until until someone dies or if the maximum number of rounds is reached.
 
 __Credits__:  
 
 * Supervisor: Prof. Martin Henz
 * Student: Lai Hoang Dung (Louis)
 
-__Presiquisites
+__Presiquisites__  
+The browser needs to support HTML5, and also the JSON.stringify and JSON.parse methods. This should include IE 11+, Firefox 36+, Chrome 40+, Opera 27+ and other modern browsers.
 
-##### TODOs: #####
-* Research strategies to run the game in JFDI environment (done)
-* Re-balance the game by updating tower's cost, unit's cost, unit's prize (Xiaodong)
-* Re-implement ai generator so it can accept Jediscript list-style inputs (done)
-* Decide what game state to be record (done)
-* Modify WaveGenerator so it decide the time a unit appears based on used algorithm. Also decide a constraint on no of units or lapse time of each round. (Done)
-* Implement another winning condition (in the case where no players die) (Done)
-* Find some ways to prevent the  students from overriding engine attributes (Partially)
-* Implement an 'act' method for PlayerAI so that game engine can just call .act() to execute what the AI needs to do (May not be necessary)
-* Think of other possible towers/units. Or should we leave it to the user imagination to customise their tower/unit? (Xiaodong)
+__Getting Started__  
+Open __index.html__ and click "Start Game" for a quick demo of a game using default AI programs.  
+Otherwise, to test the game with custom AI programs, open __test_ai.html__. Go to console and type    
+
+```
+Game(<PlayerAI Object 1>, <PlayerAI Object 2>);
+```
+
+An interface similar to the game screen on __index.html__ will then appear.
+
+__Info for Students__  
+Refer to Student_Guide.md
+
+__Info for Avengers__  
+Refer to Avenger_Guide.md
+
+__Mission Ideas__  
+Refer to Mission_Ideas.md

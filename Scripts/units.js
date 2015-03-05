@@ -43,7 +43,7 @@ var Rope = Unit.extend({
  */
 var FireWizzrobe = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, FireWizzrobe.speed, 70, MazeStrategy.manhattan, FireWizzrobe.hitpoints, 5);
+		this._super(owner, target, FireWizzrobe.speed, 70, MazeStrategy.manhattan, FireWizzrobe.hitpoints, 3);
 		this.createVisual(FireWizzrobe.sprite, [3, 3, 3, 3], 1.4);
 	},
 }, function(wizz) {
@@ -62,7 +62,7 @@ var FireWizzrobe = Unit.extend({
  */
 var DarkNut = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, DarkNut.speed, 80, MazeStrategy.euclideanNoSQR, DarkNut.hitpoints, 19);
+		this._super(owner, target, DarkNut.speed, 80, MazeStrategy.euclideanNoSQR, DarkNut.hitpoints, 10);
 		this.createVisual(DarkNut.sprite, [4, 4, 4, 4]);
 	},
 }, function(nut) {
@@ -81,7 +81,7 @@ var DarkNut = Unit.extend({
  */
 var Speedy = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, Speedy.speed, 25, MazeStrategy.diagonalShortCut, Speedy.hitpoints, 45);
+		this._super(owner, target, Speedy.speed, 25, MazeStrategy.diagonalShortCut, Speedy.hitpoints, 28);
 		this.createVisual(Speedy.sprite, [20]);
 	},
 }, function(unit) {
@@ -100,7 +100,7 @@ var Speedy = Unit.extend({
  */
 var Armos = Unit.extend({
 	init: function(owner, target) {
-		this._super(owner, target, Armos.speed, 125, MazeStrategy.euclidean, Armos.hitpoints, 40);
+		this._super(owner, target, Armos.speed, 125, MazeStrategy.euclidean, Armos.hitpoints, 20);
 		this.createVisual(Armos.sprite, [4, 4, 4, 4], 1.2);
 	},
 }, function(armos) {

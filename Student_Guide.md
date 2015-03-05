@@ -1,6 +1,7 @@
 #### Tower Defense/Attack Multiplayer Game ####
 
-__Gameplay__: The game has two players, player 1 occupying the left half of the map, player 2 occupying the right half. The two player are controlled by two AI programs to be written by the student. In this game, the two players will take part in both sending out soldier to attack the opponent's base and building towers to defend themselves against each other's attack. There are multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will prepare their towers. Next, during the waving phase, player 1 and 2 take turns to attack each other. The game continues until until someone dies or if the maximum number of rounds is reached.
+__Gameplay__:    
+The game has two players, player 1 occupying the left half of the map, player 2 occupying the right half. The two player are controlled by two AI programs to be written by the student. In this game, the two players will take part in both sending out soldier to attack the opponent's base and building towers to defend themselves against each other's attack. There are multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will prepare their towers. Next, during the waving phase, player 1 and 2 take turns to attack each other. The game continues until until someone dies or if the maximum number of rounds is reached.
 
 __Victory Condition__:  
 A player becomes the winner when his opponent lost all HP, or if the maximum number of rounds is reached. In the latter case, the points of two players are compared. And the one with higher point win (In case that two players have the same point, player 1 wins). The points are based on the player's current health and current money amount.
@@ -72,22 +73,22 @@ There are altogether 6 types of units that a player can use as soldiers:
 	* Speed: 3
 	* HP: 30
 	* Cost: 6
-	* Prize: 5
+	* Prize: 3
 * DarkNut:  
 	* Speed: 2.5
 	* HP: 150
 	* Cost: 20
-	* Prize: 19
+	* Prize: 10
 * Speedy:
 	* Speed: 7
 	* HP: 200
 	* Cost: 56
-	* Prize: 45
+	* Prize: 28
 * Armos:  
 	* Speed: 1
 	* HP: 600
 	* Cost: 41
-	* Prize: 40
+	* Prize: 20
 
 __Types of Towers__:  
 There are altogether 8 types of towers player can use to defend himself.  
@@ -99,36 +100,36 @@ There are altogether 8 types of towers player can use to defend himself.
 	* Range: 4
 	* Damage per shot: 2
 	* Shot speed: 8
-	* Cost: 3
+	* Cost: 30
 * CanonTower:
 	* Speed: 1
 	* Range: 8
 	* Damage per shot: 15
 	* Shot speed: 40
-	* Cost: 9
+	* Cost: 90
 * FlameTower:
 	* Speed: 6
 	* Range: 2
 	* Damage per shot: 8
 	* Shot speed: 1.5
-	* Cost: 4
+	* Cost: 40
 * IceTower:
 	* Speed: 2
 	* Range: 6
 	* Damage per shot: 15
 	* Shot speed: 3.5
-	* Cost: 7
+	* Cost: 70
 * LaserTower:  
 	* Speed: 3
 	* Range: 5
 	* Damage per shot: 7
 	* Shot speed: 10
-	* Cost: 7
+	* Cost: 70
 * GateToHell:
 	* Speed: 1
 	* Range: 2
 	* Damager per shot: 300
 	* Shot speed: 2
-	* Cost: 25  	   	   
+	* Cost: 250 	   	   
 
 
