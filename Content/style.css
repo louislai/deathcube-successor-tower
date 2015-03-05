@@ -140,7 +140,7 @@ button:hover:not(:disabled) {
 #money-info-p1 {
 	background: url(icons/money.png) no-repeat left center;
 	padding-left: 28px;
-	left: 700px;
+	left: 900px;
 }
 
 #tower-info-p1 {
@@ -152,7 +152,7 @@ button:hover:not(:disabled) {
 #health-info-p1 {
 	background: url(icons/health.png) no-repeat left center;
 	padding-left: 28px;
-	left: 900px;
+	left: 700px;
 }
 
 #point-info-p1 {

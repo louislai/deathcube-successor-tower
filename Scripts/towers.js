@@ -40,7 +40,7 @@ var MGNest = Tower.extend({
 	nest.speed = 4.0;
 	nest.range = 4.0;
 	nest.rating = nest.speed * Math.log(nest.range + 1.0) * nest.shotType.rating;
-	nest.cost = Math.round(nest.rating / 6.0 + 1.0);
+	nest.cost = Math.round(nest.rating / 6.0 + 1.0) * 10;
 	types.towers['MGNest'] = nest;
 });
 
@@ -62,7 +62,7 @@ var CanonTower = Tower.extend({
 	canon.speed = 1.0;
 	canon.range = 8.0;
 	canon.rating = canon.speed * Math.log(canon.range + 1.0) * canon.shotType.rating;
-	canon.cost = Math.round(canon.rating / 6.0 + 1.0);
+	canon.cost = Math.round(canon.rating / 6.0 + 1.0) * 10;
 	types.towers['CanonTower'] = canon;
 });
 
@@ -84,7 +84,7 @@ var FlameTower = Tower.extend({
 	flame.speed = 6.0;
 	flame.range = 2.0;
 	flame.rating = flame.speed * Math.log(flame.range + 1.0) * flame.shotType.rating;
-	flame.cost = Math.round(flame.rating / 6.0 + 1.0);
+	flame.cost = Math.round(flame.rating / 6.0 + 1.0) * 10;
 	types.towers['FlameTower'] = flame;
 });
 
@@ -106,7 +106,7 @@ var IceTower = Tower.extend({
 	ice.speed = 2.0;
 	ice.range = 6.0;
 	ice.rating = ice.speed * Math.log(ice.range + 1.0) * ice.shotType.rating;
-	ice.cost = Math.round(ice.rating / 6.0 + 1.0);
+	ice.cost = Math.round(ice.rating / 6.0 + 1.0) * 10;
 	types.towers['IceTower'] = ice;
 });
 
@@ -128,7 +128,7 @@ var LaserTower = Tower.extend({
 	laser.speed = 3.0;
 	laser.range = 5.0;
 	laser.rating = laser.speed * Math.log(laser.range + 1.0) * laser.shotType.rating;
-	laser.cost = Math.round(laser.rating / 6.0 + 1.0);
+	laser.cost = Math.round(laser.rating / 6.0 + 1.0) * 10;
 	types.towers['LaserTower'] = laser;
 });
 
@@ -150,7 +150,7 @@ var GateToHell = Tower.extend({
 	gate.speed = 1.0;
 	gate.range = 2.0;
 	gate.rating = gate.speed * Math.log(gate.range + 1.0) * gate.shotType.rating;
-	gate.cost = Math.round(gate.rating / 6.0 + 1.0);
+	gate.cost = Math.round(gate.rating / 6.0 + 1.0) * 10;
 	types.towers['GateToHell'] = gate;
 });
 

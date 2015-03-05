@@ -1,22 +1,24 @@
 #### Tower Defense/Attack Multiplayer Game ####
 
-__Gameplay__: The game has two players, player 1 occupying the left half of the map, player 2 occupying the right half. In this game, the two players will take part in both sending out soldier to attack the opponent's base and building towers to defend themselves against each other's attack. The game begins by loading up the AI programs defined by the players. Then there will be multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will build whatever they want to build. They can destroy their existing buildings to get back spaces or money during this phase too. Next, during the waving phase, player 1 and 2 take turns to attack each other (So player 1 will send out his group of soldiers to attack player 2 's base, and afterwards the role of the attacker is handed over to player 2). The game continues until until someone dies or if the maximum number of rounds is reached.
+__Gameplay__: The game has two players, player 1 occupying the left half of the map, player 2 occupying the right half. The two player are controlled by two AI programs to be written by the student. In this game, the two players will take part in both sending out soldier to attack the opponent's base and building towers to defend themselves against each other's attack. There are multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will prepare their towers. Next, during the waving phase, player 1 and 2 take turns to attack each other. The game continues until until someone dies or if the maximum number of rounds is reached.
 
 __Victory Condition__:  
 A player becomes the winner when his opponent lost all HP, or if the maximum number of rounds is reached. In the latter case, the points of two players are compared. And the one with higher point win (In case that two players have the same point, player 1 wins). The points are based on the player's current health and current money amount.
 
-__The Interface__:  
-The top of the screen is the info bar, displaying the info of each player, including the name,  current HP, current number of shooting tower over the maximum allowed number of shooting towers, and the current point.  
-Below the screen lies a canvas containing the game map. On the map, the left half is controlled by player 1, while the right half is controlled by player 2, and the two halves are separated by the boundary line. The coordinates start from (0, 0) from the top left, and increase to the maximum coordinates at the right bottom.
-
 __The Phases:__  
 _Building Phase_  
-This is the 'preparation' part of a round. This phase is when the engine will call the players' ai program to generate the towers, create mazes, destroy existing towers, etc
+This is the 'preparation' part of a round. This phase is when the engine will call the players' AI program to generate the towers, create mazes, destroy existing towers, etc
 
 _Waving Phase_  
 This is the 'action' part of a round. In this phase, player 1 will attack player 2 first with his group of soldier. After all of player 1's soldier either successfully reach player 2's base or perish, player 2 will attack player 1.  
- Throughout the phase, the engine will call the players' ai programs to generate the soldiers to be sent out. One player's attacker can have at most 8 soldiers attacking, and can last as long as (number of units * 1300) time units.  The list of units that would be sent out during a player's attack turn is generated at the start of the turn based on the AI's algorithm.  
+ Throughout the phase, the engine will call the players' ai programs to generate the soldiers to be sent out. One player's attacker can have at most 8 soldiers attacking, and can last as long as (number of units * 1300) time units.  The list of units that would be sent out during a player's attack turn is generated at the start of the turn based on the AI's algorithm.  Students should test out how each type of unit move differently.
+Note that the path to be travelled by a unit is determined by the game engine. Each unit can take one out of 5 maze-traversing strategies: Manhattan, MaxDXDY, DiagonalShortcut, Euclidean and EuclideanNoSQR).  
 Also note the coloured squares on the left and the right only represent the spawning points for the units. The players should not assume that his opponent's soldier needs to reach exactly the coloured square on the his side to damage him. In fact, anywhere along the left or right edge is fair game.
+
+
+__The Interface__:  
+The top of the screen is the info bar, displaying the info of each player, including the name,  current HP, current number of shooting tower over the maximum allowed number of shooting towers, and the current point.  
+Below the screen lies a canvas containing the game map. On the map, the left half is controlled by player 1, while the right half is controlled by player 2, and the two halves are separated by the boundary line. The coordinates start from (0, 0) from the top left, and increase to the maximum coordinates at the right bottom.
 
 __AI APIs__  
 Here are the classes/constructors that players need to be aware of:  

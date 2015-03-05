@@ -167,7 +167,6 @@
 				function callTick() {
 					if (count < speedMultiplier) {
 						me.tick();
-						console.log(count);
 						count++;
 						setTimeout(callTick, delay);
 					}

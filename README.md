@@ -1,6 +1,14 @@
-#### Tower Defense/Attack Multiplayer Game ####
+## CS1010R: Tower Defense/Attack Multiplayer Game ##
 
-__Gameplay__: The game has two players, player 1 occupying the left base, player 2 occupying the right base. The game begins by loading up the AIs defined by the players. Then there will be multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will build whatever they want to build. They can destroy their existing building to get back spaces or money during this phase too. Next, during the waving phase, player 1 and 2 take turns to attack each other. The game continues until until someone dies or if the maximum number of rounds is reached.
+__Gameplay__:   
+The game has two players, player 1 occupying the left base, player 2 occupying the right base. The game begins by loading up the AIs defined by the players. Then there will be multiple rounds. Each round consists of 2 phases: building phase and waving phase. The building phase occurs first, during which the players will build whatever they want to build. They can destroy their existing building to get back spaces or money during this phase too. Next, during the waving phase, player 1 and 2 take turns to attack each other. The game continues until until someone dies or if the maximum number of rounds is reached.
+
+__Credits__:  
+
+* Supervisor: Prof. Martin Henz
+* Student: Lai Hoang Dung (Louis)
+
+__Presiquisites
 
 ##### TODOs: #####
 * Research strategies to run the game in JFDI environment (done)
