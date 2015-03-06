@@ -24,13 +24,13 @@ Below the screen lies a canvas containing the game map. On the map, the left hal
 __AI APIs__  
 Here are the classes/constructors that players need to be aware of:  
 
-_Point_: can be instanized with 2 parameters: x-coordinate and y-coordinate  (e.g. new Point(0, 0)).
+_Point_: can be instantiated with 2 parameters: x-coordinate and y-coordinate  (e.g. new Point(0, 0)).
 
-_AITowerToBuild_: This can be instanized with 2 parameters: the tower type, and a Point defining the coordinates of the tower on the map (e.g. new AITowerToBuild(Rock, new Point(0, 0))). This constructs a tower object to be built on the map. Note that the coordinates of the tower need to be valid. 
+_AITowerToBuild_: This can be instantiated with 2 parameters: the tower type, and a Point defining the coordinates of the tower on the map (e.g. new AITowerToBuild(Rock, new Point(0, 0))). This constructs a tower object to be built on the map. Note that the coordinates of the tower need to be valid. 
 
-_AITowerToDestroy_: This class is instanized with 1 parameter: the coordinates of an existing tower to be destroyed on the map. Note that the coordinates of the tower need to be valid. 
+_AITowerToDestroy_: This class is instantiated with 1 parameter: the coordinates of an existing tower to be destroyed on the map. Note that the coordinates of the tower need to be valid. 
 
-_AIUnit_: This class can be instanized with 2 parameters: the unit type, and the time instance to send the unit out (e.g. new AIUnit(Mario, 0)). The time instance is when to send the unit out during the player's attack turn during the waving phase. As mentioned, a player's attack turn can last as long as (number of units * 1300) time units. So the time instance can be any integer between 0 and the time cap.
+_AIUnit_: This class can be instantiated with 2 parameters: the unit type, and the time instance to send the unit out (e.g. new AIUnit(Mario, 0)). The time instance is when to send the unit out during the player's attack turn during the waving phase. As mentioned, a player's attack turn can last as long as (number of units * 1300) time units. So the time instance can be any integer between 0 and the time cap.
 
 _PlayerAI_: This is the main AI class the players need to subclass. An AI Object is called with following parameters, in order:  
 

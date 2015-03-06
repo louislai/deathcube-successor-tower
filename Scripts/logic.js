@@ -163,8 +163,6 @@
 					me.tick();
 				}
 
-				// // Use speedMultiplier here for adjusting speed. 
-				// // But constants.speedMultiplier should be used in the mature version
 				// var count = 0;
 				// var delay = Math.floor(constants.ticks / speedMultiplier);
 				// console.log("delay" + delay);

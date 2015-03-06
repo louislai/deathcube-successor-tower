@@ -31,11 +31,11 @@ __Directory Structure__
 
 __Project Status__  
 During the span of the project, I have modified the existing code base extensively so that it can support the type of multiplayer turn-based defense-and-attack game I was conceptualising. The UIs have also been updated to reflect the multiplayer game mode.  
-Something that should be made clear is that though the students will be subclassing the PlayerAI, AIUnit, AITowerToBuild, AITowerToDestroy classes, the inner representations of player, unit and tower are actually done by the Player, Unit, and Tower classes. The AI classes give the engine the necessary data to instanize the appropriate Player/Unit/Tower objects.  
+Something that should be made clear is that though the students will be subclassing the PlayerAI, AIUnit, AITowerToBuild, AITowerToDestroy classes, the inner representations of player, unit and tower are actually done by the Player, Unit, and Tower classes. The AI classes give the engine the necessary data to instantiate the appropriate Player/Unit/Tower objects.  
 
 Although the game description describe the left-hand side as Player 1, and right-hand side as Player 2, their inner representations in the engine is more along the line of Player 0 and Player 1 respectively. In fact the __side attribute of the PlayerAI object and side attribute of Player object is indexed from 0.
 
-Regarding security, the students never actually have direct access to the objects in the engine. Game data is made available to the student programs either by cloning them or by converting them to AI objects. Also I use the Object.defineProperty to set all the constants in __manifest.js__ to unwritable. This however may not be an optimal solution or the best practice. Obfuscation may also be considered.  
+Regarding security, the students never actually have direct access to the objects in the engine. Game data is made available to the student programs either by cloning them or by converting them to AI objects. Also I use the Object.defineProperty to set all the constants in __manifest.js__ to unwritable. This however might not be the best practice. Obfuscation may also be considered.  
 
 Also, the game is quite laggy on Safari.
 
