@@ -29,14 +29,27 @@ __Directory Structure__
 	*  manifest: House the constants and resource routes used by the game
 	*  utilities.js : Utility functions.
 
-__Thoughts about the project progress__  
+__Project Status__  
 During the span of the project, I have modified the existing code base extensively so that it can support the type of multiplayer turn-based defense-and-attack game I was conceptualising. The UIs have also been updated to reflect the multiplayer game mode.  
-Something that should be made clear is that the PlayerAI, AIUnit, AITowerToBuild, AITowerToDestroy classes that students need to subclass are not the actual classes that game engine actually use internally to run the game. The inner representations of player, unit and tower are actually done by the Player, Unit, and Tower classes. The AI classes give the engine the necessary data to instanize the appropriate inner objects.  
-Regarding security, right now the students never actually got direct access to the objects in the engine. Even the MazeRecord only hold copies of the game objects and not the actual data. Also I use the Object.defineProperty to set all the constants in __manifest.js__ to unwritable. This however is not an optimal solution. Obfuscation may also be considered.  
+Something that should be made clear is that though the students will be subclassing the PlayerAI, AIUnit, AITowerToBuild, AITowerToDestroy classes, the inner representations of player, unit and tower are actually done by the Player, Unit, and Tower classes. The AI classes give the engine the necessary data to instanize the appropriate Player/Unit/Tower objects.  
+
+Although the game description describe the left-hand side as Player 1, and right-hand side as Player 2, their inner representations in the engine is more along the line of Player 0 and Player 1 respectively. In fact the __side attribute of the PlayerAI object and side attribute of Player object is indexed from 0.
+
+Regarding security, the students never actually have direct access to the objects in the engine. Game data is made available to the student programs either by cloning them or by converting them to AI objects. Also I use the Object.defineProperty to set all the constants in __manifest.js__ to unwritable. This however may not be an optimal solution or the best practice. Obfuscation may also be considered.  
+
 Also, the game is quite laggy on Safari.
 
 
 __Possible Future Improvements__  
-It is possible to extend the number of units and towers for the game, as the design is OOP and is easily extensible. It is even possible to allow students the ability to design their own units/towers.  Also there might be a need to make the game more balanced.
-The handler for competition running has not been implemented yet.  
+
+It is possible to extend the number of units and towers for the game, as the design is OOP and is easily extensible. It is even possible to allow students the ability to design their own units/towers.  Also there might be a need to make the game more balanced.   
+
+The program to run the contest itself has not been implemented yet. 
+ 
 It is possible to look into security improvements in greater details.
+
+Future maintainers of the project can also look into alternative methods to manipulate the game speed without breaking the game semantics. The current method works but can make the game appear laggy on some browser
+
+Future maintainers of the project can also look into alternative ways to control maze-traversing behaviours of units.
+
+The sprites, icons and background can be redesigned as well. The current map background and page background are actually obtained through Google Images search and should be replaced to avoid copyright issues.

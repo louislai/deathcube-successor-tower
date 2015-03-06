@@ -159,20 +159,26 @@
 			this.view.start();
 			this.gameLoop = setInterval(function() {
 
-				// Use speedMultiplier here for adjusting speed. 
-				// But constants.speedMultiplier should be used in the mature version
-				var count = 0;
-				var delay = Math.floor(constants.ticks / speedMultiplier);
-
-				function callTick() {
-					if (count < speedMultiplier) {
-						me.tick();
-						count++;
-						setTimeout(callTick, delay);
-					}
+				for (var i = 0 ; i < speedMultiplier ; i++) {
+					me.tick();
 				}
 
-				callTick();
+				// // Use speedMultiplier here for adjusting speed. 
+				// // But constants.speedMultiplier should be used in the mature version
+				// var count = 0;
+				// var delay = Math.floor(constants.ticks / speedMultiplier);
+				// console.log("delay" + delay);
+
+				// function callTick() {
+				// 	if (count < speedMultiplier) {
+				// 		console.log(count);
+				// 		me.tick();
+				// 		count++;
+				// 		setTimeout(callTick, delay);
+				// 	}
+				// }
+
+				// callTick();
 
 			}, constants.ticks);	
 		}
