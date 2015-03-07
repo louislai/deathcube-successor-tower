@@ -7,7 +7,7 @@ var Rock = Tower.extend({
 	init: function(owner, target) {
 		this._super(owner, target, Rock.speed, 200, Rock.range);
 		this.createVisual(Rock.sprite, [1]);
-		this.type = 0;
+		this.type = 0;  // Index in constants.towers
 	},
 }, function(rock) {
 	rock.description = "Just a rock ... a big ROCK. If you can't boulder you have to go around.";
@@ -29,7 +29,7 @@ var MGNest = Tower.extend({
 	init: function(owner, target) {
 		this._super(owner, target, MGNest.speed, 25, MGNest.range, MGNest.shotType);
 		this.createVisual(MGNest.sprite, [1]);
-		this.type = 1;
+		this.type = 1;  // Index in constants.towers
 	},
 }, function(nest) {
 	nest.description = 'The MG Nest is cheap but powerful. It can help you a lot against low armored units.';
@@ -51,7 +51,7 @@ var CanonTower = Tower.extend({
 	init: function(owner, target) {
 		this._super(owner, target, CanonTower.speed, 50, CanonTower.range, CanonTower.shotType);
 		this.createVisual(CanonTower.sprite, [1, 1, 1, 1]);
-		this.type = 2;
+		this.type = 2;  // Index in constants.towers
 	},
 }, function(canon) {
 	canon.description = 'The backbone in war! It has an amazing range and shoots shells, however, the firing speed could be better.';
@@ -73,7 +73,7 @@ var FlameTower = Tower.extend({
 	init: function(owner, target) {
 		this._super(owner, target, FlameTower.speed, 200, FlameTower.range, FlameTower.shotType);
 		this.createVisual(FlameTower.sprite, [4]);
-		this.type = 3;
+		this.type = 3;  // Index in constants.towers
 	},
 }, function(flame) {
 	flame.description = 'Burn them down but a bit faster ... Excellent for slow armored units, but fails against strong armored enemies.';
@@ -95,7 +95,7 @@ var IceTower = Tower.extend({
 	init: function(owner, target) {
 		this._super(owner, target, IceTower.speed, 200, IceTower.range, IceTower.shotType);
 		this.createVisual(IceTower.sprite, [1, 1, 1, 1]);
-		this.type = 4;
+		this.type = 4;  // Index in constants.towers
 	},
 }, function(ice) {
 	ice.description = 'Cool. Slow shots, but with high efficiency. The right choice against slow strongly armored units.';
@@ -117,7 +117,7 @@ var LaserTower = Tower.extend({
 	init: function(owner, target) {
 		this._super(owner, target, LaserTower.speed, 25, LaserTower.range, LaserTower.shotType);
 		this.createVisual(LaserTower.sprite, [1, 1, 1, 1]);
-		this.type = 5;
+		this.type = 5;  // Index in constants.towers
 	},
 }, function(laser) {
 	laser.description = "Won't play with you, but does it with high efficiency. Really fast low damage shots.";
@@ -139,7 +139,7 @@ var GateToHell = Tower.extend({
 	init: function(owner, target) {
 		this._super(owner, target, GateToHell.speed, 200, GateToHell.range, GateToHell.shotType);
 		this.createVisual(GateToHell.sprite, [6]);
-		this.type = 6;
+		this.type = 6;  // Index in constants.towers
 	},
 }, function(gate) {
 	gate.description = 'Paint rules! This is the ultimate weapon of war, but it will not kill high speed units.';
@@ -154,4 +154,10 @@ var GateToHell = Tower.extend({
 	types.towers['GateToHell'] = gate;
 });
 
-var towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, LaserTower, GateToHell];
+// Add list of towers to constant.towers
+constants.towers = [Rock, MGNest, CanonTower, FlameTower, IceTower, LaserTower, GateToHell];
+
+// Make it unwritable
+Object.defineProperty(constants, 'towers', {
+	writable: false
+});

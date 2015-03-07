@@ -246,6 +246,7 @@ var Tower = GameObject.extend({
 		this.targets = [];
 		this.timeToNextShot = 0;
 		this.mazeWeight = 0;
+		this.side = 0;
 		this.direction = Direction.left;
 		this.shotType = shotType || {};
 		this.registerEvent(events.shot);

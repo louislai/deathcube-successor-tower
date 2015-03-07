@@ -40,7 +40,7 @@ Function.prototype.clone = function() {
     var result = [];
     for (var i = 0; i < arr.length; i++) {
       var tw = arr[i];
-      var type = towers[tw.type];
+      var type = constants.towers[tw.type];
       var coordinates = new Point(tw.mazeCoordinates.x, tw.mazeCoordinates.y) ;
       result = pair(new AITowerToBuild(type, coordinates), result);
     }
@@ -64,9 +64,9 @@ Function.prototype.clone = function() {
  */
 
  MazeRecord.getShootingTowers = function() {
-  return Towerarr_to_AITowerToBuildlst(this.towers.filter(
+  return (this.towers.filter(
                         function(tower) {
-                          return !(tower.type !== 0);
+                          return (tower.type !== 0);
                         }
                       ));
  }
@@ -79,38 +79,38 @@ Function.prototype.clone = function() {
                       ));
  }
 
- MazeRecord.getSelfShootingTowers = function(owner) {
-  var real_owner = this.players[owner.__side];
+ MazeRecord.getSelfShootingTowers = function(aiowner) {
+  var side = aiowner.getSide();
   return Towerarr_to_AITowerToBuildlst(this.towers.filter(
                         function(tower) {
-                          return !(tower instanceof Rock) && tower.owner === real_owner;
+                          return tower.type !== 0 && tower.side === side;
                         }
                       ));
  }
 
- MazeRecord.getSelfRocks = function(owner) {
-  var real_owner = this.players[owner.__side];
+ MazeRecord.getSelfRocks = function(aiowner) {
+  var side = aiowner.getSide();
   return Towerarr_to_AITowerToBuildlst(this.towers.filter(
                         function(tower) {
-                          return (tower instanceof Rock) && tower.owner === real_owner;
+                          return tower.type === 0 && tower.side === side;
                         }
                       ));
  }
 
- MazeRecord.getOpponentShootingTowers = function(target) {
-  var real_target = this.players[target.__side];
+ MazeRecord.getOpponentShootingTowers = function(aitarget) {
+  var side = aitarget.getSide();
   return Towerarr_to_AITowerToBuildlst(this.towers.filter(
                         function(tower) {
-                          return !(tower instanceof Rock) && tower.target === real_target;
+                          return tower.type !== 0 && tower.side !== side;
                         }
                       ));
  }
 
- MazeRecord.getOpponentRocks = function(target) {
-  var real_target = this.players[target.__side];
+ MazeRecord.getOpponentRocks = function(aitarget) {
+  var side = aitarget.getSide();
   return Towerarr_to_AITowerToBuildlst(this.towers.filter(
                         function(tower) {
-                          return (tower instanceof Rock) && tower.target === real_target;
+                          return tower.type === 0 && tower.target !== side;
                         }
                       ));
  }

@@ -380,6 +380,7 @@
 		if (pt.x <= me.width && pt.x >= 0 && pt.y <= me.height && pt.y >= 0) { // Modification to guarantee point is valid
 			if (me.state == GameState.building && type.cost <= me.currentDefender.money && (isrock || (numShooting < owner.maxTowerNumber))) {
 				newTower.mazeCoordinates = pt;
+				newTower.side = owner.side;
 
 				// Prevent player 1 building on player 0 ground
 				if (owner === me.players[1] && newTower.mazeCoordinates.x < me.width / 2) {

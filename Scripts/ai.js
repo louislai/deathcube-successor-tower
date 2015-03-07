@@ -78,7 +78,7 @@ function randomTower(n, c) {
   if (n === 0) {
     return [];
   } else {
-    return pair(new AITowerToBuild(towers[Math.floor(Math.random() * towers.length)], 
+    return pair(new AITowerToBuild(constants.towers[Math.floor(Math.random() * constants.towers.length)], 
                 new Point(Math.floor(Math.random() * 15) + c, Math.floor(Math.random() * 15))),
                 randomTower(n - 1, c));
   }
@@ -140,7 +140,7 @@ function numberToPoint(lst) {
 }
 
 
-// List of monsters and towers for testing
+// List of monsters for testing
 var monsters = [Mario, Rope, DarkNut, Speedy, Armos];
 
 var initTowers0 = pair(new AITowerToBuild(LaserTower, new Point(7, 8)), numberToPoint(presetRock0));
