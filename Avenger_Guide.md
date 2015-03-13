@@ -35,7 +35,7 @@ Something that should be made clear is that though the students will be subclass
 
 Although the game description describe the left-hand side as Player 1, and right-hand side as Player 2, their inner representations in the engine is more along the line of Player 0 and Player 1 respectively. In fact the __side attribute of the PlayerAI object and side attribute of Player object is indexed from 0.
 
-Regarding security, the students never actually have direct access to the objects in the engine. Game data is made available to the student programs either by cloning them or by converting them to AI objects. Also I use the Object.defineProperty to set all the constants in __manifest.js__ to unwritable. This however might not be the best practice. Obfuscation may also be considered.  
+Regarding security, the students never actually have direct access to the objects in the engine. Game data is made available to the student programs either by cloning them or by converting them to AI objects. Also I use the Object.defineProperty to set all the constants in __manifest.js__ to unwritable. This however might not be the best practice. (Actually towards the end of the project, I discovered about TypeScript which might be more appropriate for setting the visibility of private variables. But I did not have the time to implement it.) Obfuscation may also be considered.  
 
 Also, the game is quite laggy on Safari.
 
@@ -45,11 +45,17 @@ __Possible Future Improvements__
 It is possible to extend the number of units and towers for the game, as the design is OOP and is easily extensible. It is even possible to allow students the ability to design their own units/towers.  Also there might be a need to make the game more balanced.   
 
 The program to run the contest itself has not been implemented yet. 
+
+Future maintainers can research methods to embed the game into JFDI Academy also. Though I believe the same method for old deathcube can be used. Student programs can be interpreted first and then run in the native browser by the engine. Then the game can be display in a 'Display' tab)
  
 It is possible to look into security improvements in greater details.
 
-Future maintainers of the project can also look into alternative methods to manipulate the game speed without breaking the game semantics. The current method works but can make the game appear laggy on some browser
+Future maintainers of the project can also look into alternative methods to manipulate the game speed without breaking the game semantics. The current method works but can make the game appear laggy on some browser.
 
 Future maintainers of the project can also look into alternative ways to control maze-traversing behaviours of units.
 
 The sprites, icons and background can be redesigned as well. The current map background and page background are actually obtained through Google Images search and should be replaced to avoid copyright issues.
+
+Develop automated tests
+
+Optimise code efficiency further (e.g. with asm.js)

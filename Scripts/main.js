@@ -275,6 +275,7 @@ var Tower = GameObject.extend({
 		if (!(this instanceof Rock)) { // Modification here to stop Rock from shooting
 			if (closestTarget) {
 				var shot = new (this.shotType)(this.owner, this.target);
+							shot.origin = this;
 	            shot.mazeCoordinates = this.mazeCoordinates;
 	            shot.velocity = closestTarget.mazeCoordinates.subtract(this.mazeCoordinates);
 	            shot.direction = shot.velocity.toDirection();
@@ -356,11 +357,17 @@ var Shot = GameObject.extend({
 		this.timeToDamagability = ~~(200 / this.speed);
 		this.velocity = new Point();
 		this.registerEvent(events.hit);
+		this.origin = undefined;
 	},
 	update: function() {
 		var pt = this.velocity.scale(this.speed * constants.ticks * 0.001);
 		this.mazeCoordinates = this.mazeCoordinates.add(pt);
 		this._super();
+
+		if (this.distanceTo(this.origin.mazeCoordinates) > this.origin.range) {
+			this.dead = true;
+			return;
+		}
 
 		if (this.timeToDamagability > 0) {
 			this.timeToDamagability -= constants.ticks;
