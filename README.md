@@ -6,7 +6,7 @@ The game has two players, player 1 occupying the left half of the map, player 2 
 __Credits__:  
 
 * Supervisor: Prof. Martin Henz
-* Student: Lai Hoang Dung (Louis)
+* Student: Lai Hoang Dung (Louis), Yu Xiaodong
 
 __Presiquisites__  
 The browser needs to support HTML5, and also the JSON.stringify and JSON.parse methods. This should include IE 11+, Firefox 36+, Chrome 40+, Opera 27+ and other modern browsers.
